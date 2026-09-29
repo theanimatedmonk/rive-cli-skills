@@ -1,0 +1,26 @@
+<Rive version="1" kind="fragment">
+    <ViewModel name="DailyDivination" id="10:1">
+        <ViewModelPropertyTrigger name="pick1" id="10:2"/>
+        <ViewModelPropertyTrigger name="pick2" id="10:3"/>
+        <ViewModelPropertyTrigger name="pick3" id="10:4"/>
+        <ViewModelPropertyTrigger name="pick4" id="10:5"/>
+        <ViewModelPropertyTrigger name="pick5" id="10:6"/>
+        <ViewModelPropertyTrigger name="reveal" id="10:7"/>
+        <ViewModelPropertyAssetImage name="face" id="10:8"/>
+        <ViewModelInstance name="Default" id="10:9">
+            <ViewModelInstanceTrigger viewModelPropertyId="10:2" name="pick1" id="10:10"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:3" name="pick2" id="10:11"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:4" name="pick3" id="10:12"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:5" name="pick4" id="10:13"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:6" name="pick5" id="10:14"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:7" name="reveal" id="10:15"/>
+            <ViewModelInstanceAssetImage propertyValue="11:2" viewModelPropertyId="10:8" name="face" id="10:16"/>
+        </ViewModelInstance>
+    </ViewModel>
+    <ViewModel name="CardFront" id="10:20">
+        <ViewModelPropertyAssetImage name="face" id="10:21"/>
+        <ViewModelInstance name="Default" id="10:22">
+            <ViewModelInstanceAssetImage propertyValue="11:6" viewModelPropertyId="10:21" name="face" id="10:23"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>

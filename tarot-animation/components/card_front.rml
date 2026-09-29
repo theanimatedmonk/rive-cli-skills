@@ -1,0 +1,31 @@
+<Rive version="1" kind="fragment">
+    <Artboard defaultStateMachineId="30:10" viewModelId="10:20" viewModelInstanceId="10:22" isComponent="true" width="160" height="280" styleId="30:2" x="220" name="CardFront" id="30:1">
+        <LayoutComponentStyle name="CardFront Style" id="30:2"/>
+        <Shape x="80" y="140" name="Frame" id="0:1069">
+            <Rectangle cornerRadiusTL="10" width="157" height="277" name="Path" id="0:1070"/>
+            <Stroke thickness="3" name="Stroke" id="0:1071">
+                <SolidColor colorValue="FFD4AF37" name="Color" id="0:1072"/>
+            </Stroke>
+        </Shape>
+        <Image assetId="11:2" x="80" y="140" scaleX="0.5" scaleY="0.5" name="Face" id="30:3">
+            <DataBindContext sourcePathIds="10:20-10:21" propertyKey="206" id="0:1073"/>
+        </Image>
+        <Shape x="80" y="140" name="Plate" id="0:1074">
+            <Rectangle cornerRadiusTL="10" width="157" height="277" name="Path" id="0:1075"/>
+            <Fill name="Fill" id="0:1076">
+                <SolidColor colorValue="FFF3E9D2" name="Color" id="0:1077"/>
+            </Fill>
+        </Shape>
+        <LinearAnimation duration="1" name="Rest" id="30:12"/>
+        <StateMachine name="Bind" id="30:10">
+            <StateMachineLayer name="Layer" id="30:11">
+                <AnyState y="-100" id="0:1078"/>
+                <ExitState x="300" y="-100" id="0:1079"/>
+                <EntryState id="0:1080">
+                    <StateTransition stateToId="30:13" id="0:1081"/>
+                </EntryState>
+                <AnimationState animationId="30:12" x="150" id="30:13"/>
+            </StateMachineLayer>
+        </StateMachine>
+    </Artboard>
+</Rive>

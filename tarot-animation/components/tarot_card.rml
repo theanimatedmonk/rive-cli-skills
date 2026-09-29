@@ -1,0 +1,24 @@
+<Rive version="1" kind="fragment">
+    <Artboard isComponent="true" width="160" height="280" styleId="40:2" x="440" name="TarotCard" id="40:1">
+        <LayoutComponentStyle name="TarotCard Style" id="40:2"/>
+        <ScriptedDrawable scriptAssetId="11:1" x="80" y="140" name="Card3D" id="40:3">
+            <ScriptInputArtboard artboardId="20:1" name="back" id="40:4"/>
+            <ScriptInputArtboard artboardId="30:1" name="front" id="40:5"/>
+            <ScriptInputNumber propertyValue="160" name="width" id="40:6"/>
+            <ScriptInputNumber propertyValue="280" name="height" id="40:7"/>
+            <ScriptInputNumber propertyValue="4" name="depth" id="40:8"/>
+            <ScriptInputNumber name="rotationY" id="40:9"/>
+            <ScriptInputNumber name="rotationX" id="40:10"/>
+            <ScriptInputNumber name="rotationZ" id="40:11"/>
+            <ScriptInputString name="viewModelProperty" id="40:12"/>
+        </ScriptedDrawable>
+        <LinearAnimation name="Flip" id="40:13">
+            <KeyedObject objectId="40:9" id="0:1082">
+                <KeyedProperty propertyKey="243" id="0:1083">
+                    <KeyFrameDouble interpolationType="1" id="0:1084"/>
+                    <KeyFrameDouble value="9.424778" interpolationType="1" frame="60" id="0:1085"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+</Rive>

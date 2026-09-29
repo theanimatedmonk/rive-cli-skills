@@ -1,0 +1,325 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #1e1e1e;
+  font-family: "Lora", Georgia, serif;
+  color: #f2ecff;
+}
+
+.phone {
+  position: relative;
+  width: 360px;
+  height: 780px;
+  overflow: hidden;
+  background: #0b0820 url("assets/bg.png") center / cover no-repeat;
+}
+
+/* Offset below the heading; the overflow past the bottom is clipped by .phone. */
+.phone__rive {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.status-bar__icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-bar {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-bar__back {
+  position: absolute;
+  left: 14px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.app-bar__title {
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.intro {
+  position: absolute;
+  top: 116px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.intro__title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 36px;
+}
+
+.intro__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.intro__line {
+  width: 26px;
+  height: 1px;
+  background: #c9a84c;
+  opacity: 0.8;
+}
+
+.intro__subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(242, 236, 255, 0.8);
+}
+
+/* Revealed state: card name and orientation replace the prompt. */
+.intro.is-revealed .intro__divider {
+  display: none;
+}
+
+.intro.is-revealed .intro__title {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.intro.is-revealed .intro__subtitle {
+  margin-top: 4px;
+  font-size: 24px;
+  line-height: 34px;
+  color: #f2ecff;
+}
+
+.intro,
+.result {
+  transition: opacity 0.5s ease;
+}
+
+.intro.is-fading,
+.result.is-hidden {
+  opacity: 0;
+}
+
+.result.is-hidden {
+  pointer-events: none;
+}
+
+.result {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 520px;
+}
+
+.result__copy {
+  margin: 0 12px;
+  font-size: 15px;
+  line-height: 22px;
+  text-align: center;
+  color: rgba(242, 236, 255, 0.8);
+}
+
+.result__cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 124px;
+  height: 46px;
+  border: 0;
+  border-radius: 8px;
+  background: #7b5cff;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.result__cta:hover {
+  background: #8a6dff;
+}
+
+.nav-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 40px;
+  background: #13112a;
+  color: #ffffff;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* "Your reading is unfolding.." — copy stays, the CTA steps aside. */
+.result__cta {
+  transition: opacity 0.3s ease;
+}
+
+.result.is-unfolding .result__cta {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Final reading: the Rive stage and pick UI are gone. */
+.phone.is-reading .phone__rive,
+.phone.is-reading .intro,
+.phone.is-reading .result {
+  display: none;
+}
+
+.reading__header {
+  position: absolute;
+  top: 99px;
+  left: 37px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.reading__card {
+  width: 63px;
+  height: 110px;
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(232, 197, 90, 0.35);
+}
+
+.reading__name {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 34px;
+}
+
+.reading__orientation {
+  margin: 6px 0 0;
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.reading__panel {
+  position: absolute;
+  top: 248px;
+  left: 24px;
+  right: 24px;
+  max-height: 370px;
+  overflow-y: auto;
+  padding: 18px 16px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(30, 27, 56, 0.82);
+}
+
+.reading__panel-title {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.reading__description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 21px;
+  color: rgba(242, 236, 255, 0.8);
+}
+
+.reading__home {
+  left: 16px;
+  right: 16px;
+  top: 644px;
+}
+
+/* Interstitial ad: covers everything but the system nav bar. */
+.ad {
+  position: absolute;
+  inset: 0 0 46px 0;
+  background: #0b0820;
+}
+
+.ad__panel {
+  position: absolute;
+  top: 28px;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  background: #f5f5f5;
+}
+
+.ad__close {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #e6e6e6;
+  color: #111111;
+  cursor: pointer;
+}
+
+.ad__label {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111111;
+}

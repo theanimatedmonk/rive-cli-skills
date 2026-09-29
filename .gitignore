@@ -1,0 +1,10 @@
+# OS / editor
+.DS_Store
+.claude/settings.local.json
+
+# Rive CLI build output (rebuild with `rive tarot-animation --publish`)
+tarot-animation/build/
+
+# Local backups of earlier .riv exports
+tarot-frontend-demo/*.old.riv
+tarot-frontend-demo/*.editor-export.riv
