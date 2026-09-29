@@ -292,8 +292,8 @@ tarot-animation/
   components/card_back.rml
   components/card_front.rml
   components/tarot_card.rml
-  scripts/tarot_card_3d.luau
-  assets/placeholder-face.png   until the host binds a real image
+  TarotCard3D.luau          (root: where `rive pull` puts it)
+  placeholder-face.png, face-hierophant.jpeg, star.svg, moon.svg
 ```
 
 `rive.yaml` `main: DailyDivination` once that artboard exists.
@@ -365,4 +365,5 @@ Current lean in **bold**. Say if any is wrong.
 | v0 | Three-card Past/Present/Future. Superseded. |
 | v1 | Daily Divination: 5-card fan, 5 Select paths, `reveal` + `face`, 3D slab card with `CardBack` / `CardFront` components. |
 | v1.1 | `pick1`…`pick5` are view-model triggers. Click listeners fire those VM triggers; the SM has no pick inputs of its own. |
-| v1.2 | **Built.** Deviations from the text above: cards are 160×280 (tarot proportions, matches the mocks). The five cards sit in a `Stage` node at the hero pose (195,300); Loading float, Flip scale (1→0.72) and Result move (→ top-left 76,84 @0.42) key `Stage`, so one clip serves every pick (the four others are at opacity 0). Flip scrubs every card's `TarotCard.Flip` via `NestedRemapAnimation` (0→3π, eased on the caller). New `RevealHold` (0.9s) between Flip and Result, matching mock 3. Hero is brought to front with a keyed `DrawRules`. Hit shapes are `isTargetOpaque` so overlapping fan cards fire one pick. 3D slab is CPU-projected and drawn with `drawImageMesh` (no WGSL/GPU canvas needed). `CardFront` needs its own state machine or its `face` bind never applies inside the script's private instance. Preview face = `assets/face-hierophant.jpg` (Rider-Waite, public domain). |
+| v1.2 | **Built.** Deviations from the text above: cards are 160×280 (tarot proportions, matches the mocks). The five cards sit in a `Stage` node at the hero pose (195,300); Loading float, Flip scale (1→0.72) and Result move (→ top-left 76,84 @0.42) key `Stage`, so one clip serves every pick (the four others are at opacity 0). Flip scrubs every card's `TarotCard.Flip` via `NestedRemapAnimation` (0→3π, eased on the caller). New `RevealHold` (0.9s) between Flip and Result, matching mock 3. Hero is brought to front with a keyed `DrawRules`. Hit shapes are `isTargetOpaque` so overlapping fan cards fire one pick. 3D slab is CPU-projected and drawn with `drawImageMesh` (no WGSL/GPU canvas needed). `CardFront` needs its own state machine or its `face` bind never applies inside the script's private instance. Preview face = `face-hierophant.jpeg` (Rider-Waite, public domain). |
+| v1.3 | Editor round-trip: card back redesigned (SVG diamond and moons), background and Result/RevealHold/ContentBox removed (flow ends on the reveal; the web page owns everything after), fan entrance re-timed. Web fixes: script skips frames while a canvas image is nil, edge-on shading is a dark overlay (`modulateColor` darkens the whole scene on web), preview reveal tap removed (the host fires `reveal`). Ship with `rive . --publish`; web runtimes skip unsigned scripts. `tools/gen_scene.py` retired: the editor is the source of truth. |
