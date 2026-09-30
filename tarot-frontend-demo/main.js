@@ -3,8 +3,10 @@ const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";
 const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
 const REVEAL_DELAY_MS = 2000;
-// Length of the Flip clip in the .riv; the result copy waits for the card to land.
-const FLIP_MS = 1200;
+// From `reveal` to the card landing face-up in the .riv: Charge (1.7s of
+// comets and shaking) plus RevealBurst up to the landing (~1.05s). The
+// result copy waits for it.
+const REVEAL_ANIMATION_MS = 2800;
 const HEADING_FADE_MS = 500;
 const INTERPRETING_MS = 2000;
 const ORIENTATION = "Upright";
@@ -74,7 +76,7 @@ async function onPicked(name) {
 }
 
 async function onRevealed() {
-  await wait(FLIP_MS);
+  await wait(REVEAL_ANIMATION_MS);
   introEl.classList.add("is-fading");
   await wait(HEADING_FADE_MS);
   titleEl.textContent = persona.name;
