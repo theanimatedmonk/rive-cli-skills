@@ -11,6 +11,8 @@
             <ScriptInputNumber name="rotationX" id="40:10"/>
             <ScriptInputNumber name="rotationZ" id="40:11"/>
             <ScriptInputString name="viewModelProperty" id="40:12"/>
+            <ScriptInputNumber propertyValue="0.30000001" name="shine" id="40:15"/>
+            <ScriptInputNumber propertyValue="2" name="shineWidth" id="40:16"/>
         </ScriptedDrawable>
         <LinearAnimation name="Flip" id="40:13">
             <KeyedObject objectId="40:9" id="0:1082">

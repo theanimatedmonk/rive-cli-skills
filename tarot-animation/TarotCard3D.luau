@@ -23,8 +23,19 @@ export type TarotCard3D = {
 	rotationX: Input<number>,
 	rotationZ: Input<number>,
 	viewModelProperty: Input<string>,
+	-- Strength of the looping cosmic shine (cosmic_shine.wgsl); 0 turns it off.
+	shine: Input<number>,
+	-- Width of the sweeping band; 1 is the default, <1 a thin streak, >1 a broad wash.
+	shineWidth: Input<number>,
 
 	context: Context?,
+	time: number,
+	shineOffset: number,
+	shinePipeline: GPUPipeline?,
+	shineCanvas: GPUCanvas?,
+	shineUniforms: GPUBuffer?,
+	shineBindings: GPUBindGroup?,
+	shineParams: buffer,
 	backInst: Artboard?,
 	frontInst: Artboard?,
 	frontVm: ViewModel?,
@@ -167,11 +178,68 @@ local function buildMesh(self: TarotCard3D)
 	self.tris = tris
 end
 
+-- The shine is rendered by a WGSL pass into a small GPU canvas, then laid
+-- over each visible face with the face's own projected mesh. Runtimes
+-- without GPU canvases simply draw the card without it.
+local function buildShine(self: TarotCard3D, context: Context)
+	local shader = context:shader('cosmic_shine')
+	if shader == nil then
+		print('TarotCard3D: shader "cosmic_shine" not found; no shine')
+		return
+	end
+	local ok, err = pcall(function()
+		local canvas = context:gpuCanvas({ width = 128, height = 224 })
+		local pipeline = GPUPipeline.new({
+			vertex = { module = shader, entryPoint = 'vs_main' },
+			fragment = { module = shader, entryPoint = 'fs_main' },
+			vertexLayout = {},
+			colorTargets = { { format = canvas.format } },
+		})
+		local uniforms = GPUBuffer.new({ size = 32, usage = 'uniform' })
+		self.shineBindings = GPUBindGroup.new({
+			layout = pipeline:getBindGroupLayout(0),
+			ubos = { { slot = 0, buffer = uniforms } },
+		})
+		self.shineCanvas = canvas
+		self.shinePipeline = pipeline
+		self.shineUniforms = uniforms
+	end)
+	if not ok then
+		print('TarotCard3D: shine unavailable: ' .. tostring(err))
+		self.shinePipeline = nil
+	end
+end
+
+-- Returns the shine image for this frame, or nil.
+local function renderShine(self: TarotCard3D): Image?
+	local pipeline, canvas = self.shinePipeline, self.shineCanvas
+	local uniforms, bindings = self.shineUniforms, self.shineBindings
+	if self.shine <= 0 or pipeline == nil or canvas == nil or uniforms == nil or bindings == nil then
+		return nil
+	end
+	buffer.writef32(self.shineParams, 0, self.time + self.shineOffset)
+	buffer.writef32(self.shineParams, 4, self.shine)
+	buffer.writef32(self.shineParams, 8, self.width)
+	buffer.writef32(self.shineParams, 12, self.height)
+	buffer.writef32(self.shineParams, 16, math.max(0.05, self.shineWidth))
+	uniforms:write(self.shineParams)
+	local pass = canvas:beginRenderPass({
+		color = { { loadOp = 'clear', storeOp = 'store', clearColor = { 0, 0, 0, 0 } } },
+	})
+	pass:setPipeline(pipeline)
+	pass:setBindGroup(0, bindings)
+	pass:draw(3)
+	pass:finish()
+	return canvas.image
+end
+
 function init(self: TarotCard3D, context: Context): boolean
 	self.context = context
+	self.shineOffset = math.random() * 4
 	buildMesh(self)
 	buildInstances(self)
 	watchFace(self, context)
+	buildShine(self, context)
 	return true
 end
 
@@ -183,6 +251,7 @@ function update(self: TarotCard3D)
 end
 
 function advance(self: TarotCard3D, seconds: number): boolean
+	self.time += seconds
 	local ctx = self.context
 	if ctx ~= nil and self.sourceFace == nil then
 		watchFace(self, ctx)
@@ -257,7 +326,8 @@ local function drawFace(
 	z: number,
 	restZ: number,
 	mirrored: boolean,
-	shade: number
+	shade: number,
+	shineImage: Image?
 )
 	if canvas == nil then
 		return
@@ -286,6 +356,18 @@ local function drawFace(
 		'srcOver',
 		1
 	)
+
+	if shineImage ~= nil then
+		renderer:drawImageMesh(
+			shineImage,
+			self.sampler,
+			verts,
+			if mirrored then self.uvsMirrored else self.uvs,
+			self.tris,
+			'screen',
+			1
+		)
+	end
 
 	-- Dim the face as it turns edge-on. A dark overlay rather than
 	-- modulateColor: the web runtime applies color modulation to the whole
@@ -366,17 +448,19 @@ function draw(self: TarotCard3D, renderer: Renderer)
 	local facing = math.abs(b.cy * b.cx)
 	local shade = 0.55 + 0.45 * facing
 
+	local shineImage = renderShine(self)
+
 	if backVisible then
 		if self.backPending > 0 and renderCanvas(self.backCanvas, self.backInst) then
 			self.backPending -= 1
 		end
-		drawFace(self, renderer, b, self.backCanvas, hd, hd, false, shade)
+		drawFace(self, renderer, b, self.backCanvas, hd, hd, false, shade, shineImage)
 	end
 	if frontVisible then
 		if self.frontPending > 0 and renderCanvas(self.frontCanvas, self.frontInst) then
 			self.frontPending -= 1
 		end
-		drawFace(self, renderer, b, self.frontCanvas, -hd, hd, true, shade)
+		drawFace(self, renderer, b, self.frontCanvas, -hd, hd, true, shade, shineImage)
 	end
 end
 
@@ -391,8 +475,17 @@ return function(): Node<TarotCard3D>
 		rotationX = 0,
 		rotationZ = 0,
 		viewModelProperty = '',
+		shine = 0.85,
+		shineWidth = 1,
 
 		context = nil,
+		time = 0,
+		shineOffset = 0,
+		shinePipeline = nil,
+		shineCanvas = nil,
+		shineUniforms = nil,
+		shineBindings = nil,
+		shineParams = buffer.create(32),
 		backInst = nil,
 		frontInst = nil,
 		frontVm = nil,

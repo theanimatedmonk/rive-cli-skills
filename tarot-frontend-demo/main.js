@@ -2,13 +2,15 @@ const RIV_URL = "tarot-animation.riv";
 const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";
 const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
-const REVEAL_DELAY_MS = 2000;
+const REVEAL_DELAY_MS = 800;
 // From `reveal` to the card landing face-up in the .riv: Charge (1.7s of
 // comets and shaking) plus RevealBurst up to the landing (~1.05s). The
 // result copy waits for it.
 const REVEAL_ANIMATION_MS = 2800;
 const HEADING_FADE_MS = 500;
 const INTERPRETING_MS = 2000;
+// Matches the .phone.is-leaving fade in style.css.
+const LEAVE_FADE_MS = 600;
 const ORIENTATION = "Upright";
 
 const phoneEl = document.querySelector(".phone");
@@ -19,8 +21,6 @@ const introEl = document.querySelector(".intro");
 const resultEl = document.getElementById("result");
 const resultCopyEl = document.getElementById("result-copy");
 const interpretButton = document.getElementById("start-interpreting");
-const adEl = document.getElementById("ad");
-const adCloseButton = document.getElementById("ad-close");
 const readingEl = document.getElementById("reading");
 const homeButton = document.getElementById("home");
 
@@ -90,23 +90,41 @@ async function onStartInterpreting() {
   interpretButton.disabled = true;
   resultEl.classList.add("is-unfolding");
   resultCopyEl.textContent = "Your reading is unfolding..";
-  await wait(INTERPRETING_MS);
-  adEl.hidden = false;
+  // Fill the reading while the copy shows, so the card image is decoded
+  // before the screen fades in.
+  const cardReady = fillReading();
+  await Promise.all([wait(INTERPRETING_MS), cardReady]);
+  await showReading();
 }
 
-function showReading() {
-  document.getElementById("reading-card").src = persona.image;
-  document.getElementById("reading-card").alt = persona.name;
+function fillReading() {
+  const cardEl = document.getElementById("reading-card");
+  cardEl.src = persona.image;
+  cardEl.alt = persona.name;
   document.getElementById("reading-name").textContent = persona.name;
   document.getElementById("reading-orientation").textContent = `- ${ORIENTATION} -`;
   document.getElementById("reading-panel-title").textContent = ORIENTATION;
   document.getElementById("reading-description").textContent = persona.description;
+  return cardEl.decode().catch(() => {});
+}
+
+// Crossfade from the Rive reveal to the plain HTML reading: the reading
+// starts rising in halfway through the reveal fading out.
+async function showReading() {
+  phoneEl.classList.add("is-leaving");
+  await wait(LEAVE_FADE_MS / 2);
+
+  readingEl.classList.add("is-entering");
+  readingEl.hidden = false;
+  // Let the hidden state paint before transitioning in.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => readingEl.classList.remove("is-entering"));
+  });
+  await wait(LEAVE_FADE_MS / 2);
 
   // The final screen is plain HTML; stop the animation behind it.
   riveInstance.stop();
   phoneEl.classList.add("is-reading");
-  adEl.hidden = true;
-  readingEl.hidden = false;
 }
 
 const riveInstance = new rive.Rive({
@@ -141,7 +159,6 @@ const riveInstance = new rive.Rive({
 });
 
 interpretButton.addEventListener("click", onStartInterpreting);
-adCloseButton.addEventListener("click", showReading);
 homeButton.addEventListener("click", () => location.reload());
 
 window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanvas());

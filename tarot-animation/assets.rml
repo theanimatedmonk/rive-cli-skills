@@ -7,5 +7,8 @@
     <SVGAsset file="star.svg" height="35" width="35" assetId="6917758" name="star" id="0:13407"/>
     <SVGAsset file="moon.svg" height="11" width="7" assetId="6917764" name="moon" id="0:13441"/>
     <ScriptAsset file="TarotCard3D.luau" serializedImplementedMethods="771" scriptProtocolValue="1" name="TarotCard3D" id="11:1"/>
-    <ScriptAsset file="CosmicFX.luau" scriptProtocolValue="node" name="CosmicFX" id="11:7"/>
+    <ScriptAsset file="CosmicFX.luau" compilationOrder="1" serializedImplementedMethods="769" scriptProtocolValue="1" name="CosmicFX" id="11:7"/>
+    <ScriptAsset file="Nebula.luau" compilationOrder="2" serializedImplementedMethods="857" scriptProtocolValue="1" name="Nebula" id="11:8"/>
+    <ShaderAsset file="cosmic_shine.wgsl" name="cosmic_shine" id="0:14846"/>
+    <ShaderAsset file="nebula.wgsl" name="nebula" id="0:14847"/>
 </Rive>

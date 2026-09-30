@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="device">
+      <span class="device__camera" aria-hidden="true"></span>
     <main class="phone">
       <canvas id="rive-canvas" class="phone__rive"></canvas>
 
@@ -65,16 +67,6 @@
         <button type="button" class="result__cta reading__home" id="home">Home</button>
       </section>
 
-      <section class="ad" id="ad" hidden aria-label="Advertisement">
-        <div class="ad__panel">
-          <button type="button" class="ad__close" id="ad-close" aria-label="Close ad">
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3 3l10 10M13 3 3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-          <span class="ad__label">Ad</span>
-        </div>
-      </section>
 
       <nav class="nav-bar" aria-hidden="true">
         <svg width="18" height="16" viewBox="0 0 18 16"><path d="M3 1v14M9 1v14M15 1v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
@@ -82,6 +74,7 @@
         <svg width="18" height="18" viewBox="0 0 18 18"><path d="M11.5 2 5 9l6.5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </nav>
     </main>
+    </div>
 
     <script src="https://unpkg.com/@rive-app/webgl2@2.43.1"></script>
     <script src="personas.js"></script>
