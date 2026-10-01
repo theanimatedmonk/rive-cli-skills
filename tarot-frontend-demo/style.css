@@ -713,7 +713,7 @@ body {
 }
 
 .home__promo-copy {
-  margin-top: 4px;
+  margin: none;
   font-family: "Lora", Georgia, serif;
   font-size: 12px;
   line-height: auto;
@@ -721,7 +721,7 @@ body {
 }
 
 .home__promo-cta {
-  margin-top: 8px;
+  margin-top: 12px;
   padding: 4px 12px;
   border-radius: 4px;
   background: #E8C27A;
@@ -812,8 +812,9 @@ body {
   filter: drop-shadow(0 0 8px rgba(232, 194, 122, 0.3));
 }
 
-/* Default promo: the card back floats gently. Stops once a card is drawn. */
-.home__promo:not(.is-drawn) .home__promo-card {
+/* The promo card floats gently: the card back by default, and the drawn
+   card after Done. */
+.home__promo-card {
   animation: promo-card-float 3.6s ease-in-out infinite;
 }
 
