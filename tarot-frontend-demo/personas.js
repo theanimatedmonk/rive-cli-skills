@@ -1,137 +1,227 @@
 // The 22 Major Arcana. `image` is the card face: it is decoded and bound to
 // the Rive view model's `face` image, and shown on the final screen.
+// `career`, `love` and `finance` are the upright readings shown on the
+// final screen's orbit, one per planet.
 // Card art: Rider–Waite–Smith (1909), public domain, via Wikimedia Commons.
 const TAROT_PERSONAS = [
   {
     image: "assets/cards/00-fool.jpg",
     name: "The Fool",
-    description:
-      "Standing at the edge of a cliff with his eyes on the sky, the Fool is the spirit of new beginnings. He invites you to step forward with an open heart, trusting the journey before you can see where it leads. Spontaneity, curiosity and faith in the unknown are your companions now; let go of what holds you back and allow yourself to begin again.",
+    career:
+      "A fresh start is calling: a new role, a side project or a complete change of direction. Say yes before you feel fully ready. Curiosity will teach you faster than caution.",
+    love:
+      "Approach love with an open, playful heart. Single, you may meet someone unexpected; together, try something new side by side. Let go of old stories about how love should look.",
+    finance:
+      "Exciting opportunities may tempt you, so enjoy the adventure but keep a safety net. Spontaneous spending can feel freeing. Make sure you can afford the leap before you take it.",
   },
   {
     image: "assets/cards/01-magician.jpg",
     name: "The Magician",
-    description:
-      "With one hand raised to the heavens and one pointing to the earth, the Magician channels intention into action. Every tool you need is already on the table before you. This is a time of skill, focus and willpower, when ideas can be made real through concentration and confidence. Trust your abilities and act with clear purpose.",
+    career:
+      "You have every skill and tool you need to make your plans real. Pitch the idea, lead the meeting, launch the project. Focused action now turns potential into results.",
+    love:
+      "Your charm and confidence are magnetic. Say clearly what you want, because honest words create real connection. A relationship can grow quickly when both of you show up with intention.",
+    finance:
+      "Resourcefulness pays off: a smart idea or a new skill can open a fresh income stream. Plan carefully and act decisively. Money follows clear purpose.",
   },
   {
     image: "assets/cards/02-high-priestess.jpg",
     name: "The High Priestess",
-    description:
-      "Seated between the pillars of light and shadow, the High Priestess guards the knowledge that lies beneath the surface. She asks you to be still and listen to your intuition, dreams and quiet inner voice. Not every answer arrives through reason; some are felt before they are understood. Trust what you sense, and let hidden truths reveal themselves in time.",
+    career:
+      "Not everything at work is out in the open yet. Watch quietly, listen more than you speak and trust your read of people. Your intuition will guide the right decision.",
+    love:
+      "Deep feelings may stay unspoken for now. Give connections time to reveal themselves rather than forcing answers. Trust what your heart already senses.",
+    finance:
+      "Keep financial plans private and avoid rushing into deals you don't fully understand. Do your research quietly. Your gut will warn you about anything that doesn't add up.",
   },
   {
     image: "assets/cards/03-empress.jpg",
     name: "The Empress",
-    description:
-      "Surrounded by ripening wheat and flowing water, the Empress embodies abundance, nurture and creation. She reminds you to care for yourself and others with warmth, and to take pleasure in beauty, comfort and the natural world. Ideas and relationships tended with patience will flourish. Allow growth to happen at its own gentle pace.",
+    career:
+      "Creative work flourishes now. Projects you have nurtured patiently begin to grow and attract recognition. Bring warmth and care to your team and they will thrive with you.",
+    love:
+      "Love feels abundant, sensual and nurturing. Relationships deepen through comfort, affection and shared pleasures. It's a beautiful time to build a home or a family together.",
+    finance:
+      "Abundance is within reach as earlier efforts start bearing fruit. Enjoy life's comforts, and keep investing in things that grow. Patience brings a generous harvest.",
   },
   {
     image: "assets/cards/04-emperor.jpg",
     name: "The Emperor",
-    description:
-      "Upon his stone throne, the Emperor represents structure, authority and steady leadership. He encourages you to bring order to your plans, set clear boundaries and take responsibility for your path. Discipline and reliability create the foundation on which lasting success is built. Lead with fairness, and let your strength protect what you value.",
+    career:
+      "Leadership is your path now. Discipline, planning and steady effort can bring a promotion or real authority. Take charge and set the structure others will follow.",
+    love:
+      "You love in a serious, protective and sincere way. Stability and loyalty matter more than grand gestures. Traditional commitment, like marriage or shared long-term goals, feels right.",
+    finance:
+      "A great moment to make your finances stable and secure. Set a clear budget and stick to it. Rein in impulsive spending and your position will steadily strengthen.",
   },
   {
     image: "assets/cards/05-hierophant.jpg",
     name: "The Hierophant",
-    description:
-      "Symbolizing tradition, faith and learning, he protects the inheritance of wisdom and ethics. The Pope reminds people to follow rules and social values while growing through guidance, education and experience. He emphasizes seeking wisdom and support in the process of exploring spirituality or knowledge. He also encourages learning from other people's experiences and understanding the balance between inner beliefs and outer practices.",
+    career:
+      "Growth comes through learning, mentors and established paths. A course, a qualification or a trusted guide will move you forward. Respect proven methods while you build your expertise.",
+    love:
+      "Shared values and commitment are at the heart of love now. Traditional milestones like engagement or marriage may be on your mind. Seek a partner whose beliefs sit in harmony with yours.",
+    finance:
+      "Play it safe with conventional, reliable choices. Seek advice from a trusted expert before big decisions. Steady, rule-following habits protect your money best.",
   },
   {
     image: "assets/cards/06-lovers.jpg",
     name: "The Lovers",
-    description:
-      "Blessed by an angel above them, the Lovers speak of connection, harmony and meaningful choice. This card reflects relationships built on honesty and shared values, and decisions made from the heart. It asks you to align your actions with what you truly believe. When you choose with integrity, love and trust grow stronger.",
+    career:
+      "An important choice is coming, so pick the path that matches your values, not just your ambitions. Partnerships and collaboration are especially powerful now. Work you believe in brings the best results.",
+    love:
+      "Deep connection, attraction and harmony are highlighted. A relationship may reach a meaningful new level. Choose love with both your heart and your values.",
+    finance:
+      "Financial decisions work best when made together and aligned with what truly matters to you. Weigh options honestly. Avoid spending to impress, and spend on what you love.",
   },
   {
     image: "assets/cards/07-chariot.jpg",
     name: "The Chariot",
-    description:
-      "The charioteer holds two opposing sphinxes in line through willpower alone. This card celebrates determination, self-control and victory earned through focus. Challenges may pull you in different directions, but steady resolve keeps you moving forward. Set your course, hold the reins firmly, and success is within reach.",
+    career:
+      "Determination drives you forward. Focus your energy on one clear goal and push through obstacles. Victory comes from discipline, confidence and refusing to give up.",
+    love:
+      "Take the reins in matters of the heart: pursue what you want with confidence. Couples can overcome challenges by pulling in the same direction. Balance passion with self-control.",
+    finance:
+      "Steady control over your money leads to progress. Set ambitious targets and stay disciplined to reach them. A determined push now can clear debts or build real savings.",
   },
   {
     image: "assets/cards/08-strength.jpg",
     name: "Strength",
-    description:
-      "A woman gently closes the jaws of a lion, showing that true strength is quiet and kind. This card speaks of courage, patience and compassion, especially toward yourself. Difficult emotions and situations are best met with calm confidence rather than force. Your inner resilience is greater than you know.",
+    career:
+      "Quiet confidence and patience win the day. Handle difficult people or pressure with calm compassion rather than force. Your inner resilience earns lasting respect.",
+    love:
+      "Gentleness and patience strengthen your bond. Face tensions with kindness and understanding instead of pride. Love grows when you lead with an open heart.",
+    finance:
+      "Self-discipline is your greatest financial asset now. Resist temptation and stay calm through any money worries. Steady courage carries you through tight moments.",
   },
   {
     image: "assets/cards/09-hermit.jpg",
     name: "The Hermit",
-    description:
-      "Holding a lantern on a snowy peak, the Hermit seeks the light of inner wisdom. He invites you to step back from the noise of the world and reflect. Solitude now is not loneliness but a chance to understand yourself more deeply. The guidance you are looking for may be found within.",
+    career:
+      "Step back and reflect on what you truly want from your work. Solo focus, research or deep study suits you now. The answers come from within, not from the crowd.",
+    love:
+      "You may need time alone to understand your own heart. Single, use this time for self-discovery; together, give each other space. Clarity leads to deeper connection later.",
+    finance:
+      "A thoughtful, conservative approach serves you well. Review your finances in detail and cut what no longer serves you. Wisdom matters more than quick wins now.",
   },
   {
     image: "assets/cards/10-wheel-of-fortune.jpg",
     name: "Wheel of Fortune",
-    description:
-      "The great wheel turns, carrying all things through cycles of rise and fall. This card signals change, destiny and turning points. Luck may shift in your favor, and events beyond your control can open new doors. Embrace the movement of life, knowing that every phase passes and a new chapter is always beginning.",
+    career:
+      "The wheel is turning in your favor. Unexpected opportunities or changes can shift your career quickly. Stay adaptable and seize lucky breaks when they appear.",
+    love:
+      "Fate may play a hand in love, through a chance meeting or a turning point in a relationship. Embrace the changes life brings. What is meant for you will find its way.",
+    finance:
+      "Fortunes can change suddenly, often for the better. Enjoy good luck but remember cycles turn. Save some of today's gains for the seasons ahead.",
   },
   {
     image: "assets/cards/11-justice.jpg",
     name: "Justice",
-    description:
-      "With a sword in one hand and scales in the other, Justice stands for truth, fairness and accountability. She reminds you that actions carry consequences and that clarity comes from honesty. Weigh decisions carefully and act with integrity. Balance will be restored when what is right is honored.",
+    career:
+      "Fairness and integrity guide your path. Contracts, negotiations or legal matters resolve in your favor if you act honestly. Your hard work is weighed and rewarded fairly.",
+    love:
+      "Balance and honesty are essential in love now. Relationships thrive when both partners give equally. Truthful conversations restore harmony.",
+    finance:
+      "Financial matters come into balance. Settle debts, read the fine print and make decisions based on facts. Fair dealings bring fair returns.",
   },
   {
     image: "assets/cards/12-hanged-man.jpg",
     name: "The Hanged Man",
-    description:
-      "Suspended upside down yet serene, the Hanged Man sees the world from a new angle. This card asks you to pause, surrender and let go of the need to force outcomes. A period of waiting can bring unexpected insight. By releasing old perspectives, you make room for a new understanding.",
+    career:
+      "Progress may feel paused, but this pause has purpose. Look at your situation from a new angle before acting. A shift in perspective reveals a better way forward.",
+    love:
+      "Let go of control and see your relationship through fresh eyes. Patience and surrender can soften old tensions. Sometimes waiting is the most loving choice.",
+    finance:
+      "Hold off on major financial moves for now. Reassess priorities and let situations unfold. A short-term sacrifice can lead to long-term gain.",
   },
   {
     image: "assets/cards/13-death.jpg",
     name: "Death",
-    description:
-      "Rarely about an ending in the literal sense, Death marks transformation and renewal. Something in your life is completing its cycle so that something new can begin. Release what no longer serves you with grace. Change may feel uncertain, but it clears the path for growth and rebirth.",
+    career:
+      "One chapter of your career is closing so another can begin. Let go of roles or projects that no longer fit. Transformation clears the way for meaningful growth.",
+    love:
+      "Old patterns in love are ending, making room for renewal. A relationship may transform deeply or come to a natural close. Embrace change as a fresh beginning.",
+    finance:
+      "Release outdated money habits and start fresh. Endings, like closing an account or changing income, can open better paths. Transformation leads to a healthier foundation.",
   },
   {
     image: "assets/cards/14-temperance.jpg",
     name: "Temperance",
-    description:
-      "An angel pours water between two cups, blending opposites into harmony. Temperance speaks of balance, moderation and patience. It encourages you to find the middle path and combine different parts of your life with care. Healing and steady progress come from calm, measured steps.",
+    career:
+      "Balance and patience lead to steady success. Blend skills, collaborate and avoid extremes. A calm, measured approach builds lasting results.",
+    love:
+      "Harmony and compromise make love flourish. Meet your partner halfway and find a gentle rhythm together. Healing and patience bring you closer.",
+    finance:
+      "Moderation is key: balance saving and spending wisely. Avoid risky extremes and make steady, thoughtful choices. Slow, consistent progress builds security.",
   },
   {
     image: "assets/cards/15-devil.jpg",
     name: "The Devil",
-    description:
-      "The chained figures beneath the Devil could free themselves at any time. This card shines a light on habits, attachments and fears that quietly hold you back. Awareness is the first step to freedom. Look honestly at what binds you, and remember that you have the power to choose differently.",
+    career:
+      "Notice where you feel trapped, by a job, a habit or someone else's expectations. Recognising the chains is the first step to breaking free. You have more choices than you think.",
+    love:
+      "Passion runs high, but watch for jealousy, dependence or unhealthy patterns. Choose connection that frees you rather than binds you. Honest boundaries protect your heart.",
+    finance:
+      "Be wary of overspending, debt or get-rich-quick temptations. Material desires may cloud your judgment. Regain control by facing your money habits honestly.",
   },
   {
     image: "assets/cards/16-tower.jpg",
     name: "The Tower",
-    description:
-      "Struck by lightning, the Tower represents sudden change and the collapse of false foundations. Though unsettling, this upheaval clears away what was never stable. Truths come to light and illusions fall. From the rubble, you can rebuild on firmer ground with greater clarity.",
+    career:
+      "Sudden change may shake your work life. What falls apart was built on shaky ground. Rebuild with honesty and stronger foundations.",
+    love:
+      "Revelations may disrupt a relationship or reveal hidden truths. Though unsettling, this upheaval clears the way for authenticity. Build love on honesty from here on.",
+    finance:
+      "Prepare for unexpected expenses or shifts in income. Keep an emergency fund close. Recovery comes from facing reality and rebuilding wisely.",
   },
   {
     image: "assets/cards/17-star.jpg",
     name: "The Star",
-    description:
-      "Beneath a sky full of light, the Star pours water onto land and sea, offering hope and renewal. After difficulty comes healing and a sense of peace. This card encourages you to have faith in the future and to trust your dreams. Stay open, and let inspiration guide you forward.",
+    career:
+      "Hope and inspiration return to your work. Pursue goals that feel meaningful and let your talents shine. Recognition and renewed purpose are on the horizon.",
+    love:
+      "Love feels hopeful, healing and sincere. Old wounds begin to mend and trust grows. Open your heart; the universe is supporting you.",
+    finance:
+      "After difficult times, your finances begin to recover. Stay optimistic and keep making steady, positive choices. Generosity and gratitude attract more abundance.",
   },
   {
     image: "assets/cards/18-moon.jpg",
     name: "The Moon",
-    description:
-      "The Moon lights a winding path between two towers, where not everything is as it seems. This card speaks of intuition, dreams and the unknown. Feelings may be heightened and situations unclear. Move carefully, trust your instincts, and allow the truth to emerge as the night gives way to dawn.",
+    career:
+      "Things at work may not be what they seem. Read between the lines and avoid hasty decisions. Trust your instincts while uncertainty settles.",
+    love:
+      "Emotions run deep but may feel confusing. Avoid assumptions and talk openly about fears or doubts. Clarity comes once the fog lifts.",
+    finance:
+      "Be cautious with unclear deals, hidden costs or misleading offers. Double-check details before committing. Patience protects you from costly mistakes.",
   },
   {
     image: "assets/cards/19-sun.jpg",
     name: "The Sun",
-    description:
-      "A joyful child rides beneath a radiant sun, embodying warmth, success and vitality. This is one of the most positive cards in the deck, bringing clarity, confidence and happiness. Share your light freely and celebrate what is going well. Brighter days are here.",
+    career:
+      "Success and recognition shine on your work. Projects flourish and your confidence inspires others. Celebrate the achievements you have earned.",
+    love:
+      "Joy, warmth and happiness fill your love life. Relationships feel light, honest and full of fun. Share your happiness openly.",
+    finance:
+      "Prosperity and stability brighten your finances. Investments and efforts pay off generously. Enjoy the rewards and share your good fortune.",
   },
   {
     image: "assets/cards/20-judgement.jpg",
     name: "Judgement",
-    description:
-      "At the angel's call, figures rise to answer a higher purpose. Judgement represents awakening, reflection and a fresh start. It invites you to review the past honestly, forgive yourself and others, and listen to your true calling. A meaningful new chapter is ready to begin.",
+    career:
+      "A calling or important evaluation arrives. Reflect on your journey and answer the opportunity with confidence. This is a moment of awakening and new direction.",
+    love:
+      "Look honestly at your relationship and what it truly needs. Forgiveness and renewal can bring you closer. A meaningful second chance may appear.",
+    finance:
+      "Review past financial decisions and learn from them. A clear assessment leads to wiser choices. Old matters may finally resolve.",
   },
   {
     image: "assets/cards/21-world.jpg",
     name: "The World",
-    description:
-      "Encircled by a victory wreath, the dancer of the World marks completion and fulfillment. A journey has reached its natural end, and you can take pride in how far you have come. This card celebrates wholeness, achievement and harmony. Enjoy the moment before the next adventure begins.",
+    career:
+      "A major goal is achieved and a cycle completes. Recognition, travel or expansion may follow. Celebrate your success before reaching for the next horizon.",
+    love:
+      "Love feels whole, fulfilled and complete. A relationship may reach a significant milestone. Enjoy the deep harmony you have built together.",
+    finance:
+      "Financial goals are reached and stability feels secure. Celebrate your accomplishments wisely. A new chapter of opportunity begins.",
   },
 ];

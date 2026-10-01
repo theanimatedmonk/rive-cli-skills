@@ -22,7 +22,6 @@ const resultEl = document.getElementById("result");
 const resultCopyEl = document.getElementById("result-copy");
 const interpretButton = document.getElementById("start-interpreting");
 const readingEl = document.getElementById("reading");
-const homeButton = document.getElementById("home");
 
 let vmi = null;
 let picked = false;
@@ -97,14 +96,52 @@ async function onStartInterpreting() {
   await showReading();
 }
 
+const TOPICS = {
+  career: { title: "Career", rgb: "232, 194, 122", color: "#E8C27A" },
+  love: { title: "Love", rgb: "239, 163, 174", color: "#EFA3AE" },
+  finance: { title: "Finance", rgb: "142, 209, 182", color: "#8ED1B6" },
+};
+const ROMAN = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+  "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"];
+const planetEls = document.querySelectorAll(".planet");
+const panelEl = document.getElementById("reading-panel");
+
+const toastEl = document.getElementById("reading-toast");
+let toastTimer = 0;
+
+function showShareToast() {
+  toastEl.textContent = "Share sheet opens here";
+  toastEl.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastEl.hidden = true;
+  }, 1800);
+}
+
+// Show one topic of the card's reading in the panel and light its planet.
+function selectTopic(topic, animate = true) {
+  const t = TOPICS[topic];
+  planetEls.forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.topic === topic)));
+  panelEl.style.setProperty("--c", t.color);
+  panelEl.style.setProperty("--rgb", t.rgb);
+  document.getElementById("reading-panel-title").textContent = t.title;
+  document.getElementById("reading-description").textContent = persona[topic];
+  panelEl.scrollTop = 0;
+  if (animate) {
+    panelEl.classList.remove("is-switching");
+    void panelEl.offsetWidth; // restart the fade
+    panelEl.classList.add("is-switching");
+  }
+}
+
 function fillReading() {
   const cardEl = document.getElementById("reading-card");
   cardEl.src = persona.image;
   cardEl.alt = persona.name;
+  const number = ROMAN[TAROT_PERSONAS.indexOf(persona)];
+  document.getElementById("reading-eyebrow").textContent = `Today's card · ${number}`;
   document.getElementById("reading-name").textContent = persona.name;
-  document.getElementById("reading-orientation").textContent = `- ${ORIENTATION} -`;
-  document.getElementById("reading-panel-title").textContent = ORIENTATION;
-  document.getElementById("reading-description").textContent = persona.description;
+  selectTopic("career", false);
   return cardEl.decode().catch(() => {});
 }
 
@@ -127,18 +164,72 @@ async function showReading() {
   phoneEl.classList.add("is-reading");
 }
 
+let riveLoaded = false;
+// "fresh": the home screen opens the card picker. "drawn": today's card is
+// drawn, so the home screen's promo opens the reading again. Nothing is
+// stored, so a refresh starts fresh.
+let homeMode = "fresh";
+const homeEl = document.getElementById("home-screen");
+const HOME_FADE_MS = 400;
+
+function hideHome() {
+  homeEl.classList.add("is-leaving");
+  setTimeout(() => {
+    homeEl.hidden = true;
+  }, HOME_FADE_MS);
+}
+
+homeEl.addEventListener("click", () => {
+  if (homeEl.classList.contains("is-leaving")) {
+    return;
+  }
+  if (homeMode === "fresh") {
+    // Home -> card picker: start the deal-out.
+    homeMode = "picking";
+    if (riveLoaded) {
+      riveInstance.play(STATE_MACHINE);
+    }
+    hideHome();
+  } else if (homeMode === "drawn") {
+    // Home -> the reading, which is still behind the home screen.
+    hideHome();
+  }
+});
+
+// Final screen -> home, with the promo showing the card that was drawn.
+function returnHome() {
+  const promoCard = document.getElementById("promo-card");
+  promoCard.src = persona.image;
+  promoCard.alt = persona.name;
+  document.getElementById("promo-copy").textContent = persona.name;
+  document.getElementById("promo-cta").textContent = "Read More";
+  document.getElementById("home-promo").classList.add("is-drawn");
+  homeMode = "drawn";
+
+  homeEl.classList.add("is-leaving");
+  homeEl.hidden = false;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => homeEl.classList.remove("is-leaving"));
+  });
+}
+
 const riveInstance = new rive.Rive({
   src: RIV_URL,
   canvas,
   artboard: ARTBOARD,
   stateMachine: STATE_MACHINE,
-  autoplay: true,
+  // Waits behind the home screen; starts when it is tapped.
+  autoplay: false,
   autoBind: true,
   enableGPUCanvas: true,
   useOffscreenRenderer: false,
   layout: new rive.Layout({ fit: rive.Fit.Cover, alignment: rive.Alignment.Center }),
   onLoad: () => {
     riveInstance.resizeDrawingSurfaceToCanvas();
+    riveLoaded = true;
+    if (homeMode !== "fresh") {
+      riveInstance.play(STATE_MACHINE);
+    }
     vmi = riveInstance.viewModelInstance;
     if (!vmi) {
       console.warn("No view model instance is bound to DailyDivination");
@@ -159,6 +250,11 @@ const riveInstance = new rive.Rive({
 });
 
 interpretButton.addEventListener("click", onStartInterpreting);
-homeButton.addEventListener("click", () => location.reload());
+// Done and back return to the home screen, where Read More reopens this reading.
+document.getElementById("done").addEventListener("click", returnHome);
+document.getElementById("reading-back").addEventListener("click", returnHome);
+// Share is a placeholder for now.
+document.getElementById("share").addEventListener("click", showShareToast);
+planetEls.forEach((el) => el.addEventListener("click", () => selectTopic(el.dataset.topic)));
 
 window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanvas());

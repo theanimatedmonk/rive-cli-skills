@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -48,23 +48,54 @@
 
       <section class="result is-hidden" id="result" aria-live="polite">
         <p class="result__copy" id="result-copy">Click the button below to view your divination results today</p>
-        <button type="button" class="result__cta" id="start-interpreting">Start Interpreting</button>
+        <button type="button" class="result__cta" id="start-interpreting">See my Card’s Message</button>
       </section>
 
-      <!-- Final reading: plain HTML, no Rive. -->
+      <!-- Final reading: plain HTML, no Rive. The orbit: tap a planet to
+           read that part of the card. -->
       <section class="reading" id="reading" hidden>
-        <header class="reading__header">
-          <img class="reading__card" id="reading-card" alt="" />
-          <div class="reading__heading">
-            <h1 class="reading__name" id="reading-name"></h1>
-            <p class="reading__orientation" id="reading-orientation"></p>
-          </div>
+        <header class="reading__top">
+          <button type="button" class="reading__back" id="reading-back" aria-label="Back">
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          </button>
+          <p class="reading__eyebrow" id="reading-eyebrow"></p>
         </header>
-        <article class="reading__panel">
+        <div class="orbit">
+          <div class="orbit__ring" aria-hidden="true"></div>
+          <div class="orbit__halo" aria-hidden="true"></div>
+          <img class="orbit__card" id="reading-card" alt="" />
+          <p class="orbit__name" id="reading-name"></p>
+          <button type="button" class="planet planet--career" data-topic="career" aria-pressed="true">
+            <span class="planet__dot">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg>
+            </span>
+            <span class="planet__label">Career</span>
+          </button>
+          <button type="button" class="planet planet--love" data-topic="love" aria-pressed="false">
+            <span class="planet__dot">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
+            </span>
+            <span class="planet__label">Love</span>
+          </button>
+          <button type="button" class="planet planet--finance" data-topic="finance" aria-pressed="false">
+            <span class="planet__dot">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M14.5 9.5c-.5-.9-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.6-2.5-1.5M12 6.5v11" /></svg>
+            </span>
+            <span class="planet__label">Finance</span>
+          </button>
+        </div>
+        <article class="reading__panel" id="reading-panel" aria-live="polite">
           <h2 class="reading__panel-title" id="reading-panel-title"></h2>
           <p class="reading__description" id="reading-description"></p>
         </article>
-        <button type="button" class="result__cta reading__home" id="home">Home</button>
+        <div class="reading__bar">
+          <button type="button" class="reading__share" id="share">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
+            Share
+          </button>
+          <button type="button" class="reading__done" id="done">Done</button>
+        </div>
+        <p class="reading__toast" id="reading-toast" role="status" hidden></p>
       </section>
 
 
@@ -73,6 +104,22 @@
         <svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" rx="5" fill="none" stroke="currentColor" stroke-width="2" /></svg>
         <svg width="18" height="18" viewBox="0 0 18 18"><path d="M11.5 2 5 9l6.5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </nav>
+
+      <!-- Home: a static screenshot for now. Tapping anywhere opens the
+           card picker. -->
+      <button type="button" class="home" id="home-screen" aria-label="Open Daily Divination">
+        <img src="assets/home.png" alt="" />
+        <span class="home__promo" id="home-promo">
+          <span class="promo-star" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 0l2.4 9.6L24 12l-9.6 2.4L12 24l-2.4-9.6L0 12l9.6-2.4z" /></svg></span>
+          <span class="promo-star promo-star--second" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 0l2.4 9.6L24 12l-9.6 2.4L12 24l-2.4-9.6L0 12l9.6-2.4z" /></svg></span>
+          <img class="home__promo-card" id="promo-card" src="assets/promo-card.png" alt="" />
+          <span class="home__promo-body">
+            <span class="home__promo-title">Daily Divination</span>
+            <span class="home__promo-copy" id="promo-copy">What does today have in store for you? Pick a card to find out.</span>
+            <span class="home__promo-cta" id="promo-cta">Draw Card</span>
+          </span>
+        </span>
+      </button>
     </main>
     </div>
 

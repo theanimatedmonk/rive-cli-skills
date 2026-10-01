@@ -228,9 +228,9 @@ body {
   top: 124px;
   height: 46px;
   border: 0;
-  border-radius: 8px;
-  background: #7b5cff;
-  color: #ffffff;
+  border-radius: 12px;
+  background: #E8C27A;
+  color: #14122B;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -238,7 +238,7 @@ body {
 }
 
 .result__cta:hover {
-  background: #8a6dff;
+  background: #ffffff;
 }
 
 .nav-bar {
@@ -308,10 +308,11 @@ body {
   opacity: 0;
 }
 
-/* The reading rises in, header first, then the panel and the button. */
-.reading__header,
+/* The reading rises in: the orbit first, then the panel and the button. */
+.reading__top,
+.orbit,
 .reading__panel,
-.reading__home {
+.reading__bar {
   transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
@@ -319,76 +320,515 @@ body {
   transition-delay: 0.15s;
 }
 
-.reading__home {
+.reading__bar {
   transition-delay: 0.3s;
 }
 
-.reading.is-entering .reading__header,
+.reading.is-entering .reading__top,
+.reading.is-entering .orbit,
 .reading.is-entering .reading__panel,
-.reading.is-entering .reading__home {
+.reading.is-entering .reading__bar {
   opacity: 0;
   transform: translateY(14px);
 }
 
-.reading__header {
-  position: absolute;
-  top: 99px;
-  left: 37px;
-  right: 16px;
-  display: flex;
-  align-items: center;
-  gap: 26px;
+/* Orbit reading: the card at the centre, Career, Love and Finance as
+   planets around it, and the chosen planet's reading in the panel below. */
+/* The reading has its own header in place of the app bar: back on the
+   left, the card's eyebrow on the right. */
+.phone.is-reading .app-bar {
+  display: none;
 }
 
-.reading__card {
-  width: 63px;
-  height: 110px;
+.reading__top {
+  position: absolute;
+  top: 32px;
+  left: 12px;
+  right: 12px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reading__back {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #d9d4ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.reading__back svg,
+.reading__share svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reading__eyebrow {
+  margin: 0;
+  padding-right: 12px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a39fc0;
+}
+
+.orbit {
+  position: absolute;
+  top: 84px;
+  left: 24px;
+  width: 312px;
+  height: 300px;
+}
+
+.orbit__ring {
+  position: absolute;
+  left: 41px;
+  top: 35px;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  border: 1px dashed #3a3566;
+  animation: orbit-spin 90s linear infinite;
+}
+
+.orbit__halo {
+  position: absolute;
+  left: 86px;
+  top: 80px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px solid #262248;
+  background: rgba(232, 194, 122, 0.05);
+}
+
+.orbit__card {
+  position: absolute;
+  left: 124px;
+  top: 100px;
+  width: 64px;
+  height: 99px;
   border-radius: 4px;
+  object-fit: cover;
   box-shadow: 0 0 14px rgba(232, 197, 90, 0.35);
 }
 
-.reading__name {
+.orbit__name {
+  position: absolute;
+  left: 66px;
+  top: 210px;
+  width: 180px;
   margin: 0;
-  font-size: 26px;
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 34px;
+  line-height: 1.1;
+  color: #f3eedd;
 }
 
-.reading__orientation {
-  margin: 6px 0 0;
-  font-size: 22px;
-  line-height: 30px;
+.planet {
+  --c: #e8c27a;
+  --rgb: 232, 194, 122;
+  position: absolute;
+  width: 88px;
+  height: 92px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.planet--career {
+  left: 112px;
+  top: 5px;
+}
+
+.planet--love {
+  --c: #efa3ae;
+  --rgb: 239, 163, 174;
+  left: 12px;
+  top: 178px;
+}
+
+.planet--finance {
+  --c: #8ed1b6;
+  --rgb: 142, 209, 182;
+  left: 212px;
+  top: 178px;
+}
+
+.planet__dot {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 27, 58, 0.9);
+  color: var(--c);
+  border: 1px solid rgba(var(--rgb), 0.6);
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+}
+
+.planet__dot svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.planet[aria-pressed="true"] .planet__dot {
+  background: var(--c);
+  color: #14122b;
+  box-shadow: 0 0 0 6px rgba(var(--rgb), 0.18), 0 0 28px rgba(var(--rgb), 0.55);
+}
+
+.planet__label {
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c);
+}
+
+.planet:focus-visible {
+  outline: 2px solid #f3eedd;
+  outline-offset: 2px;
+  border-radius: 12px;
 }
 
 .reading__panel {
+  --c: #e8c27a;
+  --rgb: 232, 194, 122;
   position: absolute;
-  top: 248px;
+  top: 398px;
   left: 24px;
   right: 24px;
-  max-height: 370px;
+  bottom: 126px;
   overflow-y: auto;
-  padding: 18px 16px 20px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(30, 27, 56, 0.82);
+  padding: 20px 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(var(--rgb), 0.4);
+  background: rgba(30, 27, 58, 0.8);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  scrollbar-width: thin;
+  scrollbar-color: #3a3566 transparent;
 }
 
 .reading__panel-title {
   margin: 0 0 10px;
-  font-size: 21px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 24px;
   font-weight: 600;
-  line-height: 28px;
+  line-height: 1.1;
+  color: var(--c);
 }
 
 .reading__description {
   margin: 0;
-  font-size: 15px;
-  line-height: 21px;
-  color: rgba(242, 236, 255, 0.8);
+  font-family: "DM Sans", sans-serif;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #d9d4ec;
 }
 
-.reading__home {
+.reading__panel.is-switching .reading__panel-title,
+.reading__panel.is-switching .reading__description {
+  animation: reading-fade 0.3s ease;
+}
+
+@keyframes reading-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit__ring,
+  .reading__panel.is-switching .reading__panel-title,
+  .reading__panel.is-switching .reading__description {
+    animation: none;
+  }
+}
+
+/* Share and Done, as in the orbit design. */
+.reading__bar {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 62px;
+  display: flex;
+  gap: 12px;
+}
+
+.reading__share,
+.reading__done {
+  flex: 1;
+  height: 52px;
+  border-radius: 14px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reading__share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(243, 238, 221, 0.28);
+  background: rgba(30, 27, 58, 0.8);
+  color: #f3eedd;
+}
+
+.reading__done {
+  border: 0;
+  background: #e8c27a;
+  color: #14122b;
+}
+
+.reading__back:focus-visible,
+.reading__share:focus-visible,
+.reading__done:focus-visible {
+  outline: 2px solid #f3eedd;
+  outline-offset: 2px;
+}
+
+.reading__toast {
+  position: absolute;
+  left: 50%;
+  bottom: 130px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #f3eedd;
+  color: #14122b;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: reading-fade 0.25s ease;
+}
+
+/* Home screen: covers the whole phone, bars included, until tapped. */
+.home {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 0;
+  border: 0;
+  background: #0a0811;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+}
+
+.home > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Promo slot in the empty space above the two cards on the home image. */
+.home__promo {
+  position: absolute;
+  top: 98px;
   left: 16px;
   right: 16px;
-  top: 644px;
+  height: 136px;
+  border-radius: 20px;
+  background: #000 url("assets/promo-bg.png") center / cover no-repeat;
+  /* Gold stroke with a soft glow: gold up-left, violet down-right. */
+  border: 1px solid rgba(232, 194, 122, 0.75);
+  box-shadow:
+    -6px -6px 22px rgba(232, 194, 122, 0.35),
+    6px 6px 22px rgba(123, 92, 255, 0.45);
+}
+
+.home__promo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 0 8px;
+  text-align: left;
+}
+
+.home__promo-card {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+}
+
+.home__promo-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.home__promo-title {
+  font-family: "Lora", Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 26px;
+  color: #ffffff;
+}
+
+.home__promo-copy {
+  margin-top: 4px;
+  font-family: "Lora", Georgia, serif;
+  font-size: 12px;
+  line-height: auto;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.home__promo-cta {
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: #E8C27A;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #14122B;
+}
+
+/* Two small stars travelling along the promo's gold border, half a lap
+   apart. The path traces the border's centre line (box 328x136, radius 20). */
+.promo-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  offset-path: path("M 19 -0.5 H 307 A 19.5 19.5 0 0 1 326.5 19 V 115 A 19.5 19.5 0 0 1 307 134.5 H 19 A 19.5 19.5 0 0 1 -0.5 115 V 19 A 19.5 19.5 0 0 1 19 -0.5 Z");
+  offset-rotate: 0deg;
+  animation: promo-star-travel 9s linear infinite;
+  pointer-events: none;
+}
+
+.promo-star--second {
+  animation-delay: -4.5s;
+}
+
+.promo-star svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: #f7dd9c;
+  filter: drop-shadow(0 0 3px rgba(247, 221, 156, 0.95)) drop-shadow(0 0 7px rgba(232, 194, 122, 0.6));
+  animation: promo-star-twinkle 1.6s ease-in-out infinite alternate;
+}
+
+.promo-star--second svg {
+  animation-delay: -0.8s;
+}
+
+@keyframes promo-star-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes promo-star-twinkle {
+  from {
+    transform: scale(0.75) rotate(0deg);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(1.1) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-star,
+  .promo-star svg {
+    animation: none;
+  }
+
+  .promo-star--second {
+    offset-distance: 50%;
+  }
+}
+
+/* After a card is drawn: the promo shows that card, without the stroke,
+   glow or travelling stars. */
+.home__promo.is-drawn {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.home__promo.is-drawn .promo-star {
+  display: none;
+}
+
+.home__promo.is-drawn .home__promo-card {
+  object-fit: contain;
+  height: 100px;
+  border-radius: 4px;
+  filter: drop-shadow(0 0 8px rgba(232, 194, 122, 0.3));
+}
+
+/* Default promo: the card back floats gently. Stops once a card is drawn. */
+.home__promo:not(.is-drawn) .home__promo-card {
+  animation: promo-card-float 3.6s ease-in-out infinite;
+}
+
+@keyframes promo-card-float {
+  0%,
+  100% {
+    transform: translateY(3px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home__promo-card {
+    animation: none !important;
+  }
 }
