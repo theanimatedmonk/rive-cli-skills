@@ -258,3 +258,22 @@ document.getElementById("share").addEventListener("click", showShareToast);
 planetEls.forEach((el) => el.addEventListener("click", () => selectTopic(el.dataset.topic)));
 
 window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanvas());
+
+// Device frame: Android or iPhone, from ?frame=, else the last choice.
+(() => {
+  const device = document.getElementById("device");
+  const buttons = document.querySelectorAll(".frame-switch button");
+  const setFrame = (frame) => {
+    device.classList.toggle("is-iphone", frame === "iphone");
+    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.frame === frame)));
+    try {
+      localStorage.setItem("frame", frame);
+    } catch {}
+  };
+  let saved = null;
+  try {
+    saved = localStorage.getItem("frame");
+  } catch {}
+  setFrame(new URLSearchParams(location.search).get("frame") || saved || "android");
+  buttons.forEach((b) => b.addEventListener("click", () => setFrame(b.dataset.frame)));
+})();
