@@ -13,7 +13,7 @@ const GESTURE_COOLDOWN_MS = 2200;
 // Palm centre: the wrist and the bases of the index, middle and pinky
 // fingers, averaged. Steadier than a fingertip.
 const PALM = [0, 5, 9, 17];
-const PALM_SMOOTHING = 0.35; // 0 = raw, closer to 1 = smoother but laggier
+const PALM_SMOOTHING = 0.7; // 0 = raw, closer to 1 = smoother but laggier
 
 /** MediaPipe category → { trigger, allowedPhases } */
 const RULES = {

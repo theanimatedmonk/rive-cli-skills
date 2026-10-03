@@ -33,8 +33,9 @@ const PHASES = {
 
 function syncButtons() {
   // Before the rings are awakened, the first button awakens them.
-  buttons.summon.textContent = phase === "rest" || phase === "awakening" ? "Awaken" : "Summon";
-  buttons.summon.disabled = phase !== "orbit" && phase !== "rest";
+  // Summoning is strictly the pray gesture; the button only awakens.
+  buttons.summon.textContent = phase === "rest" || phase === "awakening" ? "Awaken" : "Pray to summon";
+  buttons.summon.disabled = phase !== "rest";
   buttons.unleash.disabled = phase !== "summoned";
   buttons.recall.disabled = phase !== "summoned";
 }
@@ -107,16 +108,17 @@ const riveInstance = new rive.Rive({
   onLoadError: (error) => console.error("Failed to load ten-rings.riv", error),
 });
 
-buttons.summon.addEventListener("click", () => fire(phase === "rest" ? "awaken" : "summon"));
+buttons.summon.addEventListener("click", () => {
+  if (phase === "rest") fire("awaken");
+});
 buttons.unleash.addEventListener("click", () => fire("unleash"));
 buttons.recall.addEventListener("click", () => fire("recall"));
 
-// Space: awaken, summon, then unleash. Esc: recall.
+// Space: awaken, then unleash (summoning is by the pray gesture only). Esc: recall.
 window.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
     event.preventDefault();
     if (phase === "rest") fire("awaken");
-    else if (phase === "orbit") fire("summon");
     else if (phase === "summoned") fire("unleash");
   } else if (event.code === "Escape" && phase === "summoned") {
     fire("recall");

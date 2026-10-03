@@ -98,16 +98,6 @@
                             <TransitionValueTriggerComparator id="0:67"/>
                         </TransitionViewModelCondition>
                     </StateTransition>
-                    <StateTransition stateToId="8:12" id="8:31">
-                        <TransitionViewModelCondition id="0:68">
-                            <TransitionPropertyViewModelComparator id="0:69">
-                                <BindablePropertyTrigger id="0:70">
-                                    <DataBindContext sourcePathIds="10:1-10:5" propertyKey="686" id="0:71"/>
-                                </BindablePropertyTrigger>
-                            </TransitionPropertyViewModelComparator>
-                            <TransitionValueTriggerComparator id="0:72"/>
-                        </TransitionViewModelCondition>
-                    </StateTransition>
                 </AnimationState>
                 <AnimationState animationId="7:3" x="240" y="80" id="8:12"> <!-- SummonIn -->
                     <StateTransition stateToId="8:13" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:73"/>

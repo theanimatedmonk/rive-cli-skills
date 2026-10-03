@@ -83,6 +83,9 @@ export type TenRings = {
 	leaderY: number,
 	trailX: { number }, -- the path the head has drawn, oldest first
 	trailY: { number },
+	viewProj: Mat4?, -- last frame's projection, for drawing the trail cloud
+	trailFollow: number, -- how visible the follow is this frame (for the cloud)
+	mistPaint: Paint,
 
 	shader: Shader?,
 	pipeline: GPUPipeline?,
@@ -338,8 +341,11 @@ local TRAIL_STEP = 0.04 -- world units between recorded path points
 local TRAIL_MAX = 400
 local CHAIN_LEAD = 0.38 -- radius of the ring at the cursor
 local CHAIN_TAIL = 0.18 -- radius of the last ring
-local LEAD_EASE = 5 -- how quickly the chain's head catches the cursor (per second)
-local CHAIN_GAP = 1.0 -- spacing, in ring radii
+local LEAD_EASE = 5 -- how quickly the chain's head catches the target (per second)
+-- How far the chain reaches toward the target: 1 = all the way; less keeps
+-- the rings nearer the halo's centre so following feels gentler.
+local FOLLOW_REACH = 1
+local CHAIN_GAP = 1.7 -- spacing, in ring radii (gaps between the rings)
 
 local function mixPose(a: Pose, b: Pose, t: number): Pose
 	return {
@@ -682,6 +688,8 @@ local function render(self: TenRings): Image?
 	local dive = clamp(self.dive, 0, 1)
 	local follow = self.follow * (1 - formation) * (1 - clamp(launch, 0, 1)) * clamp(intro, 0, 1) * (1 - rest) * (1 - dive) * (1 - clamp(self.flight, 0, 1))
 	local chain = if follow > 0.001 then chainPoses(self) else nil
+	self.trailFollow = follow
+	self.viewProj = viewProj
 
 	for i, ring in self.rings do
 		local o = orbitPose(i, t, self.turn)
@@ -887,6 +895,113 @@ local function drawAura(self: TenRings, renderer: Renderer, front: boolean)
 	end
 end
 
+-- Trailing mist: while the rings follow the cursor or a hand, a fine
+-- particle haze in the energy colour streams along the path behind them:
+-- many tiny specks scattered around the trail, drifting and twinkling,
+-- spreading wider and fading toward the tail, over a barely-there glow.
+-- Specks are batched into a few paths by brightness, so it stays cheap.
+local MIST_SPACING = 0.12 -- world units between trail samples
+local MIST_LENGTH = 10 -- how far back along the path the mist reaches
+local MIST_SPECKS = 12 -- specks per sample
+local MIST_ALPHA = 0.5 -- brightest speck opacity
+local MIST_HAZE = 0.05 -- opacity of the faint glow under the specks
+local MIST_BANDS = 4
+
+local function hash(n: number): number
+	local x = math.sin(n * 127.1) * 43758.5453
+	return x - math.floor(x)
+end
+
+local function addDot(path: Path, cx: number, cy: number, r: number)
+	-- A small diamond-ish circle: four curves are overkill at 1-3 px.
+	path:moveTo(Vector.xy(cx + r, cy))
+	path:lineTo(Vector.xy(cx, cy + r))
+	path:lineTo(Vector.xy(cx - r, cy))
+	path:lineTo(Vector.xy(cx, cy - r))
+	path:close()
+end
+
+local function drawTrailMist(self: TenRings, renderer: Renderer)
+	local follow = self.trailFollow
+	local vp = self.viewProj
+	local xs, ys = self.trailX, self.trailY
+	local n = #xs
+	if follow <= 0.01 or vp == nil or n < 2 then
+		return
+	end
+	local r, g, b = Color.red(self.energyColor) :: number, Color.green(self.energyColor) :: number, Color.blue(self.energyColor) :: number
+	local hw, hh = self.width / 2, self.height / 2
+	local pxPerUnit = hh / (CAMERA_Z * math.tan(FOV / 2))
+	local t = self.time
+	local paint = self.mistPaint
+	paint.gradient = nil
+
+	local bands: { Path } = {}
+	for band = 1, MIST_BANDS do
+		bands[band] = Path.new()
+	end
+	local haze = Path.new()
+	local hazeStarted = false
+
+	local walked, nextAt, k = 0, 0, 0
+	for idx = n, 2, -1 do
+		local ax, ay = xs[idx], ys[idx]
+		local bx, by = xs[idx - 1], ys[idx - 1]
+		local seg = math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
+		while seg > 0 and nextAt <= walked + seg and nextAt <= MIST_LENGTH do
+			local f = (nextAt - walked) / seg
+			local wx, wy = mix(ax, bx, f), mix(ay, by, f)
+			local along = nextAt / MIST_LENGTH -- 0 at head, 1 at tail
+			local fade = (1 - along) ^ 0.8
+			k += 1
+			local q = vp:transformPoint(wx, wy, 0)
+			local cx, cy = q.x * hw, -q.y * hh
+			-- The faint glow follows the path as one soft stroke.
+			if hazeStarted then
+				haze:lineTo(Vector.xy(cx, cy))
+			else
+				haze:moveTo(Vector.xy(cx, cy))
+				hazeStarted = true
+			end
+			-- Scatter widens toward the tail.
+			local spread = pxPerUnit * mix(0.35, 0.9, along)
+			for j = 1, MIST_SPECKS do
+				local seed = k * 13.7 + j * 3.1
+				local ang = hash(seed) * math.pi * 2 + t * (0.3 + hash(seed + 1) * 0.5)
+				local rad = spread * math.sqrt(hash(seed + 2))
+				-- Drift: slow upward rise and a little swirl.
+				local px = cx + math.cos(ang) * rad
+				local py = cy + math.sin(ang) * rad - (t * 12 + hash(seed + 3) * 40) % 40 * along
+				local twinkle = 0.45 + 0.55 * math.sin(t * (2 + hash(seed + 4) * 3) + seed)
+				local level = fade * twinkle * (0.4 + 0.6 * hash(seed + 5))
+				local band = math.clamp(math.floor(level * MIST_BANDS) + 1, 1, MIST_BANDS)
+				if level > 0.03 then
+					addDot(bands[band], px, py, 1.1 + 2 * hash(seed + 6))
+				end
+			end
+			nextAt += MIST_SPACING
+		end
+		walked += seg
+		if walked > MIST_LENGTH then
+			break
+		end
+	end
+
+	if hazeStarted then
+		local stroke = self.auraPaint
+		stroke.blendMode = 'srcOver'
+		stroke.thickness = pxPerUnit * 0.9
+		stroke.feather = pxPerUnit * 0.8
+		stroke.color = Color.rgba(r, g, b, math.floor(MIST_HAZE * follow * 255))
+		renderer:drawPath(haze, stroke)
+	end
+	for band = 1, MIST_BANDS do
+		local a = MIST_ALPHA * follow * (band / MIST_BANDS)
+		paint.color = Color.rgba(r, g, b, math.floor(a * 255))
+		renderer:drawPath(bands[band], paint)
+	end
+end
+
 local function drawGlow(self: TenRings, renderer: Renderer)
 	-- Only once energy builds: the resting halo stays dark.
 	local power = clamp((self.power - 0.25) / 0.75, 0, 1.5)
@@ -1000,15 +1115,17 @@ function advance(self: TenRings, seconds: number): boolean
 	local active = (self.time - self.lastMove) < FOLLOW_IDLE
 	if active and self.follow < 0.02 then
 		-- Starting fresh: the chain grows out of the cursor.
-		self.leaderX, self.leaderY = self.cursorX, self.cursorY
-		self.trailX, self.trailY = { self.cursorX }, { self.cursorY }
+		self.leaderX, self.leaderY = self.cursorX * FOLLOW_REACH, CIRCLE_Y + (self.cursorY - CIRCLE_Y) * FOLLOW_REACH
+		self.trailX, self.trailY = { self.leaderX }, { self.leaderY }
 	end
 	local rateIn = if active then 1.8 else 1.2
 	self.follow += ((if active then 1 else 0) - self.follow) * (1 - math.exp(-rateIn * seconds))
 	if self.follow > 0.001 then
 		local k = 1 - math.exp(-LEAD_EASE * seconds)
-		self.leaderX += (self.cursorX - self.leaderX) * k
-		self.leaderY += (self.cursorY - self.leaderY) * k
+		local goalX = self.cursorX * FOLLOW_REACH
+		local goalY = CIRCLE_Y + (self.cursorY - CIRCLE_Y) * FOLLOW_REACH
+		self.leaderX += (goalX - self.leaderX) * k
+		self.leaderY += (goalY - self.leaderY) * k
 		local n = #self.trailX
 		local lx, ly = self.trailX[n], self.trailY[n]
 		if lx == nil or (self.leaderX - lx) ^ 2 + (self.leaderY - ly) ^ 2 > TRAIL_STEP * TRAIL_STEP then
@@ -1059,6 +1176,7 @@ function draw(self: TenRings, renderer: Renderer)
 	if image == nil then
 		return
 	end
+	drawTrailMist(self, renderer)
 	drawAura(self, renderer, false)
 	drawGlow(self, renderer)
 	renderer:save()
@@ -1120,6 +1238,9 @@ return function(): Node<TenRings>
 		leaderY = 0,
 		trailX = {},
 		trailY = {},
+		viewProj = nil,
+		trailFollow = 0,
+		mistPaint = Paint.with({ style = 'fill' }),
 
 		shader = nil,
 		pipeline = nil,
