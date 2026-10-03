@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Ten Rings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="hero">
+      <canvas id="rings" class="hero__canvas" aria-label="Ten ancient rings orbiting in the mist"></canvas>
+
+      <header class="hero__copy">
+        <p class="hero__eyebrow">Ten rings · one power</p>
+        <h1 class="hero__title">The Ten Rings</h1>
+        <p class="hero__tagline">Summon them to the arm. Unleash them on the world.</p>
+      </header>
+
+      <div class="hero__controls">
+        <div class="actions" role="group" aria-label="Ring actions">
+          <button type="button" class="action action--primary" id="summon">Summon</button>
+          <button type="button" class="action action--primary" id="unleash" disabled>Unleash</button>
+          <button type="button" class="action" id="recall" disabled>Recall</button>
+        </div>
+        <div class="swatches" role="group" aria-label="Imprint colour" data-property="imprintColor">
+          <span class="swatches__label">Runes</span>
+          <button type="button" class="swatch" style="--c: #ff7a2e" data-color="ff7a2e" aria-label="Ember runes" aria-pressed="true"></button>
+          <button type="button" class="swatch" style="--c: #ffd36b" data-color="ffd36b" aria-label="Gold runes" aria-pressed="false"></button>
+          <button type="button" class="swatch" style="--c: #4fc3ff" data-color="4fc3ff" aria-label="Blue runes" aria-pressed="false"></button>
+          <button type="button" class="swatch" style="--c: #6dff9c" data-color="6dff9c" aria-label="Jade runes" aria-pressed="false"></button>
+          <label class="swatch swatch--custom" aria-label="Pick any rune colour">
+            <input type="color" class="swatch__picker" value="#ff7a2e" />
+          </label>
+        </div>
+        <div class="swatches" role="group" aria-label="Energy colour" data-property="energyColor">
+          <span class="swatches__label">Energy</span>
+          <button type="button" class="swatch" style="--c: #3fb6ff" data-color="3fb6ff" aria-label="Blue energy" aria-pressed="true"></button>
+          <button type="button" class="swatch" style="--c: #f2b84b" data-color="f2b84b" aria-label="Gold energy" aria-pressed="false"></button>
+          <button type="button" class="swatch" style="--c: #ff5a4f" data-color="ff5a4f" aria-label="Crimson energy" aria-pressed="false"></button>
+          <button type="button" class="swatch" style="--c: #b98cff" data-color="b98cff" aria-label="Violet energy" aria-pressed="false"></button>
+          <label class="swatch swatch--custom" aria-label="Pick any energy colour">
+            <input type="color" class="swatch__picker" value="#3fb6ff" />
+          </label>
+        </div>
+        <p class="hint">Click the rings, or press <kbd>Space</kbd> · <kbd>Esc</kbd> to recall</p>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.0"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

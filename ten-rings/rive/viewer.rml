@@ -1,0 +1,28 @@
+<Rive version="1" kind="fragment">
+    <!-- Inspect the GLB on its own: drag to rotate. -->
+    <Artboard defaultStateMachineId="2:20" clip="true" width="600" height="600" styleId="2:2" x="1400" name="ModelViewer" id="2:1">
+        <Fill name="Background" id="0:264">
+            <SolidColor colorValue="FF070B10" name="Color" id="0:265"/>
+        </Fill>
+        <LayoutComponentStyle name="ModelViewer Style" id="2:2"/>
+        <ScriptedDrawable scriptAssetId="1:2" x="300" y="300" name="Model" id="2:10">
+            <ScriptInputString propertyValue="rings" name="asset" id="2:11"/>
+            <ScriptInputNumber propertyValue="520" name="width" id="2:12"/>
+            <ScriptInputNumber propertyValue="520" name="height" id="2:13"/>
+            <ScriptInputNumber propertyValue="20" name="spinY" id="2:17"/>
+            <ScriptInputNumber propertyValue="1" name="metallic" id="2:18"/>
+            <ScriptInputNumber propertyValue="0.35" name="roughness" id="2:22"/>
+            <ScriptInputColor propertyValue="FFB08048" name="tint" id="2:23"/>
+            <ScriptInputNumber propertyValue="1" name="tintAmount" id="2:24"/>
+            <ScriptInputNumber propertyValue="0.6" name="rimStrength" id="2:25"/>
+            <ScriptInputBoolean propertyValue="true" name="interactive" id="2:19"/>
+        </ScriptedDrawable>
+        <StateMachine name="Viewer" id="2:20">
+            <StateMachineLayer name="Layer" id="2:21">
+                <AnyState x="200" y="-120" id="0:266"/>
+                <ExitState x="400" y="-120" id="0:267"/>
+                <EntryState id="0:268"/>
+            </StateMachineLayer>
+        </StateMachine>
+    </Artboard>
+</Rive>

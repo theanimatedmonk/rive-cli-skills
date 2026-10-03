@@ -1,0 +1,20 @@
+<Rive version="1" kind="fragment">
+    <!-- The page drives the rings through these triggers and can re-theme the energy. -->
+    <ViewModel name="TenRings" id="10:1">
+        <ViewModelPropertyTrigger name="summon" id="10:2"/>
+        <ViewModelPropertyTrigger name="unleash" id="10:3"/>
+        <ViewModelPropertyTrigger name="recall" id="10:4"/>
+        <ViewModelPropertyTrigger name="tap" id="10:5"/>
+        <ViewModelPropertyColor name="energyColor" id="10:6"/>
+        <!-- Glow colour of the carved artwork and the aura around the rings. -->
+        <ViewModelPropertyColor name="imprintColor" id="10:7"/>
+        <ViewModelInstance name="Default" id="10:9">
+            <ViewModelInstanceTrigger viewModelPropertyId="10:2" name="summon" id="10:10"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:3" name="unleash" id="10:11"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:4" name="recall" id="10:12"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:5" name="tap" id="10:13"/>
+            <ViewModelInstanceColor viewModelPropertyId="10:6" propertyValue="FF3FB6FF" name="energyColor" id="10:14"/>
+            <ViewModelInstanceColor viewModelPropertyId="10:7" propertyValue="FFFF7A2E" name="imprintColor" id="10:15"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>

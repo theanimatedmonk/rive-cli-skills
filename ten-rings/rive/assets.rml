@@ -1,0 +1,13 @@
+<Rive version="1" kind="fragment">
+    <!-- GLB must be declared before the scripts that require it. -->
+    <ScriptAsset file="GLB.luau" isModule="true" name="GLB" id="1:1"/>
+    <ScriptAsset file="GLBModel.luau" scriptProtocolValue="node" name="GLBModel" id="1:2"/>
+    <ScriptAsset file="TenRings.luau" scriptProtocolValue="node" name="TenRings" id="1:6"/>
+    <ScriptAsset file="Atmosphere.luau" scriptProtocolValue="node" name="Atmosphere" id="1:7"/>
+    <ScriptAsset file="Burst.luau" scriptProtocolValue="node" name="Burst" id="1:8"/>
+    <ShaderAsset file="glb_pbr.wgsl" name="glb_pbr" id="1:3"/>
+    <ShaderAsset file="ring.wgsl" name="ring" id="1:10"/>
+    <ShaderAsset file="mist.wgsl" name="mist" id="1:9"/>
+    <!-- The ring meshes (three distinct rings, repeated in the file). -->
+    <BlobAsset file="../shang-chi_rings.glb" name="rings" id="1:4"/>
+</Rive>

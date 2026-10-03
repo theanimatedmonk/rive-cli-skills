@@ -1,0 +1,8 @@
+name: ten-rings
+main: "TenRings"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
+push:
+  projectId: 91535
+  fileId: 2627307

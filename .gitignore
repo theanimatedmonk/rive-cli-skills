@@ -8,3 +8,4 @@ tarot-animation/build/
 # Local backups of earlier .riv exports
 tarot-frontend-demo/*.old.riv
 tarot-frontend-demo/*.editor-export.riv
+ten-rings/rive/build/
