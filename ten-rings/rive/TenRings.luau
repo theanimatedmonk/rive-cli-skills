@@ -1002,30 +1002,18 @@ local function drawTrailMist(self: TenRings, renderer: Renderer)
 	end
 end
 
--- Lightning strands: while following, thin jagged bolts in the energy
--- colour thread ring to ring along the chain (head to tail), re-striking
--- a few times a second, with the odd branch. Subtle: drawn screen-blended
--- over the mist, a soft glow under a bright hairline core.
-local BOLT_STRANDS = 2 -- strands per gap
-local BOLT_RATE = 12 -- re-strikes per second
-local BOLT_ALPHA = 0.55
-local BOLT_SEGMENTS = 7
-
-local function boltPath(x1: number, y1: number, x2: number, y2: number, seed: number, amp: number): Path
-	local path = Path.new()
-	local dx, dy = x2 - x1, y2 - y1
-	local len = math.sqrt(dx * dx + dy * dy)
-	local nx, ny = -dy / math.max(len, 1e-6), dx / math.max(len, 1e-6)
-	path:moveTo(Vector.xy(x1, y1))
-	for s = 1, BOLT_SEGMENTS - 1 do
-		local f = s / BOLT_SEGMENTS
-		-- Jag sideways, most in the middle of the gap.
-		local off = (hash(seed + s * 7.3) - 0.5) * 2 * amp * math.sin(f * math.pi)
-		path:lineTo(Vector.xy(x1 + dx * f + nx * off, y1 + dy * f + ny * off))
-	end
-	path:lineTo(Vector.xy(x2, y2))
-	return path
-end
+-- Energy strings: while following, ribbons of light run ring to ring along
+-- the chain, drawn exactly like the waves around each ring (drawAura): smooth
+-- strands that undulate sideways, with bright pulses travelling along them,
+-- a soft glow under a bright core, screen-blended.
+type Strand = { freq: number, speed: number, amp: number, phase: number }
+local STRANDS: { Strand } = {
+	{ freq = 1.5, speed = 1.3, amp = 0.16, phase = 0 },
+	{ freq = 2.5, speed = -0.9, amp = 0.11, phase = 2.1 },
+	{ freq = 1, speed = 0.7, amp = 0.2, phase = 4.2 },
+}
+local STRING_POINTS = 24
+local STRING_CHUNKS = 6
 
 local function drawLightning(self: TenRings, renderer: Renderer)
 	local follow = self.trailFollow
@@ -1035,39 +1023,56 @@ local function drawLightning(self: TenRings, renderer: Renderer)
 	local r, g, b = Color.red(self.energyColor) :: number, Color.green(self.energyColor) :: number, Color.blue(self.energyColor) :: number
 	local paint = self.auraPaint
 	paint.blendMode = 'screen'
-	local strike = math.floor(self.time * BOLT_RATE)
+	local t = self.time
 	local rings = self.rings
+	local xs, ys = table.create(STRING_POINTS + 1, 0), table.create(STRING_POINTS + 1, 0)
+	local function alphaColor(a: number): Color
+		return Color.rgba(r, g, b, math.floor(clamp(a, 0, 1) * 255))
+	end
 	for i = 1, #rings - 1 do
 		local a, c = rings[i], rings[i + 1]
 		local x1, y1, x2, y2 = a.screen.x, a.screen.y, c.screen.x, c.screen.y
-		local gap = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+		local dx, dy = x2 - x1, y2 - y1
+		local gap = math.sqrt(dx * dx + dy * dy)
 		if gap > 4 then
-			-- Fainter toward the tail.
-			local fade = follow * (1 - (i - 1) / #rings * 0.6)
-			for k = 1, BOLT_STRANDS do
-				local seed = strike * 31.7 + i * 5.3 + k * 97.1
-				-- Each strand flickers on and off between strikes.
-				if hash(seed + 0.5) > 0.25 then
-					local amp = gap * (0.12 + 0.12 * hash(seed + 1.9))
-					local bolt = boltPath(x1, y1, x2, y2, seed, amp)
-					paint.thickness = 5
-					paint.feather = 6
-					paint.color = Color.rgba(r, g, b, math.floor(BOLT_ALPHA * 0.35 * fade * 255))
-					renderer:drawPath(bolt, paint)
-					paint.thickness = 1.1
-					paint.feather = 0
-					local hot = Color.rgba(math.floor((255 + r) / 2), math.floor((255 + g) / 2), math.floor((255 + b) / 2), math.floor(BOLT_ALPHA * fade * 255))
-					paint.color = hot
-					renderer:drawPath(bolt, paint)
-					-- An occasional short branch off the middle.
-					if hash(seed + 4.4) > 0.7 then
-						local f = 0.35 + 0.3 * hash(seed + 5.5)
-						local bx, by = x1 + (x2 - x1) * f, y1 + (y2 - y1) * f
-						local ang = math.atan2(y2 - y1, x2 - x1) + (hash(seed + 6.6) - 0.5) * 2.2
-						local blen = gap * (0.25 + 0.25 * hash(seed + 7.7))
-						local branch = boltPath(bx, by, bx + math.cos(ang) * blen, by + math.sin(ang) * blen, seed + 9, blen * 0.25)
-						paint.thickness = 0.8
-						renderer:drawPath(branch, paint)
+			local nx, ny = -dy / gap, dx / gap
+			local size = (a.screenRadius + c.screenRadius) / 2
+			local strength = follow * (1 - (i - 1) / #rings * 0.5)
+			for n, st in STRANDS do
+				-- The strand: along the gap, swaying sideways; pinned at the
+				-- ring centres.
+				for k = 0, STRING_POINTS do
+					local f = k / STRING_POINTS
+					local sway = math.sin(f * math.pi) * gap * st.amp
+						* math.sin(f * math.pi * 2 * st.freq + t * st.speed * 2.2 + st.phase + i * 1.3)
+					xs[k + 1] = x1 + dx * f + nx * sway
+					ys[k + 1] = y1 + dy * f + ny * sway
+				end
+				-- Pulses flowing from ring to ring.
+				local per = STRING_POINTS / STRING_CHUNKS
+				for ch = 0, STRING_CHUNKS - 1 do
+					local mid = (ch + 0.5) / STRING_CHUNKS
+					local pulse = 0.5 + 0.5 * math.sin(mid * math.pi * 3 - t * 3.4 * (if st.speed < 0 then -1 else 1) + st.phase + n * 2 + i)
+					pulse = pulse * pulse
+					local alpha = (0.1 + 0.9 * pulse) * strength
+					if alpha > 0.03 then
+						local path = Path.new()
+						for k = ch * per, (ch + 1) * per do
+							local pt = Vector.xy(xs[k + 1], ys[k + 1])
+							if k == ch * per then
+								path:moveTo(pt)
+							else
+								path:lineTo(pt)
+							end
+						end
+						paint.thickness = size * 0.07
+						paint.feather = size * 0.1
+						paint.color = alphaColor(alpha * 0.4)
+						renderer:drawPath(path, paint)
+						paint.thickness = math.max(1, size * 0.018)
+						paint.feather = size * 0.025
+						paint.color = alphaColor(alpha * 0.85)
+						renderer:drawPath(path, paint)
 					end
 				end
 			end
