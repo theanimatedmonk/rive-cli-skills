@@ -5,6 +5,11 @@
         <ViewModelPropertyTrigger name="unleash" id="10:3"/>
         <ViewModelPropertyTrigger name="recall" id="10:4"/>
         <ViewModelPropertyTrigger name="tap" id="10:5"/>
+        <ViewModelPropertyTrigger name="awaken" id="10:8"/>
+        <!-- Follow target for the Orbit chain (e.g. a tracked hand), 0..1 across/down. -->
+        <ViewModelPropertyNumber name="followX" id="10:17"/>
+        <ViewModelPropertyNumber name="followY" id="10:18"/>
+        <ViewModelPropertyBoolean name="followActive" id="10:19"/>
         <ViewModelPropertyColor name="energyColor" id="10:6"/>
         <!-- Glow colour of the carved artwork and the aura around the rings. -->
         <ViewModelPropertyColor name="imprintColor" id="10:7"/>
@@ -13,6 +18,10 @@
             <ViewModelInstanceTrigger viewModelPropertyId="10:3" name="unleash" id="10:11"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:4" name="recall" id="10:12"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:5" name="tap" id="10:13"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:8" name="awaken" id="10:16"/>
+            <ViewModelInstanceNumber viewModelPropertyId="10:17" propertyValue="0.5" name="followX" id="10:20"/>
+            <ViewModelInstanceNumber viewModelPropertyId="10:18" propertyValue="0.5" name="followY" id="10:21"/>
+            <ViewModelInstanceBoolean viewModelPropertyId="10:19" name="followActive" id="10:22"/>
             <ViewModelInstanceColor viewModelPropertyId="10:6" propertyValue="FF3FB6FF" name="energyColor" id="10:14"/>
             <ViewModelInstanceColor viewModelPropertyId="10:7" propertyValue="FFFF7A2E" name="imprintColor" id="10:15"/>
         </ViewModelInstance>

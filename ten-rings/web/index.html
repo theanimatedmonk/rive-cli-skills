@@ -6,53 +6,38 @@
     <title>The Ten Rings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=DM+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="hero">
-      <canvas id="rings" class="hero__canvas" aria-label="Ten ancient rings orbiting in the mist"></canvas>
+      <canvas id="rings" class="hero__canvas" aria-label="The ten rings"></canvas>
 
-      <header class="hero__copy">
-        <p class="hero__eyebrow">Ten rings · one power</p>
-        <h1 class="hero__title">The Ten Rings</h1>
-        <p class="hero__tagline">Summon them to the arm. Unleash them on the world.</p>
-      </header>
-
-      <div class="hero__controls">
+      <div class="controls">
+        <div class="toggle" role="group" aria-label="Wielder" id="wielders"></div>
         <div class="actions" role="group" aria-label="Ring actions">
-          <button type="button" class="action action--primary" id="summon">Summon</button>
-          <button type="button" class="action action--primary" id="unleash" disabled>Unleash</button>
+          <button type="button" class="action" id="summon">Awaken</button>
+          <button type="button" class="action" id="unleash" disabled>Unleash</button>
           <button type="button" class="action" id="recall" disabled>Recall</button>
         </div>
-        <div class="swatches" role="group" aria-label="Imprint colour" data-property="imprintColor">
-          <span class="swatches__label">Runes</span>
-          <button type="button" class="swatch" style="--c: #ff7a2e" data-color="ff7a2e" aria-label="Ember runes" aria-pressed="true"></button>
-          <button type="button" class="swatch" style="--c: #ffd36b" data-color="ffd36b" aria-label="Gold runes" aria-pressed="false"></button>
-          <button type="button" class="swatch" style="--c: #4fc3ff" data-color="4fc3ff" aria-label="Blue runes" aria-pressed="false"></button>
-          <button type="button" class="swatch" style="--c: #6dff9c" data-color="6dff9c" aria-label="Jade runes" aria-pressed="false"></button>
-          <label class="swatch swatch--custom" aria-label="Pick any rune colour">
-            <input type="color" class="swatch__picker" value="#ff7a2e" />
-          </label>
-        </div>
-        <div class="swatches" role="group" aria-label="Energy colour" data-property="energyColor">
-          <span class="swatches__label">Energy</span>
-          <button type="button" class="swatch" style="--c: #3fb6ff" data-color="3fb6ff" aria-label="Blue energy" aria-pressed="true"></button>
-          <button type="button" class="swatch" style="--c: #f2b84b" data-color="f2b84b" aria-label="Gold energy" aria-pressed="false"></button>
-          <button type="button" class="swatch" style="--c: #ff5a4f" data-color="ff5a4f" aria-label="Crimson energy" aria-pressed="false"></button>
-          <button type="button" class="swatch" style="--c: #b98cff" data-color="b98cff" aria-label="Violet energy" aria-pressed="false"></button>
-          <label class="swatch swatch--custom" aria-label="Pick any energy colour">
-            <input type="color" class="swatch__picker" value="#3fb6ff" />
-          </label>
-        </div>
-        <p class="hint">Click the rings, or press <kbd>Space</kbd> · <kbd>Esc</kbd> to recall</p>
+        <button type="button" class="action gesture-toggle" id="gesture-toggle" aria-pressed="false">
+          Gestures
+        </button>
       </div>
+      <aside class="gesture-preview" id="gesture-preview" hidden>
+        <video id="gesture-video" class="gesture-preview__video" playsinline muted autoplay></video>
+        <p class="gesture-preview__hint" id="gesture-label"></p>
+        <ul class="gesture-preview__legend">
+          <li><span>Fist at camera</span> Awaken</li>
+          <li><span>Open palm</span> Recall</li>
+          <li><span>Pray</span> Summon</li>
+          <li><span>Close fist</span> Unleash</li>
+          <li><span>Move your hand</span> Rings follow (orbit)</li>
+        </ul>
+      </aside>
     </main>
 
     <script src="https://unpkg.com/@rive-app/webgl2@2.44.0"></script>
-    <script src="main.js"></script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>

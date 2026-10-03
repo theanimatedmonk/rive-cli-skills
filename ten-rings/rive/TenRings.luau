@@ -19,6 +19,12 @@
 --   launch     0..1 throws the stack outward in a fan (Unleash)
 --   power      0..1 energy: rim glow, emissive, halo glow, spin speed
 --   intro      0..1 rings arrive from the dark, one after another
+--   rest       1 = rings sit on two forearms (the default, before awakening)
+--   dive       0..1 pushes every ring deep into the screen
+--   flight     0..1 Awaken: rings fly off the forearms along curves into orbit
+--   charge     0..1 Unleash: the circle collapses into a tight, interlocked,
+--              fast-spinning cluster
+--   shake      0..1 Unleash: the cluster trembles before it explodes
 --
 -- The pointer tilts the whole formation (never claims the event).
 -- Place the node at the centre of the artboard; it draws `width` x `height`.
@@ -35,6 +41,17 @@ export type TenRings = {
 	launch: Input<number>,
 	power: Input<number>,
 	intro: Input<number>,
+	rest: Input<number>,
+	dive: Input<number>,
+	flight: Input<number>,
+	charge: Input<number>,
+	shake: Input<number>,
+	-- External follow target (e.g. a tracked hand), 0..1 across and down the
+	-- node's width/height. While `followActive`, it drives the Orbit chain
+	-- exactly like the pointer does.
+	followX: Input<number>,
+	followY: Input<number>,
+	followActive: Input<boolean>,
 	energyColor: Input<Color>,
 	imprintColor: Input<Color>,
 	imprintGlow: Input<number>,
@@ -194,6 +211,63 @@ local function orbitPose(i: number, t: number, turn: number): Pose
 	return { x = x, y = y, z = z, ax = ax, ay = ay, az = az, s = SIZE[i] }
 end
 
+-- Rest: five rings on each of two forearms rising from the bottom of the
+-- frame, angled in toward each other, largest at the wrist nearest the
+-- viewer, nested close together and humming gently.
+local ARM_BOTTOM_X, ARM_BOTTOM_Y, ARM_BOTTOM_S = 1.15, -2.2, 0.63
+local ARM_TOP_X, ARM_TOP_Y, ARM_TOP_S = 0.63, -1.6, 0.39
+local DIVE_DEPTH = 24
+
+-- Which forearm each ring rests on, and where along it (0 = wrist). Each
+-- arm takes the rings whose orbit slots are on its side of the halo, so
+-- when they fly out their paths never cross.
+local ARM_SIDE = { 1, 1, 1, -1, -1, -1, -1, -1, 1, 1 }
+local ARM_J = { 2, 3, 4, 0, 1, 2, 3, 4, 0, 1 }
+
+local function armsPose(i: number, t: number): Pose
+	local side = ARM_SIDE[i]
+	local j = ARM_J[i]
+	local f = j / (COUNT / 2 - 1)
+	local bob = math.sin(t * 1.3 + j * 0.6 + (if side < 0 then 0 else 1.7)) * 0.018
+	local x = side * mix(ARM_BOTTOM_X, ARM_TOP_X, f)
+	local y = mix(ARM_BOTTOM_Y, ARM_TOP_Y, f) + bob
+	local z = -f * 0.6
+	-- Faces the viewer, leaning along the forearm (up and inward).
+	return { x = x, y = y, z = z, ax = -side * 0.32, ay = 0.42, az = 1, s = mix(ARM_BOTTOM_S, ARM_TOP_S, f) }
+end
+
+-- Awaken flight: from the forearm to the ring's orbit slot along a cubic
+-- curve that rises straight up off the arm, swings out over its own side
+-- and drops into the slot from above and outside. Rings at the elbow end
+-- leave first. `flight` 0..1 is keyed; at 1 every ring is in its slot.
+local function cubic(a: number, b: number, c: number, d: number, u: number): number
+	local v = 1 - u
+	return v * v * v * a + 3 * v * v * u * b + 3 * v * u * u * c + u * u * u * d
+end
+
+local function flightPose(i: number, from: Pose, to: Pose, flight: number): Pose
+	local side = ARM_SIDE[i]
+	local delay = (4 - ARM_J[i]) * 0.06
+	local u = smooth(clamp((flight - delay) / (1 - 0.24), 0, 1))
+	local p1x, p1y = from.x + side * 0.2, from.y + 3.2
+	local p2x, p2y = to.x + side * 1.6, to.y + 1.7
+	local x = cubic(from.x, p1x, p2x, to.x, u)
+	local y = cubic(from.y, p1y, p2y, to.y, u)
+	local z = mix(from.z, to.z, u) - 2.2 * math.sin(u * math.pi)
+	-- Turn from facing the viewer to the orbit's lean, with an extra
+	-- roll in the middle of the flight.
+	local roll = math.sin(u * math.pi) * 0.6 * side
+	return {
+		x = x,
+		y = y,
+		z = z,
+		ax = mix(from.ax, to.ax, u) + roll,
+		ay = mix(from.ay, to.ay, u),
+		az = mix(from.az, to.az, u),
+		s = mix(from.s, to.s, u),
+	}
+end
+
 -- Summoned: the rings shrink and line up evenly around a large circle,
 -- face-on to the viewer. Each keeps its angle from the halo (the halo's
 -- x/y on screen follow cos/sin of the same angle), so summoning draws every
@@ -225,6 +299,28 @@ local function circlePose(i: number, t: number, power: number, turn: number, tum
 	local ay = ty * math.sin(flip) + ry * wobble
 	local az = math.cos(flip)
 	return { x = x, y = y, z = 0, ax = ax, ay = ay, az = az, s = CIRCLE_RING }
+end
+
+-- Unleash cluster: the rings pulled into a tight circle, so close they
+-- overlap, tilted alternately along their tangent so neighbours interlace
+-- like chain links.
+local CLUSTER_RADIUS = 0.55
+local CLUSTER_RING = 0.36
+
+local function clusterPose(i: number, turn: number): Pose
+	local a = circleAngle(i, turn)
+	local rx, ry = math.cos(a), math.sin(a)
+	local tx, ty = -ry, rx
+	local lean = if i % 2 == 0 then 0.7 else -0.7
+	return {
+		x = rx * CLUSTER_RADIUS,
+		y = CIRCLE_Y + ry * CLUSTER_RADIUS,
+		z = if i % 2 == 0 then 0.06 else -0.06,
+		ax = tx * lean,
+		ay = ty * lean,
+		az = 1,
+		s = CLUSTER_RING,
+	}
 end
 
 -- Unleash: each ring flies straight out from the circle along its spoke,
@@ -582,11 +678,19 @@ local function render(self: TenRings): Image?
 	local tilt = Mat4.fromRotationX(math.rad(self.tiltY)) * Mat4.fromRotationY(math.rad(self.tiltX))
 	local viewProj = proj * view * Mat4.fromTranslation(0, LIFT, 0)
 
-	local follow = self.follow * (1 - formation) * (1 - clamp(launch, 0, 1)) * clamp(intro, 0, 1)
+	local rest = clamp(self.rest, 0, 1)
+	local dive = clamp(self.dive, 0, 1)
+	local follow = self.follow * (1 - formation) * (1 - clamp(launch, 0, 1)) * clamp(intro, 0, 1) * (1 - rest) * (1 - dive) * (1 - clamp(self.flight, 0, 1))
 	local chain = if follow > 0.001 then chainPoses(self) else nil
 
 	for i, ring in self.rings do
 		local o = orbitPose(i, t, self.turn)
+		local flight = clamp(self.flight, 0, 1)
+		if flight > 0 then
+			o = flightPose(i, armsPose(i, t), o, flight)
+		elseif rest > 0 then
+			o = mixPose(o, armsPose(i, t), smooth(rest))
+		end
 		if chain then
 			o = mixPose(o, chain[i], smooth(follow))
 		end
@@ -594,13 +698,44 @@ local function render(self: TenRings): Image?
 		local x, y, z = mix(o.x, st.x, formation), mix(o.y, st.y, formation), mix(o.z, st.z, formation)
 		local ax, ay, az = mix(o.ax, st.ax, formation), mix(o.ay, st.ay, formation), mix(o.az, st.az, formation)
 		local s = mix(o.s, st.s, formation)
-		-- Unleash: fly outward, turn to face the direction of travel, grow.
+		-- Unleash, part 1: collapse into the interlocked cluster.
+		local charge = clamp(self.charge, 0, 1)
+		if charge > 0 then
+			local c = clusterPose(i, self.turn)
+			local k = smooth(charge)
+			x = mix(x, c.x, k)
+			y = mix(y, c.y, k)
+			z = mix(z, c.z, k)
+			ax = mix(ax, c.ax, k)
+			ay = mix(ay, c.ay, k)
+			az = mix(az, c.az, k)
+			s = mix(s, c.s, k)
+		end
+		-- Part 2: tremble, the whole cluster and each ring on its own.
+		local shake = clamp(self.shake, 0, 1)
+		if shake > 0 then
+			local a = shake * shake
+			x += (math.sin(t * 53 + i * 1.7) * 0.05 + math.sin(t * 37) * 0.07) * a
+			y += (math.cos(t * 47 + i * 2.3) * 0.05 + math.cos(t * 41) * 0.07) * a
+			ax += math.sin(t * 61 + i) * 0.25 * a
+			ay += math.cos(t * 57 + i * 1.3) * 0.25 * a
+		end
+		-- Part 3: explode outward, turning to face the direction of travel.
 		if launch > 0 then
 			local dx, dy, dz = launchDir(i, self.turn)
-			local dist = 1.6 * launch
+			local dist = 3.2 * launch
 			x, y, z = x + dx * dist, y + dy * dist, z + dz * dist
 			ax, ay, az = ax + dx * launch * 2.5, ay + dy * launch * 2.5, az + dz * launch * 2.5
 			s *= 1 + 0.35 * launch
+		end
+		-- Awaken: pushed deep into the screen, each to a slightly different
+		-- depth, turning to face the way they travel.
+		if dive > 0 then
+			local d = dive * dive * (3 - 2 * dive)
+			z -= DIVE_DEPTH * d * (1 + 0.18 * math.sin((PHASE[i] :: number) * 3))
+			ax = mix(ax, 0, d * 0.6)
+			ay = mix(ay, 0, d * 0.6)
+			az = mix(az, 1, d * 0.6)
 		end
 		-- Intro: each ring flies in from the dark in turn.
 		local k = clamp(intro * 1.7 - (i - 1) * 0.07, 0, 1)
@@ -609,7 +744,7 @@ local function render(self: TenRings): Image?
 		y += (1 - smooth(k)) * 1.5
 
 		local scale = s / self.ringRadius
-		local model = tilt * orient(x, y, z, ax, ay, az, self.spins[i], scale)
+		local model = tilt * orient(x, y, z, ax, ay, az, self.spins[i] or 0, scale)
 		ring.mvp = viewProj * model
 		writeUniforms(self, ring, ring.mvp, model, power)
 
@@ -817,26 +952,50 @@ function init(self: TenRings, context: Context): boolean
 	return true
 end
 
+-- Moves the follow target to a point in the node's local space (origin at
+-- the centre), from the pointer or from `followX`/`followY`.
+local function setCursor(self: TenRings, px: number, py: number)
+	self.pointerX = clamp(px / (self.width / 2), -1, 1)
+	self.pointerY = clamp(py / (self.height / 2), -1, 1)
+	-- The target on the rings' plane (z = 0), in world units.
+	local halfH = CAMERA_Z * math.tan(FOV / 2)
+	local x = px / (self.height / 2) * halfH
+	local y = -py / (self.height / 2) * halfH - LIFT
+	if (x - self.cursorX) ^ 2 + (y - self.cursorY) ^ 2 > 1e-6 then
+		self.lastMove = self.time
+	end
+	self.cursorX, self.cursorY = x, y
+end
+
 function advance(self: TenRings, seconds: number): boolean
 	self.time += seconds
 	local power = clamp(self.power, 0, 1.5)
 	local formation = smooth(self.formation)
 	-- One rotation for halo and circle: lazy in orbit, a little quicker
 	-- once summoned.
-	self.turn = (self.turn + seconds * (0.16 + formation * 0.2 * power)) % (math.pi * 2)
+	-- Held while resting, so each arm's rings fly to the slots on its side.
+	local moving = 1 - clamp(self.rest, 0, 1)
+	self.turn = (self.turn + seconds * moving * (0.16 + formation * 0.2 * power)) % (math.pi * 2)
 	-- Tumbling eases in with the circle and speeds up with power.
 	self.tumble = (self.tumble + seconds * formation * (1.4 + 1.8 * power)) % (math.pi * 4)
+	-- Charging spins the interlocked cluster faster and faster.
+	local charge = clamp(self.charge, 0, 1)
+	self.turn = (self.turn + seconds * charge * charge * 11) % (math.pi * 2)
 	local launch = clamp(self.launch, 0, 1.5)
 	for i = 1, COUNT do
 		-- Lazy turning in orbit; fast, alternating spin on the arm and in flight.
 		local dir = if i % 2 == 0 then 1 else -1
 		-- Orbit: lazy, alternating. Summoned: every ring spins the same way at
 		-- the same speed, in step with the tumble.
-		local rate = mix(0.25 * dir, 1.2 * (0.4 + power), formation) + dir * launch * 9
+		local rate = mix(0.25 * dir, 1.2 * (0.4 + power), formation) + dir * launch * 14 + charge * 6
 		self.spins[i] = (self.spins[i] + rate * seconds) % (math.pi * 2)
 	end
 	-- Cursor follow: on while the pointer has moved recently, off once it
 	-- has been still for a moment (then the rings drift back into orbit).
+	if self.followActive then
+		self.pointerOn = true
+		setCursor(self, (self.followX - 0.5) * self.width, (self.followY - 0.5) * self.height)
+	end
 	-- Recency alone decides: leaving the canvas also means no more moves.
 	local active = (self.time - self.lastMove) < FOLLOW_IDLE
 	if active and self.follow < 0.02 then
@@ -874,17 +1033,12 @@ function advance(self: TenRings, seconds: number): boolean
 end
 
 local function pointerMove(self: TenRings, event: PointerEvent)
-	self.pointerOn = true
-	self.pointerX = clamp(event.position.x / (self.width / 2), -1, 1)
-	self.pointerY = clamp(event.position.y / (self.height / 2), -1, 1)
-	-- The cursor on the rings' plane (z = 0), in world units.
-	local halfH = CAMERA_Z * math.tan(FOV / 2)
-	local x = event.position.x / (self.height / 2) * halfH
-	local y = -event.position.y / (self.height / 2) * halfH - LIFT
-	if (x - self.cursorX) ^ 2 + (y - self.cursorY) ^ 2 > 1e-6 then
-		self.lastMove = self.time
+	-- An external target (a tracked hand) takes over from the pointer.
+	if self.followActive then
+		return
 	end
-	self.cursorX, self.cursorY = x, y
+	self.pointerOn = true
+	setCursor(self, event.position.x, event.position.y)
 end
 
 local function pointerExit(self: TenRings, event: PointerEvent)
@@ -928,6 +1082,14 @@ return function(): Node<TenRings>
 		launch = 0,
 		power = 0.2,
 		intro = 1,
+		rest = 0,
+		dive = 0,
+		flight = 0,
+		charge = 0,
+		shake = 0,
+		followX = 0.5,
+		followY = 0.5,
+		followActive = false,
 		energyColor = Color.rgb(63, 182, 255),
 		imprintColor = Color.rgb(255, 122, 46),
 		imprintGlow = 2.2,
