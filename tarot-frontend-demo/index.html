@@ -18,6 +18,7 @@
       <button type="button" data-frame="iphone" aria-pressed="false">iPhone</button>
     </div>
     <div class="frame-switch layout-switch" role="group" aria-label="Reading layout">
+      <button type="button" data-layout="a" aria-pressed="false">A · Tabs</button>
       <button type="button" data-layout="g" aria-pressed="false">G · Spread</button>
       <button type="button" data-layout="h" aria-pressed="true">H · Orbit</button>
     </div>
@@ -108,6 +109,31 @@
           <h2 class="reading__panel-title" id="reading-panel-title"></h2>
           <p class="reading__description" id="reading-description"></p>
         </article>
+        <!-- Option A: the card up top, Career, Love and Finance as segmented
+             tabs, and the chosen tab's reading in the panel below. -->
+        <div class="tabs" id="tabs">
+          <div class="tabs__head">
+            <div class="tabs__titles">
+              <p class="tabs__eyebrow">Today's card</p>
+              <h2 class="tabs__title" id="tabs-title"></h2>
+            </div>
+            <img class="tabs__thumb" id="tabs-thumb" alt="" />
+          </div>
+          <div class="tabs__bar" role="tablist" aria-label="Reading category">
+            <button type="button" class="tabs__tab" role="tab" data-topic="career" aria-selected="true">Career</button>
+            <button type="button" class="tabs__tab" role="tab" data-topic="love" aria-selected="false">Love</button>
+            <button type="button" class="tabs__tab" role="tab" data-topic="finance" aria-selected="false">Finance</button>
+          </div>
+          <article class="tabs__panel" id="tabs-panel" role="tabpanel" aria-live="polite">
+            <div class="tabs__heading">
+              <span class="tabs__icon" data-topic="career" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg></span>
+              <span class="tabs__icon" data-topic="love" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg></span>
+              <span class="tabs__icon" data-topic="finance" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M14.5 9.5c-.5-.9-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.6-2.5-1.5M12 6.5v11" /></svg></span>
+              <h3 class="tabs__panel-title" id="tabs-panel-title"></h3>
+            </div>
+            <p class="tabs__body" id="tabs-body"></p>
+          </article>
+        </div>
         <!-- Option G: three face-down cards, one per topic. Tap to turn one
              over and read it in the panel below. -->
         <div class="spread" id="spread">

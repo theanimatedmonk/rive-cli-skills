@@ -1032,7 +1032,10 @@ body {
 
 .reading.is-spread .orbit,
 .reading.is-spread .reading__panel,
-.reading.is-spread .reading__eyebrow {
+.reading.is-spread .reading__eyebrow,
+.reading.is-tabs .orbit,
+.reading.is-tabs .reading__panel,
+.reading.is-tabs .reading__eyebrow {
   display: none;
 }
 
@@ -1312,6 +1315,181 @@ body {
   .spread__panel-title,
   .spread__panel-body {
     transition: none;
+    animation: none;
+  }
+}
+
+/* Option A: the reading as segmented tabs. Hidden in G and H. */
+.tabs {
+  display: none;
+}
+
+.reading.is-tabs .tabs {
+  position: absolute;
+  top: 84px;
+  left: 0;
+  right: 0;
+  bottom: 126px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+  transition-delay: 0.1s;
+}
+
+.reading.is-entering .tabs {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.tabs__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+}
+
+.tabs__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tabs__eyebrow {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a39fc0;
+}
+
+.tabs__title {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1;
+  color: #f3eedd;
+}
+
+.tabs__thumb {
+  flex: none;
+  width: 64px;
+  height: 99px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.tabs__bar {
+  flex: none;
+  margin: 0 24px;
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  border-radius: 999px;
+  background: rgba(30, 27, 58, 0.8);
+}
+
+.tabs__tab {
+  --c: #e8c27a;
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #d9d4ec;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+
+.tabs__tab[data-topic="love"] {
+  --c: #efa3ae;
+}
+
+.tabs__tab[data-topic="finance"] {
+  --c: #8ed1b6;
+}
+
+.tabs__tab[aria-selected="true"] {
+  background: var(--c);
+  color: #14122b;
+}
+
+.tabs__panel {
+  --c: #e8c27a;
+  min-height: 0;
+  margin: 0 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  border-radius: 20px;
+  border: 1px solid #2e2a52;
+  background: rgba(30, 27, 58, 0.8);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  scrollbar-width: thin;
+  scrollbar-color: #3a3566 transparent;
+}
+
+.tabs__heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--c);
+}
+
+.tabs__icon {
+  display: flex;
+}
+
+.tabs__icon[hidden] {
+  display: none;
+}
+
+.tabs__icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tabs__panel-title {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.tabs__body {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #d9d4ec;
+}
+
+.tabs__panel.is-switching {
+  animation: reading-fade 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs__tab {
+    transition: none;
+  }
+
+  .tabs__panel.is-switching {
     animation: none;
   }
 }

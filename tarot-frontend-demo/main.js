@@ -137,6 +137,38 @@ function selectTopic(topic, animate = true) {
   }
 }
 
+// Option A: Career, Love and Finance as segmented tabs; the chosen tab's
+// reading shows in the panel below.
+const tabEls = document.querySelectorAll(".tabs__tab");
+const tabsPanel = document.getElementById("tabs-panel");
+
+function selectTab(topic, animate = true) {
+  const t = TOPICS[topic];
+  tabEls.forEach((el) => el.setAttribute("aria-selected", String(el.dataset.topic === topic)));
+  tabsPanel.querySelectorAll(".tabs__icon").forEach((el) => {
+    el.hidden = el.dataset.topic !== topic;
+  });
+  tabsPanel.style.setProperty("--c", t.color);
+  document.getElementById("tabs-panel-title").textContent = t.title;
+  document.getElementById("tabs-body").textContent = persona[topic];
+  tabsPanel.scrollTop = 0;
+  if (animate) {
+    tabsPanel.classList.remove("is-switching");
+    void tabsPanel.offsetWidth; // restart the fade
+    tabsPanel.classList.add("is-switching");
+  }
+}
+
+function fillTabs() {
+  const thumb = document.getElementById("tabs-thumb");
+  thumb.src = persona.image;
+  thumb.alt = persona.name;
+  document.getElementById("tabs-title").textContent = persona.name;
+  selectTab("career", false);
+}
+
+tabEls.forEach((el) => el.addEventListener("click", () => selectTab(el.dataset.topic)));
+
 // Option G: three face-down cards, one per topic. Turning one over shows
 // that topic in the panel; "Shuffle again" turns them all back.
 const spreadSlots = document.querySelectorAll(".spread__slot");
@@ -217,6 +249,7 @@ function fillReading() {
   document.getElementById("reading-name").textContent = persona.name;
   selectTopic("career", false);
   fillSpread(number);
+  fillTabs();
   return cardEl.decode().catch(() => {});
 }
 
@@ -363,11 +396,12 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
   buttons.forEach((b) => b.addEventListener("click", () => setFrame(b.dataset.frame)));
 })();
 
-// Reading layout: G (three-card spread) or H (orbit), from ?layout=, else
-// the last choice.
+// Reading layout: A (tabs), G (three-card spread) or H (orbit), from
+// ?layout=, else the last choice.
 (() => {
   const buttons = document.querySelectorAll(".layout-switch [data-layout]");
   const setLayout = (layout) => {
+    readingEl.classList.toggle("is-tabs", layout === "a");
     readingEl.classList.toggle("is-spread", layout === "g");
     buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.layout === layout)));
     try {
@@ -379,6 +413,7 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
     saved = localStorage.getItem("layout");
   } catch {}
   const requested = new URLSearchParams(location.search).get("layout");
-  setLayout(requested === "g" || requested === "h" ? requested : saved || "h");
+  const layouts = ["a", "g", "h"];
+  setLayout(layouts.includes(requested) ? requested : layouts.includes(saved) ? saved : "h");
   buttons.forEach((b) => b.addEventListener("click", () => setLayout(b.dataset.layout)));
 })();
