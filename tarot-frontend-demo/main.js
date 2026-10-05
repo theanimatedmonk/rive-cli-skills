@@ -4,9 +4,9 @@ const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";
 const REVEAL_DELAY_MS = 800;
 // From `reveal` to the card landing face-up in the .riv: Charge (1.7s of
-// comets and shaking) plus RevealBurst up to the landing (~1.05s). The
-// result copy waits for it.
-const REVEAL_ANIMATION_MS = 2800;
+// comets and shaking) plus RevealBurst up to the landing (~1.05s), both
+// played at 0.75x speed in the editor. The result copy waits for it.
+const REVEAL_ANIMATION_MS = 3700;
 const HEADING_FADE_MS = 500;
 const INTERPRETING_MS = 2000;
 // Matches the .phone.is-leaving fade in style.css.
