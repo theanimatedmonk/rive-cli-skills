@@ -17,6 +17,10 @@
       <button type="button" data-frame="android" aria-pressed="true">Android</button>
       <button type="button" data-frame="iphone" aria-pressed="false">iPhone</button>
     </div>
+    <div class="frame-switch layout-switch" role="group" aria-label="Reading layout">
+      <button type="button" data-layout="g" aria-pressed="false">G · Spread</button>
+      <button type="button" data-layout="h" aria-pressed="true">H · Orbit</button>
+    </div>
 
     <div class="device" id="device">
       <span class="device__camera" aria-hidden="true"></span>
@@ -104,6 +108,43 @@
           <h2 class="reading__panel-title" id="reading-panel-title"></h2>
           <p class="reading__description" id="reading-description"></p>
         </article>
+        <!-- Option G: three face-down cards, one per topic. Tap to turn one
+             over and read it in the panel below. -->
+        <div class="spread" id="spread">
+          <div class="spread__head">
+            <img class="spread__thumb" id="spread-thumb" alt="" />
+            <div class="spread__titles">
+              <p class="spread__eyebrow" id="spread-eyebrow"></p>
+              <h2 class="spread__title" id="spread-title"></h2>
+              <p class="spread__hint" id="spread-hint"></p>
+            </div>
+          </div>
+          <div class="spread__row">
+            <div class="spread__slot spread__slot--career">
+              <button type="button" class="spread__card" data-topic="career" aria-pressed="false" aria-label="Reveal Career card">
+                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">I</span></span>
+                <span class="spread__face"><span class="spread__face-num">I</span><span class="spread__face-name">Career</span></span>
+              </button>
+              <span class="spread__label">Career</span>
+            </div>
+            <div class="spread__slot spread__slot--love">
+              <button type="button" class="spread__card" data-topic="love" aria-pressed="false" aria-label="Reveal Love card">
+                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">II</span></span>
+                <span class="spread__face"><span class="spread__face-num">II</span><span class="spread__face-name">Love</span></span>
+              </button>
+              <span class="spread__label">Love</span>
+            </div>
+            <div class="spread__slot spread__slot--finance">
+              <button type="button" class="spread__card" data-topic="finance" aria-pressed="false" aria-label="Reveal Finance card">
+                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">III</span></span>
+                <span class="spread__face"><span class="spread__face-num">III</span><span class="spread__face-name">Finance</span></span>
+              </button>
+              <span class="spread__label">Finance</span>
+            </div>
+          </div>
+          <article class="spread__panel" id="spread-panel" aria-live="polite"></article>
+          <button type="button" class="spread__reset" id="spread-reset" hidden>Shuffle again</button>
+        </div>
         <div class="reading__bar">
           <button type="button" class="reading__share" id="share">
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>

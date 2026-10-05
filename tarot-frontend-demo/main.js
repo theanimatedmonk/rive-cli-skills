@@ -134,6 +134,77 @@ function selectTopic(topic, animate = true) {
   }
 }
 
+// Option G: three face-down cards, one per topic. Turning one over shows
+// that topic in the panel; "Shuffle again" turns them all back.
+const spreadSlots = document.querySelectorAll(".spread__slot");
+const spreadPanel = document.getElementById("spread-panel");
+const spreadHint = document.getElementById("spread-hint");
+const spreadReset = document.getElementById("spread-reset");
+let spreadRevealed = new Set();
+let spreadActive = null;
+
+function renderSpread(animate = false) {
+  spreadSlots.forEach((slot) => {
+    const button = slot.querySelector(".spread__card");
+    const topic = button.dataset.topic;
+    const up = spreadRevealed.has(topic);
+    slot.classList.toggle("is-up", up);
+    button.classList.toggle("is-up", up);
+    button.setAttribute("aria-pressed", String(spreadActive === topic));
+    button.setAttribute("aria-label", `${up ? "Show" : "Reveal"} ${TOPICS[topic].title} card`);
+  });
+  const count = spreadRevealed.size;
+  spreadHint.textContent = count === 3
+    ? "All three revealed. Tap a card to revisit it."
+    : `Tap a card to turn it over · ${count} of 3 revealed`;
+  spreadReset.hidden = count === 0;
+  if (spreadActive) {
+    const t = TOPICS[spreadActive];
+    spreadPanel.style.setProperty("--c", t.color);
+    spreadPanel.replaceChildren();
+    const title = document.createElement("h2");
+    title.className = "spread__panel-title";
+    title.textContent = t.title;
+    const body = document.createElement("p");
+    body.className = "spread__panel-body";
+    body.textContent = persona[spreadActive];
+    spreadPanel.append(title, body);
+    if (animate) {
+      spreadPanel.scrollTop = 0;
+    }
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "spread__empty";
+    empty.textContent = "Your reading waits beneath the cards.";
+    spreadPanel.replaceChildren(empty);
+  }
+}
+
+function fillSpread(number) {
+  const thumb = document.getElementById("spread-thumb");
+  thumb.src = persona.image;
+  thumb.alt = persona.name;
+  document.getElementById("spread-eyebrow").textContent = `Today's card · ${number}`;
+  document.getElementById("spread-title").textContent = persona.name;
+  spreadRevealed = new Set();
+  spreadActive = null;
+  renderSpread();
+}
+
+spreadSlots.forEach((slot) => {
+  const button = slot.querySelector(".spread__card");
+  button.addEventListener("click", () => {
+    spreadRevealed.add(button.dataset.topic);
+    spreadActive = button.dataset.topic;
+    renderSpread(true);
+  });
+});
+spreadReset.addEventListener("click", () => {
+  spreadRevealed = new Set();
+  spreadActive = null;
+  renderSpread();
+});
+
 function fillReading() {
   const cardEl = document.getElementById("reading-card");
   cardEl.src = persona.image;
@@ -142,6 +213,7 @@ function fillReading() {
   document.getElementById("reading-eyebrow").textContent = `Today's card · ${number}`;
   document.getElementById("reading-name").textContent = persona.name;
   selectTopic("career", false);
+  fillSpread(number);
   return cardEl.decode().catch(() => {});
 }
 
@@ -262,7 +334,7 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
 // Device frame: Android or iPhone, from ?frame=, else the last choice.
 (() => {
   const device = document.getElementById("device");
-  const buttons = document.querySelectorAll(".frame-switch button");
+  const buttons = document.querySelectorAll(".frame-switch [data-frame]");
   const setFrame = (frame) => {
     device.classList.toggle("is-iphone", frame === "iphone");
     buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.frame === frame)));
@@ -276,4 +348,24 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
   } catch {}
   setFrame(new URLSearchParams(location.search).get("frame") || saved || "android");
   buttons.forEach((b) => b.addEventListener("click", () => setFrame(b.dataset.frame)));
+})();
+
+// Reading layout: G (three-card spread) or H (orbit), from ?layout=, else
+// the last choice.
+(() => {
+  const buttons = document.querySelectorAll(".layout-switch [data-layout]");
+  const setLayout = (layout) => {
+    readingEl.classList.toggle("is-spread", layout === "g");
+    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.layout === layout)));
+    try {
+      localStorage.setItem("layout", layout);
+    } catch {}
+  };
+  let saved = null;
+  try {
+    saved = localStorage.getItem("layout");
+  } catch {}
+  const requested = new URLSearchParams(location.search).get("layout");
+  setLayout(requested === "g" || requested === "h" ? requested : saved || "h");
+  buttons.forEach((b) => b.addEventListener("click", () => setLayout(b.dataset.layout)));
 })();
