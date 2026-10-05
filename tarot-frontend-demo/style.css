@@ -84,6 +84,12 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+  /* Taps reach the cards only once the fan has settled (main.js). */
+  pointer-events: none;
+}
+
+.phone__rive.is-ready {
+  pointer-events: auto;
 }
 
 .status-bar {

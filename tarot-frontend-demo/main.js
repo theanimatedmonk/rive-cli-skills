@@ -1,7 +1,7 @@
 const RIV_URL = "tarot-animation.riv";
+const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
 const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";
-const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
 const REVEAL_DELAY_MS = 800;
 // From `reveal` to the card landing face-up in the .riv: Charge (1.7s of
 // comets and shaking) plus RevealBurst up to the landing (~1.05s). The
@@ -12,6 +12,9 @@ const INTERPRETING_MS = 2000;
 // Matches the .phone.is-leaving fade in style.css.
 const LEAVE_FADE_MS = 600;
 const ORIENTATION = "Upright";
+// The blend on the .riv's Layout -> FanIdle transition (200ms) plus a
+// margin. The state machine reports FanIdle when that blend starts.
+const FAN_BLEND_MS = 250;
 
 const phoneEl = document.querySelector(".phone");
 const canvas = document.getElementById("rive-canvas");
@@ -316,6 +319,16 @@ const riveInstance = new rive.Rive({
     const reveal = vmi.trigger("reveal");
     if (reveal) {
       reveal.on(onRevealed);
+    }
+  },
+  // Taps reach the canvas only once the fan has settled into FanIdle: the
+  // state machine can't act on a pick before then, so a pick trigger fired
+  // during the Layout deal-out or its blend would be lost.
+  onStateChange: (event) => {
+    if (event.data.includes("FanIdle") && !picked) {
+      setTimeout(() => canvas.classList.add("is-ready"), FAN_BLEND_MS);
+    } else if (event.data.some((state) => state !== "FanIdle")) {
+      canvas.classList.remove("is-ready");
     }
   },
   onLoadError: (error) => console.error("Failed to load tarot-animation.riv", error),
