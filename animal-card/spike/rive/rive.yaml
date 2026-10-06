@@ -1,0 +1,5 @@
+name: image-shader-spike
+main: "Probe"
+logs:
+  file: build/rive.log
+  problems: build/problems.log

@@ -1,0 +1,26 @@
+<Rive version="1" kind="fragment">
+    <!-- Can a WGSL shader read a data-bound image? Three panels, left to right:
+         A  the bound image drawn as-is (proves the binding itself works)
+         B  a shader sampling the bound image's own view() directly
+         C  the bound image copied into a canvas first, then that canvas sampled
+         The shader posterizes and shows magenta wherever it samples nothing. -->
+    <Artboard defaultStateMachineId="8:1" viewModelId="10:1" viewModelInstanceId="10:3" clip="true" width="860" height="300" styleId="3:2" name="Probe" id="3:1">
+        <Fill name="Background" id="3:3">
+            <SolidColor colorValue="FF1A1A22" name="Color" id="3:4"/>
+        </Fill>
+        <LayoutComponentStyle name="Probe Style" id="3:2"/>
+        <ScriptedDrawable scriptAssetId="1:1" x="0" y="0" name="Probe" id="3:10"/>
+        <!-- Binds only apply while a state machine runs, so one idles here. -->
+        <StateMachine name="Main" id="8:1">
+            <StateMachineLayer name="Layer" id="8:2">
+                <AnyState id="8:3"/>
+                <ExitState id="8:4"/>
+                <EntryState id="8:5">
+                    <StateTransition stateToId="8:6" id="8:7"/>
+                </EntryState>
+                <AnimationState animationId="7:1" id="8:6"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation duration="60" loopValue="1" name="Idle" id="7:1"/>
+    </Artboard>
+</Rive>

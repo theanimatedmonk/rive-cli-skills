@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image Shader Spike</title>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; padding: 16px; background: #111; color: #ddd; font: 14px system-ui, sans-serif; }
+      canvas { width: 860px; height: 300px; max-width: 100%; display: block; }
+      p { margin: 8px 0; }
+    </style>
+  </head>
+  <body>
+    <p>A: bound image as-is · B: shader on its view() · C: shader on a canvas copy. Magenta = the shader read nothing.</p>
+    <canvas id="c" width="860" height="300"></canvas>
+    <p id="status">Loading…</p>
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.0"></script>
+    <script>
+      // Binds bird.jpg over the default test card at runtime, the way the
+      // bird app would bind a Wikipedia photo. `?bind=0` keeps the default.
+      const status = document.getElementById("status");
+      const bind = new URLSearchParams(location.search).get("bind") !== "0";
+      const r = new rive.Rive({
+        src: "image-shader-spike.riv",
+        canvas: document.getElementById("c"),
+        artboard: "Probe",
+        stateMachines: "Main",
+        autoplay: true,
+        autoBind: true,
+        enableGPUCanvas: true,
+        onLoad: async () => {
+          r.resizeDrawingSurfaceToCanvas();
+          if (!bind) {
+            status.textContent = "Default image (asset) bound.";
+            return;
+          }
+          const bytes = new Uint8Array(await (await fetch("bird.jpg")).arrayBuffer());
+          const image = await rive.decodeImage(bytes);
+          r.viewModelInstance.image("photo").value = image;
+          image.unref();
+          status.textContent = "bird.jpg bound at runtime.";
+        },
+        onLoadError: (e) => (status.textContent = "Load error: " + e),
+      });
+    </script>
+  </body>
+</html>

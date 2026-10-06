@@ -1,0 +1,8 @@
+name: rive
+logs:
+  file: build/rive.log
+  problems: build/problems.log
+main: "AnimalCard"
+push:
+  projectId: 91535
+  fileId: 2629223

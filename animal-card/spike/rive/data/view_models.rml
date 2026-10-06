@@ -1,0 +1,8 @@
+<Rive version="1" kind="fragment">
+    <ViewModel name="Probe" id="10:1">
+        <ViewModelPropertyAssetImage name="photo" id="10:2"/>
+        <ViewModelInstance name="Default" id="10:3">
+            <ViewModelInstanceAssetImage propertyValue="1:3" viewModelPropertyId="10:2" name="photo" id="10:4"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>

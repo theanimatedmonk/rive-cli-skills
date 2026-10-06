@@ -1,0 +1,121 @@
+:root {
+  --bg: #000000;
+  --text: #d9d4ec;
+  --muted: #8f8aa8;
+  --button: #f2f2f5;
+  --button-text: #14122b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.stage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px 16px;
+}
+
+#card {
+  width: min(560px, 100%);
+  aspect-ratio: 620 / 780;
+  height: auto;
+  display: block;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload {
+  position: relative;
+  height: 44px;
+  padding: 0 22px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--button);
+  color: var(--button-text);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload:focus-within {
+  outline: 2px solid var(--button);
+  outline-offset: 3px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.harmony label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.harmony select,
+.harmony input[type="range"] {
+  min-width: 200px;
+  height: 36px;
+  accent-color: #d9b45f;
+}
+
+.harmony select {
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #3a3a46;
+  background: #15151c;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+
+.harmony input[type="text"] {
+  min-width: 200px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #3a3a46;
+  background: #15151c;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Animal Card</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <canvas id="card" width="620" height="780" aria-label="Animal card. Click to flip; move the cursor to tilt."></canvas>
+      <div class="controls">
+        <div class="row">
+        <label class="upload">
+          <input type="file" id="upload" accept="image/png,image/jpeg,image/webp" />
+          Upload image
+        </label>
+        </div>
+        <div class="row harmony">
+          <label>
+            Bird name
+            <input type="text" id="bird-name" value="Osprey" />
+          </label>
+          <label>
+            Scientific name
+            <input type="text" id="scientific-name" value="Pandion haliaetus" />
+          </label>
+        </div>
+        <div class="row harmony">
+          <label>
+            Colour scheme
+            <select id="harmony">
+              <option value="0">Complementary</option>
+              <option value="1">Analogous</option>
+              <option value="2">Split-complementary</option>
+              <option value="3">Triadic</option>
+              <option value="4" selected>Tetradic (square)</option>
+              <option value="5">Tetradic (rectangle)</option>
+            </select>
+          </label>
+          <label>
+            Base hue <span id="hue-value">30°</span>
+            <input type="range" id="base-hue" min="0" max="359" value="30" />
+          </label>
+        </div>
+        <p class="hint" id="status">Click the card to flip it: the photo is on the front, its Madhubani print on the back. Upload a photo to change both, and pick a colour scheme for the print.</p>
+      </div>
+    </main>
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.0"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

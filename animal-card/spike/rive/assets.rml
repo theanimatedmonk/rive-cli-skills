@@ -1,0 +1,6 @@
+<Rive version="1" kind="fragment">
+    <ScriptAsset file="ImageProbe.luau" scriptProtocolValue="node" name="ImageProbe" id="1:1"/>
+    <ShaderAsset file="probe.wgsl" name="probe" id="1:2"/>
+    <!-- Default value of the view model's `photo`; the web page binds a real bird over it. -->
+    <ImageAsset file="test-card.png" width="256" height="256" name="test-card" id="1:3"/>
+</Rive>

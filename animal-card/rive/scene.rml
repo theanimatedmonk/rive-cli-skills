@@ -1,0 +1,362 @@
+<Rive version="1" kind="fragment">
+    <Artboard defaultStateMachineId="0:7044" viewModelId="0:258155" viewModelInstanceId="0:258156" clip="true" width="620" height="780" styleId="0:7042" x="932" y="142" name="AnimalCard" id="0:7039">
+        <LayoutComponentStyle id="0:7042"/>
+        <Shape x="310" y="390" name="Hit" id="0:900001">
+            <Rectangle width="358.5" height="508.5" name="Path" id="0:900002"/>
+        </Shape>
+        <ScriptedDrawable scriptAssetId="0:15675" x="310" y="390" name="Card3D 1" id="0:15676">
+            <ScriptInputNumber name="rotX" id="0:15677"/>
+            <ScriptInputNumber name="rotY" id="0:15678"/>
+            <ScriptInputNumber propertyValue="5" name="depth" id="0:15679"/>
+            <ScriptInputColor propertyValue="FFBFA8FF" name="edgeColor" id="0:15680"/>
+            <ScriptInputNumber propertyValue="20" name="roundness" id="0:26279"/>
+            <ScriptInputNumber propertyValue="1.5" name="scale" id="0:26280"/>
+            <ScriptInputColor propertyValue="FF897DEC" name="shadowColor" id="0:30194"/>
+            <ScriptInputNumber propertyValue="59" name="shadowOpacity" id="0:30195"/>
+            <ScriptInputNumber name="shadowOffsetX" id="0:30196"/>
+            <ScriptInputNumber propertyValue="12" name="shadowOffsetY" id="0:30197"/>
+            <ScriptInputNumber propertyValue="82" name="shadowSoftness" id="0:30198"/>
+            <ScriptInputNumber propertyValue="70" name="maxTilt" id="0:33591"/>
+            <ScriptInputNumber propertyValue="900" name="tiltArea" id="0:33592"/>
+            <ScriptInputArtboard artboardId="0:86045" name="face" id="0:69224"/>
+            <ScriptInputArtboard artboardId="0:900100" name="back" id="0:900003"/>
+            <ScriptInputString name="viewModelProperty" id="0:71293"/>
+            <ScriptInputString propertyValue="front,photo,harmony,baseHue,birdName,scientificName" name="properties" id="0:73531"/>
+            <ScriptInputNumber propertyValue="93" name="lightAngle" id="0:82237"/>
+            <ScriptInputNumber propertyValue="24" name="lightIntensity" id="0:82238"/>
+            <ScriptInputNumber propertyValue="1" name="glossIntensity" id="0:82239"/>
+            <ScriptInputNumber propertyValue="137" name="glossSharpness" id="0:82240"/>
+            <ScriptInputColor propertyValue="FFFFFFFF" name="lightColor" id="0:83451"/>
+            <ScriptInputNumber propertyValue="86" name="ambient" id="0:83452"/>
+            <ScriptInputNumber propertyValue="40" name="foilIntensity" id="0:86034"/>
+            <ScriptInputNumber propertyValue="3" name="foilStripes" id="0:86035"/>
+            <ScriptInputNumber propertyValue="60" name="foilShift" id="0:86036"/>
+            <ScriptInputNumber name="foilAngle" id="0:86777"/>
+            <ScriptInputBoolean propertyValue="true" name="cursorTracking" id="0:177018"/>
+            <ScriptInputNumber propertyValue="70" name="particleCells" id="0:930001"/>
+            <ScriptInputNumber propertyValue="90" name="particleGlow" id="0:930002"/>
+            <ScriptInputNumber propertyValue="1" name="glowSpeed" id="0:930003"/>
+        </ScriptedDrawable>
+        <ScriptedDrawable scriptAssetId="0:950001" name="Aura" id="0:950010">
+            <ScriptInputNumber propertyValue="620" name="width" id="0:950011"/>
+            <ScriptInputNumber propertyValue="780" name="height" id="0:950012"/>
+            <ScriptInputNumber propertyValue="310" name="cardX" id="0:950013"/>
+            <ScriptInputNumber propertyValue="390" name="cardY" id="0:950014"/>
+            <ScriptInputNumber propertyValue="358.5" name="cardWidth" id="0:950015"/>
+            <ScriptInputNumber propertyValue="508.5" name="cardHeight" id="0:950016"/>
+            <ScriptInputNumber propertyValue="24" name="cardCorner" id="0:950017"/>
+            <ScriptInputNumber propertyValue="90" name="count" id="0:950018"/>
+            <ScriptInputNumber propertyValue="70" name="mist" id="0:950019"/>
+            <ScriptInputNumber propertyValue="85" name="reach" id="0:950020"/>
+            <ScriptInputColor propertyValue="FF897DEC" name="auraColor" id="0:950021"/>
+            <ScriptInputColor propertyValue="FFFFD696" name="sparkColor" id="0:950022"/>
+            <ScriptInputNumber propertyValue="650" name="burst" id="0:950023"/>
+        </ScriptedDrawable>
+        <Fill fillRule="2" id="0:1085653">
+            <SolidColor colorValue="FF131313" id="0:1085654"/>
+        </Fill>
+        <StateMachine name="Card" id="0:7044">
+            <StateMachineLayer name="card" id="0:7045">
+                <AnyState x="400" id="0:7046"/>
+                <ExitState x="480" id="0:7047"/>
+                <EntryState id="0:7048">
+                    <StateTransition stateToId="0:7049" id="0:7050"/>
+                </EntryState>
+                <AnimationState animationId="0:7043" x="160" id="0:7049"/>
+            </StateMachineLayer>
+            <StateMachineLayer name="flip" id="0:900010">
+                <AnyState x="400" id="0:900011"/>
+                <ExitState x="480" id="0:900012"/>
+                <EntryState id="0:900013">
+                    <StateTransition stateToId="0:900014" id="0:900015"/>
+                </EntryState>
+                <AnimationState animationId="0:900040" x="160" id="0:900014">
+                    <StateTransition stateToId="0:900016" duration="600" interpolationType="2" id="0:900017">
+                        <TransitionViewModelCondition id="0:900018">
+                            <TransitionPropertyViewModelComparator id="0:900019">
+                                <BindablePropertyTrigger id="0:900020">
+                                    <DataBindContext sourcePathIds="0:258155-0:900005" propertyKey="686" id="0:900021"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:900022"/>
+                        </TransitionViewModelCondition>
+                        <CubicEaseInterpolator id="0:900023"/>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState animationId="0:900041" x="160" y="160" id="0:900016">
+                    <StateTransition stateToId="0:900014" duration="600" interpolationType="2" id="0:900024">
+                        <TransitionViewModelCondition id="0:900025">
+                            <TransitionPropertyViewModelComparator id="0:900026">
+                                <BindablePropertyTrigger id="0:900027">
+                                    <DataBindContext sourcePathIds="0:258155-0:900005" propertyKey="686" id="0:900028"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:900029"/>
+                        </TransitionViewModelCondition>
+                        <CubicEaseInterpolator id="0:900030"/>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+            <StateMachineLayer name="tracking" id="0:900031">
+                <AnyState x="400" id="0:900032"/>
+                <ExitState x="480" id="0:900033"/>
+                <EntryState id="0:900034">
+                    <StateTransition stateToId="0:900035" id="0:900036"/>
+                </EntryState>
+                <AnimationState animationId="0:900042" x="160" id="0:900035"/>
+            </StateMachineLayer>
+            <StateMachineListenerSingle listenerTypeValue="6" targetId="0:900001" name="Tap Card" id="0:900037">
+                <ListenerViewModelChange id="0:900038">
+                    <BindablePropertyTrigger propertyValue="1" id="0:900039">
+                        <DataBindContext sourcePathIds="0:258155-0:900005" propertyKey="686" direction="true" id="0:900043"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+        </StateMachine>
+        <LinearAnimation name="card" id="0:7043">
+            <KeyedObject objectId="0:15679" id="0:101212">
+                <KeyedProperty propertyKey="243" id="0:101213">
+                    <KeyFrameDouble value="3" interpolationType="1" id="0:101214"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:86036" id="0:101215">
+                <KeyedProperty propertyKey="243" id="0:101216">
+                    <KeyFrameDouble value="6" interpolationType="1" id="0:101217"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:86034" id="0:101218">
+                <KeyedProperty propertyKey="243" id="0:101219">
+                    <KeyFrameDouble value="39" interpolationType="1" id="0:101220"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:86035" id="0:101221">
+                <KeyedProperty propertyKey="243" id="0:101222">
+                    <KeyFrameDouble value="4" interpolationType="1" id="0:101223"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:86777" id="0:101224">
+                <KeyedProperty propertyKey="243" id="0:101225">
+                    <KeyFrameDouble value="116" interpolationType="1" id="0:101226"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:26279" id="0:163903">
+                <KeyedProperty propertyKey="243" id="0:163904">
+                    <KeyFrameDouble value="16" interpolationType="1" id="0:163905"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:83452" id="0:258147">
+                <KeyedProperty propertyKey="243" id="0:258148">
+                    <KeyFrameDouble value="87" interpolationType="1" id="0:258149"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:83451" id="0:965880">
+                <KeyedProperty propertyKey="836" id="0:965881">
+                    <KeyFrameColor value="FFFFFFFF" interpolationType="1" id="0:965882"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation name="front" id="0:900040">
+            <KeyedObject objectId="0:15678" id="0:900044">
+                <KeyedProperty propertyKey="243" id="0:900045">
+                    <KeyFrameDouble interpolationType="1" id="0:900046"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation name="back" id="0:900041">
+            <KeyedObject objectId="0:15678" id="0:900047">
+                <KeyedProperty propertyKey="243" id="0:900048">
+                    <KeyFrameDouble value="180" interpolationType="1" id="0:900049"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation loopValue="1" name="tracking" id="0:900042">
+            <KeyedObject objectId="0:177018" id="0:900050">
+                <KeyedProperty propertyKey="245" id="0:900051">
+                    <KeyFrameBool value="true" id="0:900052"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+    <Artboard defaultStateMachineId="0:86050" viewModelId="0:75291" viewModelInstanceId="0:75292" isComponent="true" clip="true" width="239" height="339" styleId="0:86048" x="318" y="157" name="CardFront" id="0:86045">
+        <Text x="13" y="278.5" name="birdName" id="0:1085662">
+            <TextStylePaint fontSize="24" fontAssetId="0:1085672" familyName="Jersey 15" styleName="Regular" name="Style 1" id="0:1085663">
+                <Fill fillRule="2" name="Fill 2" id="0:1085679">
+                    <SolidColor colorValue="FF000000" name="Component" id="0:1085680"/>
+                    <Feather strength="7" offsetY="3" id="0:1085682"/>
+                </Fill>
+                <Fill fillRule="2" name="Fill 1" id="0:1085664">
+                    <SolidColor colorValue="FFFFFFFF" name="Component" id="0:1085665"/>
+                </Fill>
+            </TextStylePaint>
+            <TextValueRun styleId="0:1085663" text="Osprey" name="Run 1" id="0:1085668">
+                <DataBindContext sourcePathIds="0:258155-0:258157-0:970001" propertyKey="268" id="0:970010"/>
+            </TextValueRun>
+        </Text>
+        <Text x="13" y="305.5" name="scientificName" id="0:1085655">
+            <TextStylePaint fontSize="16" fontAssetId="0:1085675" familyName="Inter" styleName="Light Italic" id="0:1085656">
+                <Fill fillRule="2" name="Fill 2" id="0:1085683">
+                    <SolidColor colorValue="FF000000" name="Component" id="0:1085684"/>
+                    <Feather strength="2" offsetY="1" id="0:1085685"/>
+                </Fill>
+                <Fill fillRule="2" id="0:1085657">
+                    <SolidColor colorValue="FFFFFFFF" id="0:1085658"/>
+                </Fill>
+                <TextStyleAxis tag="1869640570" axisValue="14" id="0:1085688"/>
+                <TextStyleAxis tag="2003265652" axisValue="300" id="0:1085689"/>
+            </TextStylePaint>
+            <TextValueRun styleId="0:1085656" text="Pandion haliaetus" id="0:1085661">
+                <DataBindContext sourcePathIds="0:258155-0:258157-0:970002" propertyKey="268" id="0:970011"/>
+            </TextValueRun>
+        </Text>
+        <Image assetId="0:258162" fit="2" name="image" id="0:101211">
+            <LayoutParticipant layoutWidthScaleType="1" layoutHeightScaleType="1" name="image Layout" id="0:900060"/>
+            <DataBindContext sourcePathIds="0:258155-0:258157-0:258152" propertyKey="206" id="0:258159"/>
+        </Image>
+        <Fill fillRule="2" id="0:86046">
+            <SolidColor colorValue="FF282828" id="0:86047"/>
+        </Fill>
+        <LayoutComponentStyle id="0:86048"/>
+        <StateMachine name="State Machine 1" id="0:86050">
+            <StateMachineLayer name="Layer 1" id="0:86051">
+                <AnyState x="400" id="0:86052"/>
+                <ExitState x="480" id="0:86053"/>
+                <EntryState id="0:86054">
+                    <StateTransition stateToId="0:86055" id="0:86056"/>
+                </EntryState>
+                <AnimationState animationId="0:86049" x="160" id="0:86055"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation name="Timeline 1" id="0:86049"/>
+    </Artboard>
+    <Artboard defaultStateMachineId="0:920001" viewModelId="0:75291" viewModelInstanceId="0:75292" isComponent="true" clip="true" width="239" height="339" styleId="0:900101" x="318" y="560" name="CardBack" id="0:900100">
+        <LayoutComponentStyle id="0:900101"/>
+        <Shape x="119.5" y="169.5" name="Inner Frame" id="0:900130">
+            <Rectangle cornerRadiusTL="8" cornerRadiusTR="8" cornerRadiusBL="8" cornerRadiusBR="8" width="195" height="295" name="Path" id="0:900131"/>
+            <Stroke id="0:900132">
+                <SolidColor colorValue="80D9B45F" id="0:900133"/>
+            </Stroke>
+        </Shape>
+        <Shape x="119.5" y="169.5" name="Frame" id="0:900140">
+            <Rectangle cornerRadiusTL="12" cornerRadiusTR="12" cornerRadiusBL="12" cornerRadiusBR="12" width="211" height="311" name="Path" id="0:900141"/>
+            <Stroke thickness="2" id="0:900142">
+                <SolidColor colorValue="FFD9B45F" id="0:900143"/>
+            </Stroke>
+        </Shape>
+        <ScriptedDrawable scriptAssetId="0:910001" name="Madhubani" id="0:910010">
+            <ScriptInputNumber propertyValue="239" name="width" id="0:910011"/>
+            <ScriptInputNumber propertyValue="339" name="height" id="0:910012"/>
+            <ScriptInputNumber propertyValue="2" name="resolution" id="0:910013"/>
+            <ScriptInputNumber propertyValue="1" name="amount" id="0:910014"/>
+            <ScriptInputNumber propertyValue="4" name="harmony" id="0:910016"/>
+            <ScriptInputNumber propertyValue="30" name="baseHue" id="0:910025"/>
+            <ScriptInputNumber propertyValue="6" name="flatten" id="0:910017"/>
+            <ScriptInputNumber propertyValue="2" name="lineWidth" id="0:910018"/>
+            <ScriptInputNumber propertyValue="9" name="patternScale" id="0:910019"/>
+            <ScriptInputNumber propertyValue="0.2" name="maskThreshold" id="0:910023"/>
+            <ScriptInputNumber propertyValue="0.22" name="dither" id="0:910024"/>
+        </ScriptedDrawable>
+        <Fill fillRule="2" id="0:900102">
+            <SolidColor colorValue="FF1B2236" id="0:900103"/>
+        </Fill>
+        <StateMachine name="State Machine 1" id="0:920001">
+            <StateMachineLayer name="Layer 1" id="0:920002">
+                <AnyState x="400" id="0:920003"/>
+                <ExitState x="480" id="0:920004"/>
+                <EntryState id="0:920005">
+                    <StateTransition stateToId="0:920006" id="0:920007"/>
+                </EntryState>
+                <AnimationState animationId="0:920008" x="160" id="0:920006"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation name="Timeline 1" id="0:920008"/>
+    </Artboard>
+    <CodeRun text="-- Card3D node: drives Card3DShader (WGSL in the Shaders panel)." id="0:965894"/>
+    <ComponentAsset artboardId="0:86045" name="CardFront" id="0:86058"/>
+    <ComponentAsset artboardId="0:900100" name="CardBack" id="0:900104"/>
+    <CubicEaseInterpolator id="0:75301"/>
+    <CubicEaseInterpolator id="0:75303"/>
+    <CubicEaseInterpolator id="0:178862"/>
+    <CubicEaseInterpolator id="0:178863"/>
+    <CubicEaseInterpolator id="0:179099"/>
+    <CubicEaseInterpolator id="0:179100"/>
+    <CubicEaseInterpolator id="0:215890"/>
+    <CubicEaseInterpolator id="0:215987"/>
+    <CubicEaseInterpolator id="0:215988"/>
+    <CubicEaseInterpolator id="0:215989"/>
+    <CubicEaseInterpolator id="0:215990"/>
+    <CubicEaseInterpolator id="0:215991"/>
+    <CubicEaseInterpolator id="0:215992"/>
+    <CubicEaseInterpolator id="0:216007"/>
+    <CubicEaseInterpolator id="0:216008"/>
+    <CubicEaseInterpolator id="0:216009"/>
+    <CubicEaseInterpolator id="0:216010"/>
+    <CubicEaseInterpolator id="0:216011"/>
+    <CubicEaseInterpolator id="0:216012"/>
+    <CubicEaseInterpolator id="0:216066"/>
+    <CubicEaseInterpolator id="0:216067"/>
+    <CubicEaseInterpolator id="0:216068"/>
+    <CubicEaseInterpolator id="0:216069"/>
+    <CubicEaseInterpolator id="0:216070"/>
+    <CubicEaseInterpolator id="0:216071"/>
+    <CubicEaseInterpolator id="0:216072"/>
+    <CubicEaseInterpolator id="0:216073"/>
+    <ElasticInterpolator id="0:543"/>
+    <ElasticInterpolator id="0:544"/>
+    <ElasticInterpolator id="0:545"/>
+    <ElasticInterpolator id="0:177021"/>
+    <ElasticInterpolator id="0:177022"/>
+    <ElasticInterpolator id="0:178767"/>
+    <ElasticInterpolator id="0:178768"/>
+    <ElasticInterpolator id="0:179012"/>
+    <ElasticInterpolator id="0:179013"/>
+    <ElasticInterpolator id="0:215958"/>
+    <ElasticInterpolator id="0:215959"/>
+    <ElasticInterpolator id="0:257996"/>
+    <ElasticInterpolator id="0:257997"/>
+    <ElasticInterpolator id="0:257998"/>
+    <FontAsset file="Inter.ttf" isCustom="false" assetId="4228759" name="Inter" id="0:163801"/>
+    <FontAsset file="Abril Fatface.ttf" isCustom="false" assetId="4227224" name="Abril Fatface" id="0:163906"/>
+    <FontAsset file="Jacquard 12 Charted.ttf" isCustom="false" assetId="4228771" name="Jacquard 12 Charted" id="0:1085671"/>
+    <FontAsset file="Jersey 15.ttf" isCustom="false" assetId="4228788" name="Jersey 15" id="0:1085672"/>
+    <FontAsset file="Inter_2.ttf" isCustom="false" assetId="4228758" name="Inter" id="0:1085675"/>
+    <FontAsset file="Italianno.ttf" isCustom="false" assetId="4228768" name="Italianno" id="0:1085678"/>
+    <ImageAsset file="charizard.png" height="342" width="245" assetId="6761779" name="charizard" id="0:86043"/>
+    <ImageAsset file="chipmunk.png" height="1024" width="811" assetId="6764303" name="chipmunk" id="0:101210"/>
+    <ImageAsset file="bg-shade.png" height="652" width="1440" assetId="6796614" name="bg-shade" id="0:163833"/>
+    <ImageAsset file="lady.png" height="280" width="187" assetId="6801723" name="lady" id="0:173020"/>
+    <ImageAsset file="osprey.png" quality="0.75999999" height="555" width="360" assetId="6981436" name="osprey" id="0:258162"/>
+    <SVGAsset file="pasted.svg" height="111" width="100" assetId="6860016" name="pasted" id="0:216299"/>
+    <ScriptAsset file="Card3D.luau" serializedImplementedMethods="859" scriptProtocolValue="1" name="Card3D" id="0:15675"/>
+    <ScriptAsset file="SandDust.luau" compilationOrder="3" serializedImplementedMethods="859" scriptProtocolValue="1" name="SandDust" id="0:144884"/>
+    <ScriptAsset file="Madhubani.luau" compilationOrder="1" serializedImplementedMethods="769" scriptProtocolValue="1" name="Madhubani" id="0:910001"/>
+    <ScriptAsset file="Aura.luau" compilationOrder="2" serializedImplementedMethods="769" scriptProtocolValue="1" name="Aura" id="0:950001"/>
+    <ShaderAsset file="Card3DShader.wgsl" name="Card3DShader" id="0:8045"/>
+    <ShaderAsset file="CardShadowShader.wgsl" name="CardShadowShader" id="0:44345"/>
+    <ShaderAsset file="SandDustShader.wgsl" name="SandDustShader" id="0:139249"/>
+    <ShaderAsset file="MadhubaniFlatten.wgsl" name="MadhubaniFlatten" id="0:910002"/>
+    <ShaderAsset file="MadhubaniStylize.wgsl" name="MadhubaniStylize" id="0:910003"/>
+    <ShaderAsset file="AuraMist.wgsl" name="AuraMist" id="0:950002"/>
+    <SolidColor colorValue="FFFFFFFF" id="0:965890"/>
+    <ViewModel defaultInstanceId="0:75292" name="CardFront" id="0:75291">
+        <ViewModelPropertyAssetImage name="photo" id="0:258152"/>
+        <ViewModelPropertyNumber name="harmony" id="0:940001"/>
+        <ViewModelPropertyNumber name="baseHue" id="0:940002"/>
+        <ViewModelPropertyString name="birdName" id="0:970001"/>
+        <ViewModelPropertyString name="scientificName" id="0:970002"/>
+        <ViewModelInstance exports="true" id="0:75292">
+            <ViewModelInstanceAssetImage propertyValue="0:258162" viewModelPropertyId="0:258152" id="0:258153"/>
+            <ViewModelInstanceNumber propertyValue="4" viewModelPropertyId="0:940001" id="0:940003"/>
+            <ViewModelInstanceNumber propertyValue="30" viewModelPropertyId="0:940002" id="0:940004"/>
+            <ViewModelInstanceString propertyValue="Osprey" viewModelPropertyId="0:970001" id="0:970003"/>
+            <ViewModelInstanceString propertyValue="Pandion haliaetus" viewModelPropertyId="0:970002" id="0:970004"/>
+        </ViewModelInstance>
+    </ViewModel>
+    <ViewModel defaultInstanceId="0:258156" name="AnimalCard" id="0:258155">
+        <ViewModelPropertyViewModel viewModelReferenceId="0:75291" name="front" id="0:258157"/>
+        <ViewModelPropertyTrigger name="flip" id="0:900005"/>
+        <ViewModelInstance exports="true" id="0:258156">
+            <ViewModelInstanceViewModel propertyValue="0:75292" viewModelPropertyId="0:258157" id="0:258158"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:900005" name="flip" id="0:900006"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>
