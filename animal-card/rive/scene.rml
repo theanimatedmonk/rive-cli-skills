@@ -1,12 +1,12 @@
 <Rive version="1" kind="fragment">
-    <Artboard defaultStateMachineId="0:7044" viewModelId="0:258155" viewModelInstanceId="0:258156" clip="true" width="620" height="780" styleId="0:7042" x="932" y="142" name="AnimalCard" id="0:7039">
+    <Artboard defaultStateMachineId="0:7044" viewModelId="0:258155" viewModelInstanceId="0:258156" clip="true" width="610" height="1082" styleId="0:7042" x="932" y="142" name="AnimalCard" id="0:7039">
         <LayoutComponentStyle id="0:7042"/>
-        <Shape x="310" y="390" name="Hit" id="0:900001">
+        <Shape x="305" y="440" name="Hit" id="0:900001">
             <Rectangle width="358.5" height="508.5" name="Path" id="0:900002"/>
         </Shape>
-        <ScriptedDrawable scriptAssetId="0:15675" x="310" y="390" name="Card3D 1" id="0:15676">
+        <ScriptedDrawable scriptAssetId="0:15675" x="305" y="440" name="Card3D 1" id="0:15676">
             <ScriptInputNumber name="rotX" id="0:15677"/>
-            <ScriptInputNumber name="rotY" id="0:15678"/>
+            <ScriptInputNumber propertyValue="180" name="rotY" id="0:15678"/>
             <ScriptInputNumber propertyValue="5" name="depth" id="0:15679"/>
             <ScriptInputColor propertyValue="FFBFA8FF" name="edgeColor" id="0:15680"/>
             <ScriptInputNumber propertyValue="20" name="roundness" id="0:26279"/>
@@ -36,12 +36,15 @@
             <ScriptInputNumber propertyValue="70" name="particleCells" id="0:930001"/>
             <ScriptInputNumber propertyValue="90" name="particleGlow" id="0:930002"/>
             <ScriptInputNumber propertyValue="1" name="glowSpeed" id="0:930003"/>
+            <ScriptInputNumber propertyValue="75" name="shineIntensity" id="0:1205470"/>
+            <ScriptInputNumber propertyValue="10" name="shineWidth" id="0:1205471"/>
+            <ScriptInputNumber propertyValue="0.80000001" name="shineSpeed" id="0:1205472"/>
         </ScriptedDrawable>
         <ScriptedDrawable scriptAssetId="0:950001" name="Aura" id="0:950010">
-            <ScriptInputNumber propertyValue="620" name="width" id="0:950011"/>
-            <ScriptInputNumber propertyValue="780" name="height" id="0:950012"/>
-            <ScriptInputNumber propertyValue="310" name="cardX" id="0:950013"/>
-            <ScriptInputNumber propertyValue="390" name="cardY" id="0:950014"/>
+            <ScriptInputNumber propertyValue="610" name="width" id="0:950011"/>
+            <ScriptInputNumber propertyValue="1082" name="height" id="0:950012"/>
+            <ScriptInputNumber propertyValue="305" name="cardX" id="0:950013"/>
+            <ScriptInputNumber propertyValue="440" name="cardY" id="0:950014"/>
             <ScriptInputNumber propertyValue="358.5" name="cardWidth" id="0:950015"/>
             <ScriptInputNumber propertyValue="508.5" name="cardHeight" id="0:950016"/>
             <ScriptInputNumber propertyValue="24" name="cardCorner" id="0:950017"/>
@@ -52,9 +55,6 @@
             <ScriptInputColor propertyValue="FFFFD696" name="sparkColor" id="0:950022"/>
             <ScriptInputNumber propertyValue="650" name="burst" id="0:950023"/>
         </ScriptedDrawable>
-        <Fill fillRule="2" id="0:1085653">
-            <SolidColor colorValue="FF131313" id="0:1085654"/>
-        </Fill>
         <StateMachine name="Card" id="0:7044">
             <StateMachineLayer name="card" id="0:7045">
                 <AnyState x="400" id="0:7046"/>
@@ -68,7 +68,7 @@
                 <AnyState x="400" id="0:900011"/>
                 <ExitState x="480" id="0:900012"/>
                 <EntryState id="0:900013">
-                    <StateTransition stateToId="0:900014" id="0:900015"/>
+                    <StateTransition stateToId="0:900016" id="0:900015"/>
                 </EntryState>
                 <AnimationState animationId="0:900040" x="160" id="0:900014">
                     <StateTransition stateToId="0:900016" duration="600" interpolationType="2" id="0:900017">
@@ -116,32 +116,32 @@
         <LinearAnimation name="card" id="0:7043">
             <KeyedObject objectId="0:15679" id="0:101212">
                 <KeyedProperty propertyKey="243" id="0:101213">
-                    <KeyFrameDouble value="3" interpolationType="1" id="0:101214"/>
+                    <KeyFrameDouble value="5" interpolationType="1" id="0:101214"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:86036" id="0:101215">
                 <KeyedProperty propertyKey="243" id="0:101216">
-                    <KeyFrameDouble value="6" interpolationType="1" id="0:101217"/>
+                    <KeyFrameDouble interpolationType="1" id="0:101217"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:86034" id="0:101218">
                 <KeyedProperty propertyKey="243" id="0:101219">
-                    <KeyFrameDouble value="39" interpolationType="1" id="0:101220"/>
+                    <KeyFrameDouble interpolationType="1" id="0:101220"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:86035" id="0:101221">
                 <KeyedProperty propertyKey="243" id="0:101222">
-                    <KeyFrameDouble value="4" interpolationType="1" id="0:101223"/>
+                    <KeyFrameDouble interpolationType="1" id="0:101223"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:86777" id="0:101224">
                 <KeyedProperty propertyKey="243" id="0:101225">
-                    <KeyFrameDouble value="116" interpolationType="1" id="0:101226"/>
+                    <KeyFrameDouble interpolationType="1" id="0:101226"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:26279" id="0:163903">
                 <KeyedProperty propertyKey="243" id="0:163904">
-                    <KeyFrameDouble value="16" interpolationType="1" id="0:163905"/>
+                    <KeyFrameDouble value="20" interpolationType="1" id="0:163905"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:83452" id="0:258147">
@@ -152,6 +152,11 @@
             <KeyedObject objectId="0:83451" id="0:965880">
                 <KeyedProperty propertyKey="836" id="0:965881">
                     <KeyFrameColor value="FFFFFFFF" interpolationType="1" id="0:965882"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:15680" id="0:1205467">
+                <KeyedProperty propertyKey="836" id="0:1205468">
+                    <KeyFrameColor value="FF9F9F9F" interpolationType="1" id="0:1205469"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
@@ -270,7 +275,6 @@
         </StateMachine>
         <LinearAnimation name="Timeline 1" id="0:920008"/>
     </Artboard>
-    <CodeRun text="-- Card3D node: drives Card3DShader (WGSL in the Shaders panel)." id="0:965894"/>
     <ComponentAsset artboardId="0:86045" name="CardFront" id="0:86058"/>
     <ComponentAsset artboardId="0:900100" name="CardBack" id="0:900104"/>
     <CubicEaseInterpolator id="0:75301"/>
@@ -320,23 +324,20 @@
     <FontAsset file="Jersey 15.ttf" isCustom="false" assetId="4228788" name="Jersey 15" id="0:1085672"/>
     <FontAsset file="Inter_2.ttf" isCustom="false" assetId="4228758" name="Inter" id="0:1085675"/>
     <FontAsset file="Italianno.ttf" isCustom="false" assetId="4228768" name="Italianno" id="0:1085678"/>
-    <ImageAsset file="charizard.png" height="342" width="245" assetId="6761779" name="charizard" id="0:86043"/>
     <ImageAsset file="chipmunk.png" height="1024" width="811" assetId="6764303" name="chipmunk" id="0:101210"/>
-    <ImageAsset file="bg-shade.png" height="652" width="1440" assetId="6796614" name="bg-shade" id="0:163833"/>
     <ImageAsset file="lady.png" height="280" width="187" assetId="6801723" name="lady" id="0:173020"/>
     <ImageAsset file="osprey.png" quality="0.75999999" height="555" width="360" assetId="6981436" name="osprey" id="0:258162"/>
     <SVGAsset file="pasted.svg" height="111" width="100" assetId="6860016" name="pasted" id="0:216299"/>
-    <ScriptAsset file="Card3D.luau" serializedImplementedMethods="859" scriptProtocolValue="1" name="Card3D" id="0:15675"/>
-    <ScriptAsset file="SandDust.luau" compilationOrder="3" serializedImplementedMethods="859" scriptProtocolValue="1" name="SandDust" id="0:144884"/>
-    <ScriptAsset file="Madhubani.luau" compilationOrder="1" serializedImplementedMethods="769" scriptProtocolValue="1" name="Madhubani" id="0:910001"/>
-    <ScriptAsset file="Aura.luau" compilationOrder="2" serializedImplementedMethods="769" scriptProtocolValue="1" name="Aura" id="0:950001"/>
+    <ScriptAsset file="Card3D.luau" compilationOrder="3" serializedImplementedMethods="859" scriptProtocolValue="1" name="Card3D" id="0:15675"/>
+    <ScriptAsset file="SandDust.luau" compilationOrder="2" serializedImplementedMethods="859" scriptProtocolValue="1" name="SandDust" id="0:144884"/>
+    <ScriptAsset file="Madhubani.luau" serializedImplementedMethods="769" scriptProtocolValue="1" name="Madhubani" id="0:910001"/>
+    <ScriptAsset file="Aura.luau" compilationOrder="1" serializedImplementedMethods="769" scriptProtocolValue="1" name="Aura" id="0:950001"/>
     <ShaderAsset file="Card3DShader.wgsl" name="Card3DShader" id="0:8045"/>
     <ShaderAsset file="CardShadowShader.wgsl" name="CardShadowShader" id="0:44345"/>
     <ShaderAsset file="SandDustShader.wgsl" name="SandDustShader" id="0:139249"/>
     <ShaderAsset file="MadhubaniFlatten.wgsl" name="MadhubaniFlatten" id="0:910002"/>
     <ShaderAsset file="MadhubaniStylize.wgsl" name="MadhubaniStylize" id="0:910003"/>
     <ShaderAsset file="AuraMist.wgsl" name="AuraMist" id="0:950002"/>
-    <SolidColor colorValue="FFFFFFFF" id="0:965890"/>
     <ViewModel defaultInstanceId="0:75292" name="CardFront" id="0:75291">
         <ViewModelPropertyAssetImage name="photo" id="0:258152"/>
         <ViewModelPropertyNumber name="harmony" id="0:940001"/>

@@ -29,8 +29,8 @@ body {
 }
 
 #card {
-  width: min(560px, 100%);
-  aspect-ratio: 620 / 780;
+  width: min(440px, 100%);
+  aspect-ratio: 610 / 1082;
   height: auto;
   display: block;
 }

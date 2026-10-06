@@ -10,14 +10,16 @@
 // card turns (a perfectly flat normal would brighten the whole face at once).
 //
 // Bindings group 0:
-//   0: UBO 224 bytes — mvp, model, edgeColor,
+//   0: UBO 256 bytes — mvp, model, edgeColor,
 //      light (angleRad, lightI, glossI, glossSharp 0-1),
 //      params.x = curvature, params.y = ambient 0-1,
 //      params.z = 0 card normals / 1 sphere normals (from localPos),
 //      params.w = seconds,
 //      lightColor = gloss tint,
 //      foil (intensity 0-1, stripe count, tilt shift 0-1, angle rad),
-//      particles (cells across, glow 0-1, speed, unused)
+//      particles (cells across, glow 0-1, speed, unused),
+//      shine (intensity 0-1, rim width, speed rad/s, unused),
+//      rim (face half-width, half-height, corner radius, unused) in mesh units
 //   1: face texture
 //   2: sampler
 //   3: back texture
@@ -31,6 +33,8 @@ struct UBO {
     lightColor: vec4<f32>,
     foil: vec4<f32>,
     particles: vec4<f32>,
+    shine: vec4<f32>,
+    rim: vec4<f32>,
 }
 @group(0) @binding(0) var<uniform> u: UBO;
 @group(0) @binding(1) var tFace: texture_2d<f32>;
@@ -131,6 +135,25 @@ fn fs_main(f: VOut) -> @location(0) vec4<f32> {
     let invA = vec3<f32>(1.0) - lit;
     let invF = vec3<f32>(1.0) - foilLit;
     var rgb = vec3<f32>(1.0) - invA * invF;
+
+    // Edge shine on the front: a thin bright rim (rounded-rect distance from the
+    // face outline), a highlight that travels around it over time, and extra
+    // light on whichever edge the tilt brings toward the viewer.
+    if (isFront) {
+        let p = f.localPos.xy;
+        let half = u.rim.xy;
+        let radius = u.rim.z;
+        let q = abs(p) - half + vec2<f32>(radius);
+        let sdf = length(max(q, vec2<f32>(0.0))) + min(max(q.x, q.y), 0.0) - radius;
+        let inset = max(-sdf, 0.0);
+        let rimMask = 1.0 - smoothstep(0.0, max(u.shine.y, 0.5), inset);
+        let theta = atan2(p.y, p.x);
+        let sweep = pow(0.5 + 0.5 * cos(theta - u.params.w * u.shine.z), 10.0);
+        let towardViewer = (u.model * vec4<f32>(p, 0.0, 0.0)).z / max(max(half.x, half.y), 1.0);
+        let tiltLift = clamp(towardViewer * 6.0, 0.0, 1.0);
+        let shineAmt = rimMask * (0.22 + 0.9 * sweep + 0.8 * tiltLift) * u.shine.x;
+        rgb = min(rgb + u.lightColor.rgb * shineAmt, vec3<f32>(1.0));
+    }
 
     // The back's print stays vivid under the light: a gentle saturation lift.
     let isBack = f.localPos.z < 0.0 && k < 0.5;

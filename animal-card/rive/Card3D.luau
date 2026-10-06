@@ -7,6 +7,8 @@
 -- Lighting: lightAngle (deg), lightIntensity, glossIntensity, glossSharpness (0-100),
 -- lightColor, ambient.
 -- Foil: foilIntensity, foilStripes, foilShift, foilAngle.
+-- Edge shine (front): shineIntensity (0-100), shineWidth (face px), shineSpeed
+-- (rad/s a highlight travels around the rim; the edge tilted toward you also lights up).
 -- Shadow: with `harmony`/`baseHue` on the view model (under `front`), the
 -- shadow colour is a deep shade of the base hue (the colour scheme helpers below).
 -- Back particles: particleCells (across the card), particleGlow (0-100),
@@ -141,7 +143,7 @@ local CORNER_SEG = 8
 local MAX_OUTLINE = 4 * (CORNER_SEG + 1)
 local MAX_VERTS = MAX_OUTLINE * 3 * 2 + MAX_OUTLINE * 6
 local VBYTES = VSTRIDE * MAX_VERTS
-local UBO_SIZE = 224
+local UBO_SIZE = 256
 local TILT_SMOOTH = 10
 local SHADOW_UBO = 64
 
@@ -173,6 +175,9 @@ type Card3D = {
   foilStripes: Input<number>,
   foilShift: Input<number>,
   foilAngle: Input<number>,
+  shineIntensity: Input<number>,
+  shineWidth: Input<number>,
+  shineSpeed: Input<number>,
   cursorTracking: Input<boolean>,
   particleCells: Input<number>,
   particleGlow: Input<number>,
@@ -1662,6 +1667,15 @@ local function draw(self: Card3D, renderer: Renderer)
   buffer.writef32(self._ubuf, 212, math.max(0, num(self.particleGlow, 60)) / 100)
   buffer.writef32(self._ubuf, 216, num(self.glowSpeed, 1))
   buffer.writef32(self._ubuf, 220, 0)
+  -- shine: intensity 0-1, rim width, speed; rim: face half-size and corner radius (mesh units).
+  buffer.writef32(self._ubuf, 224, math.max(0, num(self.shineIntensity, 60)) / 100)
+  buffer.writef32(self._ubuf, 228, math.max(0.5, num(self.shineWidth, 10)))
+  buffer.writef32(self._ubuf, 232, num(self.shineSpeed, 0.8))
+  buffer.writef32(self._ubuf, 236, 0)
+  buffer.writef32(self._ubuf, 240, hw)
+  buffer.writef32(self._ubuf, 244, hh)
+  buffer.writef32(self._ubuf, 248, r)
+  buffer.writef32(self._ubuf, 252, 0)
   ubo:write(self._ubuf)
 
   local faceView = self._dummyView
@@ -1766,6 +1780,9 @@ return function(): Node<Card3D>
     foilStripes = 3,
     foilShift = 60,
     foilAngle = 45,
+    shineIntensity = 60,
+    shineWidth = 10,
+    shineSpeed = 0.8,
     cursorTracking = false,
     particleCells = 70,
     particleGlow = 60,
