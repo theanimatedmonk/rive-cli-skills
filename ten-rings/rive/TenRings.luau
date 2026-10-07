@@ -46,6 +46,8 @@ export type TenRings = {
 	flight: Input<number>,
 	charge: Input<number>,
 	shake: Input<number>,
+	-- Temporary (for a video shot): all ten rings stacked on one forearm.
+	armStack: Input<number>,
 	-- External follow target (e.g. a tracked hand), 0..1 across and down the
 	-- node's width/height. While `followActive`, it drives the Orbit chain
 	-- exactly like the pointer does.
@@ -302,6 +304,22 @@ local function circlePose(i: number, t: number, power: number, turn: number, tum
 	local ay = ty * math.sin(flip) + ry * wobble
 	local az = math.cos(flip)
 	return { x = x, y = y, z = 0, ax = ax, ay = ay, az = az, s = CIRCLE_RING }
+end
+
+-- Forearm stack (temporary, for a video shot): the original summon pose.
+-- All ten rings nested along one unseen forearm running up and to the
+-- right, a little toward the camera, larger near the elbow.
+local ARM_X, ARM_Y, ARM_Z = normalize(0.42, 1, 0.3)
+local ARM_BASE_X, ARM_BASE_Y, ARM_BASE_Z = 0.25, -0.05, 0
+
+local function stackPose(i: number, t: number, power: number): Pose
+	local along = (i - (COUNT + 1) / 2) * 0.125
+	local wob = math.sin(t * 6 + PHASE[i]) * 0.012 * power
+	local x = ARM_BASE_X + ARM_X * along + wob
+	local y = ARM_BASE_Y + ARM_Y * along
+	local z = ARM_BASE_Z + ARM_Z * along
+	local s = 0.6 + (COUNT - i) * 0.01
+	return { x = x, y = y, z = z, ax = ARM_X, ay = ARM_Y, az = ARM_Z, s = s }
 end
 
 -- Unleash cluster: the rings pulled into a tight circle, so close they
@@ -706,6 +724,19 @@ local function render(self: TenRings): Image?
 		local x, y, z = mix(o.x, st.x, formation), mix(o.y, st.y, formation), mix(o.z, st.z, formation)
 		local ax, ay, az = mix(o.ax, st.ax, formation), mix(o.ay, st.ay, formation), mix(o.az, st.az, formation)
 		local s = mix(o.s, st.s, formation)
+		-- Forearm stack shot: all ten nested along one arm, spinning.
+		local armStack = clamp(self.armStack, 0, 1)
+		if armStack > 0 then
+			local st2 = stackPose(i, t, power)
+			local k = smooth(armStack)
+			x = mix(x, st2.x, k)
+			y = mix(y, st2.y, k)
+			z = mix(z, st2.z, k)
+			ax = mix(ax, st2.ax, k)
+			ay = mix(ay, st2.ay, k)
+			az = mix(az, st2.az, k)
+			s = mix(s, st2.s, k)
+		end
 		-- Unleash, part 1: collapse into the interlocked cluster.
 		local charge = clamp(self.charge, 0, 1)
 		if charge > 0 then
@@ -1168,9 +1199,18 @@ function advance(self: TenRings, seconds: number): boolean
 	local formation = smooth(self.formation)
 	-- One rotation for halo and circle: lazy in orbit, a little quicker
 	-- once summoned.
-	-- Held while resting, so each arm's rings fly to the slots on its side.
+	-- Held while resting, so each arm's rings fly to the slots on its side;
+	-- and eased back to the starting angle, so after a Return the halo is
+	-- lined up for the next Awaken.
 	local moving = 1 - clamp(self.rest, 0, 1)
 	self.turn = (self.turn + seconds * moving * (0.16 + formation * 0.2 * power)) % (math.pi * 2)
+	if self.rest > 0.5 then
+		local back = self.turn
+		if back > math.pi then
+			back -= math.pi * 2
+		end
+		self.turn = (self.turn - back * (1 - math.exp(-2.5 * seconds))) % (math.pi * 2)
+	end
 	-- Tumbling eases in with the circle and speeds up with power.
 	self.tumble = (self.tumble + seconds * formation * (1.4 + 1.8 * power)) % (math.pi * 4)
 	-- Charging spins the interlocked cluster faster and faster.
@@ -1183,6 +1223,7 @@ function advance(self: TenRings, seconds: number): boolean
 		-- Orbit: lazy, alternating. Summoned: every ring spins the same way at
 		-- the same speed, in step with the tumble.
 		local rate = mix(0.25 * dir, 1.2 * (0.4 + power), formation) + dir * launch * 14 + charge * 6
+			+ clamp(self.armStack, 0, 1) * dir * (1.2 + 0.15 * i) * (0.4 + power)
 		self.spins[i] = (self.spins[i] + rate * seconds) % (math.pi * 2)
 	end
 	-- Cursor follow: on while the pointer has moved recently, off once it
@@ -1286,6 +1327,7 @@ return function(): Node<TenRings>
 		flight = 0,
 		charge = 0,
 		shake = 0,
+		armStack = 0,
 		followX = 0.5,
 		followY = 0.5,
 		followActive = false,

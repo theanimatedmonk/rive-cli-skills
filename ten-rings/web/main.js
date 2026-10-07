@@ -12,6 +12,7 @@ const buttons = {
   summon: document.getElementById("summon"),
   unleash: document.getElementById("unleash"),
   recall: document.getElementById("recall"),
+  stack: document.getElementById("stack"),
 };
 const toggle = document.getElementById("wielders");
 
@@ -24,6 +25,10 @@ let phase = "rest";
 const PHASES = {
   Rest: "rest",
   Awaken: "awakening",
+  Return: "returning",
+  StackIn: "stacking",
+  StackHold: "stacked",
+  StackOut: "unstacking",
   Orbit: "orbit",
   SummonIn: "summoning",
   SummonHold: "summoned",
@@ -37,7 +42,8 @@ function syncButtons() {
   buttons.summon.textContent = phase === "rest" || phase === "awakening" ? "Awaken" : "Pray to summon";
   buttons.summon.disabled = phase !== "rest";
   buttons.unleash.disabled = phase !== "summoned";
-  buttons.recall.disabled = phase !== "summoned";
+  buttons.recall.disabled = phase !== "summoned" && phase !== "stacked";
+  buttons.stack.disabled = phase !== "orbit";
 }
 
 function fire(name) {
@@ -113,6 +119,7 @@ buttons.summon.addEventListener("click", () => {
 });
 buttons.unleash.addEventListener("click", () => fire("unleash"));
 buttons.recall.addEventListener("click", () => fire("recall"));
+buttons.stack.addEventListener("click", () => fire("stack"));
 
 // Space: awaken, then unleash (summoning is by the pray gesture only). Esc: recall.
 window.addEventListener("keydown", (event) => {

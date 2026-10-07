@@ -28,6 +28,7 @@
             <ScriptInputNumber propertyValue="0" name="flight" id="3:22"/>
             <ScriptInputNumber propertyValue="0" name="charge" id="3:23"/>
             <ScriptInputNumber propertyValue="0" name="shake" id="3:24"/>
+            <ScriptInputNumber propertyValue="0" name="armStack" id="3:28"/>
             <ScriptInputNumber propertyValue="0.5" name="followX" id="3:25">
                 <DataBindContext sourcePathIds="10:1-10:17" propertyKey="243" id="0:475"/>
             </ScriptInputNumber>
@@ -87,7 +88,48 @@
                 <AnimationState animationId="7:8" x="-240" y="80" id="8:17"> <!-- Awaken: pushed into the screen, back out into orbit -->
                     <StateTransition stateToId="8:11" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:284"/>
                 </AnimationState>
+                <AnimationState animationId="7:9" x="-240" y="220" id="8:18"> <!-- Return: back onto the forearms -->
+                    <StateTransition stateToId="8:16" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+                </AnimationState>
+                <AnimationState animationId="7:10" x="720" y="-60" id="8:19"> <!-- StackIn (temporary video shot) -->
+                    <StateTransition stateToId="8:20" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+                </AnimationState>
+                <AnimationState animationId="7:11" x="960" y="-60" id="8:20"> <!-- StackHold -->
+                    <StateTransition stateToId="8:21">
+                        <TransitionViewModelCondition>
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyTrigger>
+                                    <DataBindContext sourcePathIds="10:1-10:4" propertyKey="686"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState animationId="7:12" x="960" y="80" id="8:21"> <!-- StackOut -->
+                    <StateTransition stateToId="8:11" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+                </AnimationState>
                 <AnimationState animationId="7:2" x="0" y="80" id="8:11"> <!-- Orbit -->
+                    <StateTransition stateToId="8:19">
+                        <TransitionViewModelCondition>
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyTrigger>
+                                    <DataBindContext sourcePathIds="10:1-10:25" propertyKey="686"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="8:18">
+                        <TransitionViewModelCondition>
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyTrigger>
+                                    <DataBindContext sourcePathIds="10:1-10:23" propertyKey="686"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
                     <StateTransition stateToId="8:12" id="8:30">
                         <TransitionViewModelCondition id="0:63">
                             <TransitionPropertyViewModelComparator id="0:64">
@@ -150,6 +192,11 @@
             </StateMachineListenerSingle>
         </StateMachine>
         <LinearAnimation duration="120" loopValue="loop" name="Rest" id="7:7">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:285">
                 <KeyedProperty propertyKey="243" id="0:286">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:287"/>
@@ -212,6 +259,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="120" name="Awaken" id="7:8">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:321">
                 <KeyedProperty propertyKey="243" id="0:322">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:323"/>
@@ -281,7 +333,293 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
+        <LinearAnimation duration="110" name="Return" id="7:9">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:17">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:14">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:15">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:41">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:23">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:24">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:20">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.45" y1="0" x2="0.35" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="110"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:16">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.2" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.45" y1="0" x2="0.35" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.15" interpolationType="linear" frame="110"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:32">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.2" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.45" y1="0" x2="0.35" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.12" interpolationType="linear" frame="110"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:33">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="54" name="StackIn" id="7:10">
+            <KeyedObject objectId="3:17">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:14">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:15">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:41">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:20">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:23">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:24">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:33">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:16">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.2" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.55" y1="0" x2="0.9" y2="0.45"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.9" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:32">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.2" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.55" y1="0" x2="0.9" y2="0.45"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.9" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="80" loopValue="loop" name="StackHold" id="7:11">
+            <KeyedObject objectId="3:17">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:14">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:15">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:41">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:20">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:23">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:24">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:33">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:16">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.9" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="40"/>
+                    <KeyFrameDouble value="0.9" interpolationType="linear" frame="80"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:32">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.9" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="40"/>
+                    <KeyFrameDouble value="0.9" interpolationType="linear" frame="80"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="54" name="StackOut" id="7:12">
+            <KeyedObject objectId="3:17">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:14">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:15">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:41">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:20">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:23">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:24">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:33">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:16">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.9" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.2" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:32">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0.9" interpolationType="cubic" frame="0"><CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.2" interpolationType="linear" frame="54"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
         <LinearAnimation duration="60" loopValue="loop" name="Orbit" id="7:2">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:370">
                 <KeyedProperty propertyKey="243" id="0:371">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:372"/>
@@ -344,6 +682,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="54" name="SummonIn" id="7:3">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:385">
                 <KeyedProperty propertyKey="243" id="0:386">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:387"/>
@@ -394,6 +737,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="80" loopValue="loop" name="SummonHold" id="7:4">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:391">
                 <KeyedProperty propertyKey="243" id="0:392">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:393"/>
@@ -445,6 +793,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="200" name="Unleash" id="7:5">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:17" id="0:397">
                 <KeyedProperty propertyKey="243" id="0:398">
                     <KeyFrameDouble value="1" interpolationType="linear" frame="0" id="0:399"/>
@@ -530,6 +883,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="54" name="Recall" id="7:6">
+            <KeyedObject objectId="3:28">
+                <KeyedProperty propertyKey="243">
+                    <KeyFrameDouble value="0" interpolationType="linear" frame="0"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="3:23" id="0:468">
                 <KeyedProperty propertyKey="243" id="0:469">
                     <KeyFrameDouble value="0" interpolationType="linear" frame="0" id="0:470"/>

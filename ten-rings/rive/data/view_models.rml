@@ -6,6 +6,10 @@
         <ViewModelPropertyTrigger name="recall" id="10:4"/>
         <ViewModelPropertyTrigger name="tap" id="10:5"/>
         <ViewModelPropertyTrigger name="awaken" id="10:8"/>
+        <!-- Orbit -> back onto the forearms. -->
+        <ViewModelPropertyTrigger name="retract" id="10:23"/>
+        <!-- Temporary video shot: Orbit -> all ten stacked on a forearm (recall to leave). -->
+        <ViewModelPropertyTrigger name="stack" id="10:25"/>
         <!-- Follow target for the Orbit chain (e.g. a tracked hand), 0..1 across/down. -->
         <ViewModelPropertyNumber name="followX" id="10:17"/>
         <ViewModelPropertyNumber name="followY" id="10:18"/>
@@ -19,6 +23,8 @@
             <ViewModelInstanceTrigger viewModelPropertyId="10:4" name="recall" id="10:12"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:5" name="tap" id="10:13"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:8" name="awaken" id="10:16"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:23" name="retract" id="10:24"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:25" name="stack" id="10:26"/>
             <ViewModelInstanceNumber viewModelPropertyId="10:17" propertyValue="0.5" name="followX" id="10:20"/>
             <ViewModelInstanceNumber viewModelPropertyId="10:18" propertyValue="0.5" name="followY" id="10:21"/>
             <ViewModelInstanceBoolean viewModelPropertyId="10:19" name="followActive" id="10:22"/>

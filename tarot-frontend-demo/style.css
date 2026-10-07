@@ -157,6 +157,7 @@ body {
   font-size: 26px;
   font-weight: 500;
   line-height: 36px;
+  color: #F7F2E8
 }
 
 .intro__divider {
@@ -177,8 +178,8 @@ body {
 .intro__subtitle {
   margin: 8px 0 0;
   font-size: 14px;
-  line-height: 20px;
-  color: rgba(242, 236, 255, 0.8);
+  line-height: 140%;
+  color: #C7C0B4;
 }
 
 /* Revealed state: card name and orientation replace the prompt. */

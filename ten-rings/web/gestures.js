@@ -22,6 +22,8 @@ const RULES = {
 
 const PRAY_RULE = { trigger: "summon", phases: new Set(["orbit"]) };
 const FIST_AWAKEN = { trigger: "awaken", phases: new Set(["rest"]) };
+// The same fist while the rings orbit sends them back onto the forearms.
+const FIST_RETRACT = { trigger: "retract", phases: new Set(["orbit"]) };
 const CLOSE_FIST_UNLEASH = { trigger: "unleash", phases: new Set(["summoned"]) };
 
 const CURL_OPEN = 0.088;
@@ -72,30 +74,53 @@ function curlSpread(hand) {
   return curl / pairs.length;
 }
 
-/** Closed fist extended toward the camera (lower z = closer in MediaPipe). */
+/** Knuckle width (index base to pinky base): the hand's own scale, so the
+ *  checks below hold whether the fist is near the lens or far from it. */
+function knuckleSpan(hand) {
+  return Math.max(dist(hand[5], hand[17]), 1e-4);
+}
+
+/** Fingers curled in: fingertips close to their knuckles, relative to the
+ *  hand's size (a fist measured ~0.7 knuckle widths, an open hand ~1.2+).
+ *  Loose on purpose: the pointing checks below are the strict part. */
+function isCurledRelative(hand) {
+  return curlSpread(hand) / knuckleSpan(hand) < 0.85;
+}
+
+/**
+ * A fist punched toward the camera, knuckles forward (like holding both
+ * arms out at the lens). Two cues, both scale-free:
+ *  - foreshortened: the wrist sits almost behind the knuckles on screen, so
+ *    wrist→middle-knuckle is short compared with the knuckle width
+ *    (a flat hand facing the camera is ~1.3-1.6; a fist at the lens < ~1);
+ *  - depth: MediaPipe puts the knuckles nearer than the wrist (lower z).
+ */
 function isFistTowardCamera(hand, gesture) {
   const classified =
-    gesture?.categoryName === "Closed_Fist" && (gesture.score ?? 0) >= 0.55;
-  if (!classified && !isCurledFist(hand)) return false;
-  if (!isCurledFist(hand)) return false;
+    gesture?.categoryName === "Closed_Fist" && (gesture.score ?? 0) >= 0.5;
+  if (!classified && !isCurledRelative(hand)) return false;
 
+  const span = knuckleSpan(hand);
   const wrist = hand[0];
-  const knuckleZ = (hand[5].z + hand[9].z + hand[13].z + hand[17].z) / 4;
-  if (knuckleZ >= wrist.z - 0.025) return false;
+  const reach = Math.hypot(hand[9].x - wrist.x, hand[9].y - wrist.y);
+  if (reach / span > 1.1) return false;
 
-  const aim = Math.hypot(hand[9].x - wrist.x, hand[9].y - wrist.y);
-  if (aim > 0.14) return false;
+  const knuckleZ = (hand[5].z + hand[9].z + hand[13].z + hand[17].z) / 4;
+  if (knuckleZ > wrist.z - span * 0.12) return false;
 
   return true;
 }
 
+/** Both hands balled into fists and pointed at the camera. */
 function findFistTowardCamera(result) {
   const hands = result.landmarks || [];
   const gestures = result.gestures || [];
+  if (hands.length < 2) return false;
+  let fists = 0;
   for (let i = 0; i < hands.length; i += 1) {
-    if (isFistTowardCamera(hands[i], gestures[i]?.[0])) return true;
+    if (isFistTowardCamera(hands[i], gestures[i]?.[0])) fists += 1;
   }
-  return false;
+  return fists >= 2;
 }
 
 /** Open hand → closed fist within a frame or two. */
@@ -205,9 +230,11 @@ export function startVisionGestures({ getPhase, fire, onStatus, onHand }) {
 
     if (findFistTowardCamera(result)) {
       if (FIST_AWAKEN.phases.has(phase)) {
-        tryFire(FIST_AWAKEN.trigger, "Fist");
+        tryFire(FIST_AWAKEN.trigger, "Both fists");
+      } else if (FIST_RETRACT.phases.has(phase)) {
+        tryFire(FIST_RETRACT.trigger, "Both fists");
       } else {
-        setStatus("Fist (wrong phase)");
+        setStatus("Both fists (wrong phase)");
       }
       return;
     }
@@ -240,6 +267,11 @@ export function startVisionGestures({ getPhase, fire, onStatus, onHand }) {
       baseOptions: { modelAssetPath: MODEL, delegate: "GPU" },
       runningMode: "VIDEO",
       numHands: 2,
+      // Fists held out at the lens are big, close and partly cut off, so be
+      // a little more willing to find the second hand.
+      minHandDetectionConfidence: 0.35,
+      minHandPresenceConfidence: 0.35,
+      minTrackingConfidence: 0.35,
     });
     return recognizer;
   }
