@@ -10,17 +10,12 @@
       href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=2" />
   </head>
   <body>
     <div class="frame-switch" role="group" aria-label="Device frame">
       <button type="button" data-frame="android" aria-pressed="true">Android</button>
       <button type="button" data-frame="iphone" aria-pressed="false">iPhone</button>
-    </div>
-    <div class="frame-switch layout-switch" role="group" aria-label="Reading layout">
-      <button type="button" data-layout="a" aria-pressed="false">A · Tabs</button>
-      <button type="button" data-layout="g" aria-pressed="false">G · Spread</button>
-      <button type="button" data-layout="h" aria-pressed="true">H · Orbit</button>
     </div>
 
     <div class="device" id="device">
@@ -72,112 +67,70 @@
         <button type="button" class="result__cta" id="start-interpreting">Reveal my reading</button>
       </section>
 
-      <!-- Final reading: plain HTML, no Rive. The orbit: tap a planet to
-           read that part of the card. -->
+      <!-- Final reading: plain HTML, no Rive. Three topic cards above a
+           fixed reading box: the box's heading stays put while the
+           paragraphs scroll, and scrolling into a topic's paragraph switches
+           the heading and lights its card (main.js, syncReading). -->
       <section class="reading" id="reading" hidden>
         <header class="reading__top">
-          <button type="button" class="reading__back" id="reading-back" aria-label="Back">
-            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </button>
-          <p class="reading__eyebrow" id="reading-eyebrow"></p>
-        </header>
-        <div class="orbit">
-          <div class="orbit__ring" aria-hidden="true"></div>
-          <div class="orbit__halo" aria-hidden="true"></div>
-          <img class="orbit__card" id="reading-card" alt="" />
-          <p class="orbit__name" id="reading-name"></p>
-          <button type="button" class="planet planet--career" data-topic="career" aria-pressed="true">
-            <span class="planet__dot">
-              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg>
-            </span>
-            <span class="planet__label">Career</span>
-          </button>
-          <button type="button" class="planet planet--love" data-topic="love" aria-pressed="false">
-            <span class="planet__dot">
-              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
-            </span>
-            <span class="planet__label">Love</span>
-          </button>
-          <button type="button" class="planet planet--finance" data-topic="finance" aria-pressed="false">
-            <span class="planet__dot">
-              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M14.5 9.5c-.5-.9-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.6-2.5-1.5M12 6.5v11" /></svg>
-            </span>
-            <span class="planet__label">Finance</span>
-          </button>
-        </div>
-        <article class="reading__panel" id="reading-panel" aria-live="polite">
-          <h2 class="reading__panel-title" id="reading-panel-title"></h2>
-          <p class="reading__description" id="reading-description"></p>
-        </article>
-        <!-- Option A: the card up top, Career, Love and Finance as segmented
-             tabs, and the chosen tab's reading in the panel below. -->
-        <div class="tabs" id="tabs">
-          <div class="tabs__head">
-            <div class="tabs__titles">
-              <p class="tabs__eyebrow">Today's card</p>
-              <h2 class="tabs__title" id="tabs-title"></h2>
-            </div>
-            <img class="tabs__thumb" id="tabs-thumb" alt="" />
-          </div>
-          <div class="tabs__bar" role="tablist" aria-label="Reading category">
-            <button type="button" class="tabs__tab" role="tab" data-topic="career" aria-selected="true">Career</button>
-            <button type="button" class="tabs__tab" role="tab" data-topic="love" aria-selected="false">Love</button>
-            <button type="button" class="tabs__tab" role="tab" data-topic="finance" aria-selected="false">Finance</button>
-          </div>
-          <article class="tabs__panel" id="tabs-panel" role="tabpanel" aria-live="polite">
-            <div class="tabs__heading">
-              <span class="tabs__icon" data-topic="career" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg></span>
-              <span class="tabs__icon" data-topic="love" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg></span>
-              <span class="tabs__icon" data-topic="finance" hidden><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M14.5 9.5c-.5-.9-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.6-2.5-1.5M12 6.5v11" /></svg></span>
-              <h3 class="tabs__panel-title" id="tabs-panel-title"></h3>
-            </div>
-            <p class="tabs__body" id="tabs-body"></p>
-          </article>
-        </div>
-        <!-- Option G: three face-down cards, one per topic. Tap to turn one
-             over and read it in the panel below. -->
-        <div class="spread" id="spread">
-          <div class="spread__head">
-            <img class="spread__thumb" id="spread-thumb" alt="" />
-            <div class="spread__titles">
-              <p class="spread__eyebrow" id="spread-eyebrow"></p>
-              <h2 class="spread__title" id="spread-title"></h2>
-              <p class="spread__hint" id="spread-hint"></p>
-            </div>
-          </div>
-          <div class="spread__row">
-            <div class="spread__slot spread__slot--career">
-              <button type="button" class="spread__card" data-topic="career" aria-pressed="false" aria-label="Reveal Career card">
-                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">I</span></span>
-                <span class="spread__face"><span class="spread__face-num">I</span><span class="spread__face-name">Career</span></span>
-              </button>
-              <span class="spread__label">Career</span>
-            </div>
-            <div class="spread__slot spread__slot--love">
-              <button type="button" class="spread__card" data-topic="love" aria-pressed="false" aria-label="Reveal Love card">
-                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">II</span></span>
-                <span class="spread__face"><span class="spread__face-num">II</span><span class="spread__face-name">Love</span></span>
-              </button>
-              <span class="spread__label">Love</span>
-            </div>
-            <div class="spread__slot spread__slot--finance">
-              <button type="button" class="spread__card" data-topic="finance" aria-pressed="false" aria-label="Reveal Finance card">
-                <span class="spread__back"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg><span class="spread__num">III</span></span>
-                <span class="spread__face"><span class="spread__face-num">III</span><span class="spread__face-name">Finance</span></span>
-              </button>
-              <span class="spread__label">Finance</span>
-            </div>
-          </div>
-          <article class="spread__panel" id="spread-panel" aria-live="polite"></article>
-          <button type="button" class="spread__reset" id="spread-reset" hidden>Shuffle again</button>
-        </div>
-        <div class="reading__bar">
           <button type="button" class="reading__share" id="share">
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5" /><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="19" r="2.5" /><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" /></svg>
             Share
           </button>
-          <button type="button" class="reading__done" id="done">Done</button>
+          <button type="button" class="reading__close" id="reading-close" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </header>
+
+        <div class="reading__head">
+          <img class="reading__thumb" id="reading-card" alt="" />
+          <div>
+            <p class="reading__eyebrow" id="reading-eyebrow"></p>
+            <h1 class="reading__name" id="reading-name"></h1>
+          </div>
         </div>
+
+        <div class="reading__cards">
+          <button type="button" class="topic-card topic-card--love" data-topic="love" aria-label="Read about Love">
+            <span class="topic-card__inner">
+              <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
+              <span class="topic-card__label">Love</span>
+            </span>
+          </button>
+          <button type="button" class="topic-card topic-card--career" data-topic="career" aria-label="Read about Career">
+            <span class="topic-card__inner">
+              <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg>
+              <span class="topic-card__label">Career</span>
+            </span>
+          </button>
+          <button type="button" class="topic-card topic-card--finance" data-topic="finance" aria-label="Read about Money">
+            <span class="topic-card__inner">
+              <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3h5l-1.4 3h-2.2zM9 7h6c2.7 2 5 5.2 5 8.6 0 3-2.4 5.4-8 5.4s-8-2.4-8-5.4C4 12.2 6.3 9 9 7z" /><path d="M13.7 11.6c-.3-.6-1-1-1.8-1-1 0-1.7.5-1.7 1.3s.7 1.1 1.7 1.3 1.8.6 1.8 1.4-.8 1.4-1.8 1.4c-.8 0-1.5-.4-1.8-1M12 9.6v7.4" /></svg>
+              <span class="topic-card__label">Money</span>
+            </span>
+          </button>
+        </div>
+
+        <article class="reading__box" id="reading-box">
+          <h2 class="reading__heading" id="reading-heading" aria-live="polite">
+            <svg class="reading__icon" data-topic="love" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
+            <svg class="reading__icon" data-topic="career" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" hidden><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" /></svg>
+            <svg class="reading__icon" data-topic="finance" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9.5 3h5l-1.4 3h-2.2zM9 7h6c2.7 2 5 5.2 5 8.6 0 3-2.4 5.4-8 5.4s-8-2.4-8-5.4C4 12.2 6.3 9 9 7z" /><path d="M13.7 11.6c-.3-.6-1-1-1.8-1-1 0-1.7.5-1.7 1.3s.7 1.1 1.7 1.3 1.8.6 1.8 1.4-.8 1.4-1.8 1.4c-.8 0-1.5-.4-1.8-1M12 9.6v7.4" /></svg>
+            <span id="reading-heading-text"></span>
+          </h2>
+          <div class="reading__scroll" id="reading-scroll">
+            <section class="reading__section" data-topic="love" aria-label="Love">
+              <p id="reading-love"></p>
+            </section>
+            <section class="reading__section" data-topic="career" aria-label="Career">
+              <p id="reading-career"></p>
+            </section>
+            <section class="reading__section" data-topic="finance" aria-label="Money">
+              <p id="reading-finance"></p>
+            </section>
+          </div>
+        </article>
+
         <p class="reading__toast" id="reading-toast" role="status" hidden></p>
       </section>
 
@@ -210,7 +163,7 @@
     </div>
 
     <script src="https://unpkg.com/@rive-app/webgl2@2.43.1"></script>
-    <script src="personas.js"></script>
-    <script src="main.js"></script>
+    <script src="personas.js?v=2"></script>
+    <script src="main.js?v=3"></script>
   </body>
 </html>

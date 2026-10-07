@@ -100,14 +100,14 @@ async function onStartInterpreting() {
 }
 
 const TOPICS = {
-  career: { title: "Career", rgb: "232, 194, 122", color: "#E8C27A" },
-  love: { title: "Love", rgb: "239, 163, 174", color: "#EFA3AE" },
-  finance: { title: "Finance", rgb: "142, 209, 182", color: "#8ED1B6" },
+  love: { title: "Love", color: "var(--love)" },
+  career: { title: "Career", color: "var(--career)" },
+  finance: { title: "Money", color: "var(--finance)" },
 };
+// Reading order: the cards left to right, the paragraphs top to bottom.
+const TOPIC_ORDER = ["love", "career", "finance"];
 const ROMAN = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
   "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"];
-const planetEls = document.querySelectorAll(".planet");
-const panelEl = document.getElementById("reading-panel");
 
 const toastEl = document.getElementById("reading-toast");
 let toastTimer = 0;
@@ -121,123 +121,71 @@ function showShareToast() {
   }, 1800);
 }
 
-// Show one topic of the card's reading in the panel and light its planet.
-function selectTopic(topic, animate = true) {
-  const t = TOPICS[topic];
-  planetEls.forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.topic === topic)));
-  panelEl.style.setProperty("--c", t.color);
-  panelEl.style.setProperty("--rgb", t.rgb);
-  document.getElementById("reading-panel-title").textContent = t.title;
-  document.getElementById("reading-description").textContent = persona[topic];
-  panelEl.scrollTop = 0;
+// The reading box: a fixed heading over the scrolling paragraphs. As a
+// topic's paragraph scrolls into the box, the heading switches to it and its
+// card lights up; cards already passed stay lit, and scrolling back reverses
+// it all.
+const scrollEl = document.getElementById("reading-scroll");
+const headingEl = document.getElementById("reading-heading");
+const headingTextEl = document.getElementById("reading-heading-text");
+const headingIcons = headingEl.querySelectorAll(".reading__icon");
+const sectionEls = [...scrollEl.querySelectorAll(".reading__section")];
+const cardEls = [...document.querySelectorAll(".topic-card")];
+// A topic becomes current once its paragraph's top passes this far down the
+// box, i.e. as it is about to take over the visible text.
+const SWITCH_AT = 0.6;
+let activeIndex = -1;
+
+function setActiveTopic(index, animate = true) {
+  if (index === activeIndex) {
+    return;
+  }
+  activeIndex = index;
+  const topic = TOPIC_ORDER[index];
+  headingTextEl.textContent = TOPICS[topic].title;
+  headingEl.style.setProperty("--c", TOPICS[topic].color);
+  // SVG elements have no `hidden` property; toggle the attribute.
+  headingIcons.forEach((icon) => icon.toggleAttribute("hidden", icon.dataset.topic !== topic));
+  cardEls.forEach((card) => {
+    const i = TOPIC_ORDER.indexOf(card.dataset.topic);
+    card.classList.toggle("is-lit", i <= index);
+    card.classList.toggle("is-active", i === index);
+    card.setAttribute("aria-current", String(i === index));
+  });
   if (animate) {
-    panelEl.classList.remove("is-switching");
-    void panelEl.offsetWidth; // restart the fade
-    panelEl.classList.add("is-switching");
+    headingEl.classList.remove("is-switching");
+    void headingEl.offsetWidth; // restart the fade
+    headingEl.classList.add("is-switching");
   }
 }
 
-// Option A: Career, Love and Finance as segmented tabs; the chosen tab's
-// reading shows in the panel below.
-const tabEls = document.querySelectorAll(".tabs__tab");
-const tabsPanel = document.getElementById("tabs-panel");
-
-function selectTab(topic, animate = true) {
-  const t = TOPICS[topic];
-  tabEls.forEach((el) => el.setAttribute("aria-selected", String(el.dataset.topic === topic)));
-  tabsPanel.querySelectorAll(".tabs__icon").forEach((el) => {
-    el.hidden = el.dataset.topic !== topic;
-  });
-  tabsPanel.style.setProperty("--c", t.color);
-  document.getElementById("tabs-panel-title").textContent = t.title;
-  document.getElementById("tabs-body").textContent = persona[topic];
-  tabsPanel.scrollTop = 0;
-  if (animate) {
-    tabsPanel.classList.remove("is-switching");
-    void tabsPanel.offsetWidth; // restart the fade
-    tabsPanel.classList.add("is-switching");
-  }
-}
-
-function fillTabs() {
-  const thumb = document.getElementById("tabs-thumb");
-  thumb.src = persona.image;
-  thumb.alt = persona.name;
-  document.getElementById("tabs-title").textContent = persona.name;
-  selectTab("career", false);
-}
-
-tabEls.forEach((el) => el.addEventListener("click", () => selectTab(el.dataset.topic)));
-
-// Option G: three face-down cards, one per topic. Turning one over shows
-// that topic in the panel; "Shuffle again" turns them all back.
-const spreadSlots = document.querySelectorAll(".spread__slot");
-const spreadPanel = document.getElementById("spread-panel");
-const spreadHint = document.getElementById("spread-hint");
-const spreadReset = document.getElementById("spread-reset");
-let spreadRevealed = new Set();
-let spreadActive = null;
-
-function renderSpread(animate = false) {
-  spreadSlots.forEach((slot) => {
-    const button = slot.querySelector(".spread__card");
-    const topic = button.dataset.topic;
-    const up = spreadRevealed.has(topic);
-    slot.classList.toggle("is-up", up);
-    button.classList.toggle("is-up", up);
-    button.setAttribute("aria-pressed", String(spreadActive === topic));
-    button.setAttribute("aria-label", `${up ? "Show" : "Reveal"} ${TOPICS[topic].title} card`);
-  });
-  const count = spreadRevealed.size;
-  spreadHint.textContent = count === 3
-    ? "All three revealed. Tap a card to revisit it."
-    : `Tap a card to turn it over · ${count} of 3 revealed`;
-  spreadReset.hidden = count === 0;
-  if (spreadActive) {
-    const t = TOPICS[spreadActive];
-    spreadPanel.style.setProperty("--c", t.color);
-    spreadPanel.replaceChildren();
-    const title = document.createElement("h2");
-    title.className = "spread__panel-title";
-    title.textContent = t.title;
-    const body = document.createElement("p");
-    body.className = "spread__panel-body";
-    body.textContent = persona[spreadActive];
-    spreadPanel.append(title, body);
-    if (animate) {
-      spreadPanel.scrollTop = 0;
+function syncReading() {
+  const top = scrollEl.scrollTop;
+  const height = scrollEl.clientHeight;
+  let index = 0;
+  sectionEls.forEach((section, i) => {
+    if (section.offsetTop - top <= height * SWITCH_AT) {
+      index = i;
     }
-  } else {
-    const empty = document.createElement("p");
-    empty.className = "spread__empty";
-    empty.textContent = "Your reading waits beneath the cards.";
-    spreadPanel.replaceChildren(empty);
-  }
-}
-
-function fillSpread(number) {
-  const thumb = document.getElementById("spread-thumb");
-  thumb.src = persona.image;
-  thumb.alt = persona.name;
-  document.getElementById("spread-eyebrow").textContent = `Today's card · ${number}`;
-  document.getElementById("spread-title").textContent = persona.name;
-  spreadRevealed = new Set();
-  spreadActive = null;
-  renderSpread();
-}
-
-spreadSlots.forEach((slot) => {
-  const button = slot.querySelector(".spread__card");
-  button.addEventListener("click", () => {
-    spreadRevealed.add(button.dataset.topic);
-    spreadActive = button.dataset.topic;
-    renderSpread(true);
   });
-});
-spreadReset.addEventListener("click", () => {
-  spreadRevealed = new Set();
-  spreadActive = null;
-  renderSpread();
+  // At the very bottom the last topic is current, however short it is.
+  if (top + height >= scrollEl.scrollHeight - 2) {
+    index = sectionEls.length - 1;
+  }
+  setActiveTopic(index);
+}
+
+scrollEl.addEventListener("scroll", syncReading, { passive: true });
+
+// Tapping a card scrolls to its paragraph.
+cardEls.forEach((card) => {
+  card.addEventListener("click", () => {
+    // Land on the paragraph itself, past the ✦ divider that opens each
+    // section, so its first line sits right under the heading.
+    const paragraph = sectionEls[TOPIC_ORDER.indexOf(card.dataset.topic)].querySelector("p");
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    scrollEl.scrollTo({ top: paragraph.offsetTop - 4, behavior: smooth ? "smooth" : "auto" });
+  });
 });
 
 function fillReading() {
@@ -247,9 +195,12 @@ function fillReading() {
   const number = ROMAN[TAROT_PERSONAS.indexOf(persona)];
   document.getElementById("reading-eyebrow").textContent = `Today's card · ${number}`;
   document.getElementById("reading-name").textContent = persona.name;
-  selectTopic("career", false);
-  fillSpread(number);
-  fillTabs();
+  for (const topic of TOPIC_ORDER) {
+    document.getElementById(`reading-${topic}`).textContent = persona[topic];
+  }
+  scrollEl.scrollTop = 0;
+  activeIndex = -1;
+  setActiveTopic(0, false);
   return cardEl.decode().catch(() => {});
 }
 
@@ -368,12 +319,10 @@ const riveInstance = new rive.Rive({
 });
 
 interpretButton.addEventListener("click", onStartInterpreting);
-// Done and back return to the home screen, where Read More reopens this reading.
-document.getElementById("done").addEventListener("click", returnHome);
-document.getElementById("reading-back").addEventListener("click", returnHome);
+// Close returns to the home screen, where Read More reopens this reading.
+document.getElementById("reading-close").addEventListener("click", returnHome);
 // Share is a placeholder for now.
 document.getElementById("share").addEventListener("click", showShareToast);
-planetEls.forEach((el) => el.addEventListener("click", () => selectTopic(el.dataset.topic)));
 
 window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanvas());
 
@@ -394,26 +343,4 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
   } catch {}
   setFrame(new URLSearchParams(location.search).get("frame") || saved || "android");
   buttons.forEach((b) => b.addEventListener("click", () => setFrame(b.dataset.frame)));
-})();
-
-// Reading layout: A (tabs), G (three-card spread) or H (orbit), from
-// ?layout=, else the last choice.
-(() => {
-  const buttons = document.querySelectorAll(".layout-switch [data-layout]");
-  const setLayout = (layout) => {
-    readingEl.classList.toggle("is-tabs", layout === "a");
-    readingEl.classList.toggle("is-spread", layout === "g");
-    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.layout === layout)));
-    try {
-      localStorage.setItem("layout", layout);
-    } catch {}
-  };
-  let saved = null;
-  try {
-    saved = localStorage.getItem("layout");
-  } catch {}
-  const requested = new URLSearchParams(location.search).get("layout");
-  const layouts = ["a", "g", "h"];
-  setLayout(layouts.includes(requested) ? requested : layouts.includes(saved) ? saved : "h");
-  buttons.forEach((b) => b.addEventListener("click", () => setLayout(b.dataset.layout)));
 })();

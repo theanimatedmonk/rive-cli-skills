@@ -1,6 +1,10 @@
 <Rive version="1" kind="fragment">
     <Artboard defaultStateMachineId="8:1" viewModelId="10:1" viewModelInstanceId="10:9" width="390" height="845" styleId="50:2" x="700" name="DailyDivination" id="50:1">
         <LayoutComponentStyle name="DailyDivination Style" id="50:2"/>
+        <!-- Keyed on timelines (FanIdle, RevealBurst); listeners turn them
+             into the fanReady / revealed view model triggers. -->
+        <Event name="fanSettled" id="0:970001"/>
+        <Event name="cardLanded" id="0:970002"/>
         <ScriptedDrawable scriptAssetId="11:7" x="195" y="387" name="CosmicFront" id="5:90">
             <ScriptInputNumber name="charge" id="5:91"/>
             <ScriptInputNumber name="burst" id="5:92"/>
@@ -629,6 +633,20 @@
                     </BindablePropertyTrigger>
                 </ListenerViewModelChange>
             </StateMachineListenerSingle>
+            <StateMachineListenerSingle listenerTypeValue="5" targetId="50:1" eventId="0:970001" name="Fan ready" id="0:970010">
+                <ListenerViewModelChange id="0:970011">
+                    <BindablePropertyTrigger propertyValue="1" id="0:970012">
+                        <DataBindContext sourcePathIds="10:1-10:30" propertyKey="686" direction="true" id="0:970013"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+            <StateMachineListenerSingle listenerTypeValue="5" targetId="50:1" eventId="0:970002" name="Card landed" id="0:970020">
+                <ListenerViewModelChange id="0:970021">
+                    <BindablePropertyTrigger propertyValue="1" id="0:970022">
+                        <DataBindContext sourcePathIds="10:1-10:31" propertyKey="686" direction="true" id="0:970023"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
         </StateMachine>
         <LinearAnimation duration="720" loopValue="1" name="Ambient" id="7:1001">
             <KeyedObject objectId="5:31" id="0:1432">
@@ -1224,6 +1242,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="180" loopValue="1" name="FanIdle" id="7:1002">
+            <!-- 0.25s in: the 200ms blend from Layout has finished. -->
+            <KeyedObject objectId="0:970001" id="0:970030">
+                <KeyedProperty propertyKey="395" id="0:970031">
+                    <KeyFrameCallback frame="15" id="0:970032"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:100" id="0:14216">
                 <KeyedProperty propertyKey="14" id="0:14217">
                     <KeyFrameDouble value="82" interpolationType="2" id="0:14218">
@@ -3919,6 +3943,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="84" speed="0.75" name="RevealBurst" id="7:1009">
+            <!-- Frame 64: the flip has finished (62) and the card has settled. -->
+            <KeyedObject objectId="0:970002" id="0:970040">
+                <KeyedProperty propertyKey="395" id="0:970041">
+                    <KeyFrameCallback frame="64" id="0:970042"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="5:92" id="0:13595">
                 <KeyedProperty propertyKey="243" id="0:13596">
                     <KeyFrameDouble interpolationType="1" id="0:13597"/>

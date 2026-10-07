@@ -59,7 +59,10 @@ import app.rive.core.RiveWorker
 import app.rive.rememberArtboard
 import app.rive.rememberStateMachine
 import app.rive.rememberViewModelInstanceResult
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.merge
 
@@ -67,15 +70,15 @@ private const val TAG = "TarotPicker"
 private const val ARTBOARD = "DailyDivination"
 private const val STATE_MACHINE = "Divination"
 
-// Same timings as the web demo (tarot-frontend-demo/main.js).
-// Layout deals the fan (88 frames at 0.75x = 1.96s), then blends 200ms into
-// FanIdle; a pick before that is swallowed by the state machine, so taps only
-// reach the cards after it.
-private const val FAN_READY_MS = 2400L
+// The .riv tells the app when to move on, through view model triggers fired
+// from its timelines: `fanReady` once the fan has settled into FanIdle (a pick
+// before that is swallowed by the state machine, so taps wait for it), and
+// `revealed` when the flipped card has landed face up. The timeouts are only
+// a safety net in case a trigger never arrives.
+private const val FAN_READY_TIMEOUT_MS = 5000L
+private const val REVEALED_TIMEOUT_MS = 6000L
 // The face must be bound before the flip starts.
 private const val REVEAL_DELAY_MS = 800L
-// Charge plus RevealBurst up to the card landing, at the editor's 0.75x speed.
-private const val REVEAL_ANIMATION_MS = 3700L
 private const val HEADING_FADE_MS = 500L
 
 private val Cream = Color(0xFFF2ECFF)
@@ -116,8 +119,11 @@ fun PickerScreen(
         var phase by remember { mutableStateOf(Phase.Picking) }
         var picked by remember { mutableIntStateOf(-1) }
         var ready by remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            delay(FAN_READY_MS)
+        LaunchedEffect(instance.value) {
+            val signalled = withTimeoutOrNull(FAN_READY_TIMEOUT_MS) {
+                instance.value.getTriggerFlow("fanReady").first()
+            }
+            Log.i(TAG, if (signalled != null) "fanReady" else "fanReady timed out")
             ready = true
         }
         PickFlow(worker, instance.value, personas) { p, index ->
@@ -161,7 +167,7 @@ fun PickerScreen(
 /**
  * Waits for the first pick (the card listeners fire pick1..pick5), binds a
  * random persona's face to the view model's `face`, fires `reveal`, then
- * reports the card once it has landed.
+ * reports the card when the file fires `revealed` (the card has landed).
  */
 @Composable
 private fun PickFlow(
@@ -196,8 +202,16 @@ private fun PickFlow(
         }
 
         delay(REVEAL_DELAY_MS)
-        vmi.fireTrigger("reveal")
-        delay(REVEAL_ANIMATION_MS)
+        coroutineScope {
+            // Listen before firing, so the landing can't be missed.
+            val landed = async { vmi.getTriggerFlow("revealed").first() }
+            vmi.fireTrigger("reveal")
+            val signalled = withTimeoutOrNull(REVEALED_TIMEOUT_MS) { landed.await() }
+            if (signalled == null) {
+                landed.cancel()
+            }
+            Log.i(TAG, if (signalled != null) "revealed" else "revealed timed out")
+        }
         currentOnPhase(Phase.Revealed, index)
     }
 }
