@@ -1,0 +1,11 @@
+<Rive version="1" kind="fragment">
+    <ComponentAsset artboardId="20:1" name="CardBack" id="11:3"/>
+    <ComponentAsset artboardId="30:1" name="CardFront" id="11:4"/>
+    <ComponentAsset artboardId="40:1" name="TarotCard" id="11:5"/>
+    <ImageAsset file="face-hierophant.jpeg" height="510" width="296" assetId="6916857" name="face-hierophant" id="11:2"/>
+    <ImageAsset file="placeholder-face.png" height="256" width="160" assetId="6916858" name="placeholder-face" id="11:6"/>
+    <SVGAsset file="star.svg" height="35" width="35" assetId="6917758" name="star" id="0:13407"/>
+    <SVGAsset file="moon.svg" height="11" width="7" assetId="6917764" name="moon" id="0:13441"/>
+    <ScriptAsset file="CosmicFX.luau" compilationOrder="2" serializedImplementedMethods="769" scriptProtocolValue="1" name="CosmicFX" id="11:7"/>
+    <ScriptAsset file="Nebula.luau" serializedImplementedMethods="857" scriptProtocolValue="1" name="Nebula" id="11:8"/>
+</Rive>

@@ -1,0 +1,39 @@
+/* App shell overrides: the web demo shows a phone inside a device frame;
+   in the app the real screen is the phone. Hide the frame, the mock
+   status and navigation bars and the demo's toggles, and scale the 360x780
+   phone screen to fit (shell.js sets --shell-scale). */
+body {
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0811;
+}
+
+.frame-switch,
+.layout-switch,
+.status-bar,
+.nav-bar,
+.home-indicator,
+.device__camera,
+.device__island,
+.device__key {
+  display: none !important;
+}
+
+.device {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  transform: scale(var(--shell-scale, 1));
+  transform-origin: center;
+}
+
+.device::before,
+.device::after {
+  display: none;
+}
+
+.phone {
+  border-radius: 0;
+}

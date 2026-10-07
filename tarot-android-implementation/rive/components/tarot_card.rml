@@ -1,0 +1,76 @@
+<Rive version="1" kind="fragment">
+    <Artboard isComponent="true" width="160" height="280" styleId="40:2" x="440" name="TarotCard" id="40:1">
+        <LayoutComponentStyle name="TarotCard Style" id="40:2"/>
+        <Node x="80" y="140" name="Faces" id="40:20">
+            <Node opacity="0" name="Front" id="40:21">
+                <Shape x="-130" rotation="0.34999999" name="Shine" id="40:30">
+                    <Rectangle width="46" height="420" name="Path" id="40:31"/>
+                    <Fill name="Fill" id="40:32">
+                        <LinearGradient startX="-23" endX="23" name="Gradient" id="40:33">
+                            <GradientStop colorValue="00FFF4D6" name="Edge" id="40:34"/>
+                            <GradientStop colorValue="8CFFF4D6" position="0.5" name="Core" id="40:35"/>
+                            <GradientStop colorValue="00FFF4D6" position="1" name="Edge" id="40:36"/>
+                        </LinearGradient>
+                        <Feather strength="10" name="Feather" id="40:37"/>
+                    </Fill>
+                    <ClippingShape sourceId="40:40" name="Card clip" id="40:38"/>
+                </Shape>
+                <Shape name="Clip" id="40:40">
+                    <Rectangle cornerRadiusTL="10" width="157" height="277" name="Path" id="40:41"/>
+                </Shape>
+                <Shape name="Frame" id="40:42">
+                    <Rectangle cornerRadiusTL="10" width="157" height="277" name="Path" id="40:43"/>
+                    <Stroke thickness="3" name="Stroke" id="40:44">
+                        <SolidColor colorValue="FFD4AF37" name="Color" id="40:45"/>
+                    </Stroke>
+                </Shape>
+                <Image assetId="11:2" scaleX="0.5" scaleY="0.5" name="Face" id="40:46">
+                    <DataBindContext sourcePathIds="10:1-10:8" propertyKey="206" id="40:47"/>
+                </Image>
+                <Shape name="Plate" id="40:48">
+                    <Rectangle cornerRadiusTL="10" width="157" height="277" name="Path" id="40:49"/>
+                    <Fill name="Fill" id="40:50">
+                        <SolidColor colorValue="FFF3E9D2" name="Color" id="40:51"/>
+                    </Fill>
+                </Shape>
+            </Node>
+            <NestedArtboard artboardId="20:1" x="-80" y="-140" name="Back" id="40:22"/>
+        </Node>
+        <LinearAnimation name="Flip" id="40:13">
+            <KeyedObject objectId="40:20" id="40:60">
+                <KeyedProperty propertyKey="16" id="40:61">
+                    <KeyFrameDouble value="1" interpolationType="1" id="40:62"/>
+                    <KeyFrameDouble interpolationType="1" frame="10" id="40:63"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="20" id="40:64"/>
+                    <KeyFrameDouble interpolationType="1" frame="30" id="40:65"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="40" id="40:66"/>
+                    <KeyFrameDouble interpolationType="1" frame="50" id="40:67"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="60" id="40:68"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="40:21" id="40:70">
+                <KeyedProperty propertyKey="18" id="40:71">
+                    <KeyFrameDouble id="40:72"/>
+                    <KeyFrameDouble value="1" frame="10" id="40:73"/>
+                    <KeyFrameDouble frame="30" id="40:74"/>
+                    <KeyFrameDouble value="1" frame="50" id="40:75"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="40:22" id="40:80">
+                <KeyedProperty propertyKey="18" id="40:81">
+                    <KeyFrameDouble value="1" id="40:82"/>
+                    <KeyFrameDouble frame="10" id="40:83"/>
+                    <KeyFrameDouble value="1" frame="30" id="40:84"/>
+                    <KeyFrameDouble frame="50" id="40:85"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="40:30" id="40:90">
+                <KeyedProperty propertyKey="13" id="40:91">
+                    <KeyFrameDouble value="-130" id="40:92"/>
+                    <KeyFrameDouble value="-130" interpolationType="1" frame="48" id="40:93"/>
+                    <KeyFrameDouble value="130" interpolationType="1" frame="60" id="40:94"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+</Rive>
