@@ -91,7 +91,7 @@ async function onRevealed() {
 async function onStartInterpreting() {
   interpretButton.disabled = true;
   resultEl.classList.add("is-unfolding");
-  resultCopyEl.textContent = "Your reading is unfolding..";
+  resultCopyEl.textContent = "Your reading is taking shape...";
   // Fill the reading while the copy shows, so the card image is decoded
   // before the screen fades in.
   const cardReady = fillReading();
