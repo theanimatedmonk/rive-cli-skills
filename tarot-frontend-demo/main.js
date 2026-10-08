@@ -8,7 +8,6 @@ const REVEAL_DELAY_MS = 800;
 // played at 0.75x speed in the editor. The result copy waits for it.
 const REVEAL_ANIMATION_MS = 3700;
 const HEADING_FADE_MS = 500;
-const INTERPRETING_MS = 2000;
 // Matches the .phone.is-leaving fade in style.css.
 const LEAVE_FADE_MS = 600;
 const ORIENTATION = "Upright";
@@ -22,7 +21,6 @@ const titleEl = document.getElementById("title");
 const subtitleEl = document.getElementById("subtitle");
 const introEl = document.querySelector(".intro");
 const resultEl = document.getElementById("result");
-const resultCopyEl = document.getElementById("result-copy");
 const interpretButton = document.getElementById("start-interpreting");
 const readingEl = document.getElementById("reading");
 
@@ -88,14 +86,11 @@ async function onRevealed() {
   resultEl.classList.remove("is-hidden");
 }
 
+// "Reveal my reading" goes straight to the final screen, once the card image
+// is decoded (it is already cached from the reveal, so this is immediate).
 async function onStartInterpreting() {
   interpretButton.disabled = true;
-  resultEl.classList.add("is-unfolding");
-  resultCopyEl.textContent = "Your reading is taking shape...";
-  // Fill the reading while the copy shows, so the card image is decoded
-  // before the screen fades in.
-  const cardReady = fillReading();
-  await Promise.all([wait(INTERPRETING_MS), cardReady]);
+  await fillReading();
   await showReading();
 }
 
@@ -319,8 +314,8 @@ const riveInstance = new rive.Rive({
 });
 
 interpretButton.addEventListener("click", onStartInterpreting);
-// Close returns to the home screen, where Read More reopens this reading.
-document.getElementById("reading-close").addEventListener("click", returnHome);
+// Back returns to the home screen, where Read More reopens this reading.
+document.getElementById("reading-back").addEventListener("click", returnHome);
 // Share is a placeholder for now.
 document.getElementById("share").addEventListener("click", showShareToast);
 

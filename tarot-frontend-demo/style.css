@@ -266,16 +266,6 @@ body {
   display: none !important;
 }
 
-/* "Your reading is unfolding.." — copy stays, the CTA steps aside. */
-.result__cta {
-  transition: opacity 0.3s ease;
-}
-
-.result.is-unfolding .result__cta {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Leaving the reveal: the Rive stage and pick UI fade out together. */
 .phone__rive {
   transition: opacity 0.6s ease;
@@ -729,14 +719,27 @@ body {
   transform: translateY(14px);
 }
 
-/* Share and close, top right. */
+/* Back on the left, Share on the right. */
 .reading__top {
   position: absolute;
   top: 34px;
+  left: 12px;
   right: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+}
+
+.reading__back {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: #f3eedd;
+  cursor: pointer;
 }
 
 .reading__share {
@@ -755,21 +758,8 @@ body {
   cursor: pointer;
 }
 
-.reading__close {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(30, 27, 58, 0.85);
-  color: #f3eedd;
-  cursor: pointer;
-}
-
 .reading__share svg,
-.reading__close svg {
+.reading__back svg {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -778,7 +768,7 @@ body {
 }
 
 .reading__share:focus-visible,
-.reading__close:focus-visible,
+.reading__back:focus-visible,
 .topic-card:focus-visible {
   outline: 2px solid #f3eedd;
   outline-offset: 3px;
