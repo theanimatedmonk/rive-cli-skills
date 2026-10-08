@@ -482,6 +482,9 @@
             <ScriptInputNumber propertyValue="80" name="cursorRadius" id="5:108"/>
             <ScriptInputNumber propertyValue="0.5" name="cursorStrength" id="5:109"/>
         </ScriptedDrawable>
+        <Fill fillRule="2" id="0:150331">
+            <SolidColor colorValue="FF000000" id="0:150332"/>
+        </Fill>
         <StateMachine name="Divination" id="8:1">
             <StateMachineLayer name="Flow" id="8:2">
                 <AnyState x="-240" id="0:1357"/>
@@ -490,7 +493,7 @@
                     <StateTransition stateToId="8:9" id="0:1360"/>
                 </EntryState>
                 <AnimationState animationId="7:1030" x="240" y="-120" id="8:9">
-                    <StateTransition stateToId="8:10" enableExitTime="true" exitTimeIsPercetange="true" duration="200" exitTime="100" interpolationType="2" id="0:56619">
+                    <StateTransition stateToId="8:10" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" interpolationType="2" id="0:56619">
                         <CubicEaseInterpolator id="0:101672"/>
                     </StateTransition>
                 </AnimationState>
@@ -845,7 +848,7 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <LinearAnimation duration="88" name="Layout" id="7:1030">
+        <LinearAnimation duration="56" name="Layout" id="7:1030">
             <KeyedObject objectId="6:100" id="0:13965">
                 <KeyedProperty propertyKey="18" id="0:13966">
                     <KeyFrameDouble interpolationType="2" id="0:13967">
@@ -3915,7 +3918,7 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <LinearAnimation duration="84" name="RevealBurst" id="7:1009">
+        <LinearAnimation duration="84" speed="0.75" name="RevealBurst" id="7:1009">
             <KeyedObject objectId="5:92" id="0:13595">
                 <KeyedProperty propertyKey="243" id="0:13596">
                     <KeyFrameDouble interpolationType="1" id="0:13597"/>
@@ -4094,7 +4097,7 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <LinearAnimation duration="102" name="Charge" id="7:1020">
+        <LinearAnimation duration="102" speed="0.75" name="Charge" id="7:1020">
             <KeyedObject objectId="5:91" id="0:13695">
                 <KeyedProperty propertyKey="243" id="0:13696">
                     <KeyFrameDouble interpolationType="2" id="0:13697">

@@ -1,4 +1,4 @@
-const RIV_URL = "tarot-animation.riv";
+const RIV_URL = "tarot-animation.riv?v=2";
 const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
 const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";

@@ -1,10 +1,11 @@
 <Rive version="1" kind="fragment">
     <Artboard defaultStateMachineId="8:1" viewModelId="10:1" viewModelInstanceId="10:9" width="390" height="845" styleId="50:2" x="700" name="DailyDivination" id="50:1">
         <LayoutComponentStyle name="DailyDivination Style" id="50:2"/>
-        <!-- Keyed on timelines (FanIdle, RevealBurst); listeners turn them
-             into the fanReady / revealed view model triggers. -->
         <Event name="fanSettled" id="0:970001"/>
         <Event name="cardLanded" id="0:970002"/>
+        <Event name="cardPicked" id="0:970003"/>
+        <Event name="chargeStarted" id="0:970004"/>
+        <Event name="burstImpact" id="0:970005"/>
         <ScriptedDrawable scriptAssetId="11:7" x="195" y="387" name="CosmicFront" id="5:90">
             <ScriptInputNumber name="charge" id="5:91"/>
             <ScriptInputNumber name="burst" id="5:92"/>
@@ -497,7 +498,7 @@
                     <StateTransition stateToId="8:9" id="0:1360"/>
                 </EntryState>
                 <AnimationState animationId="7:1030" x="240" y="-120" id="8:9">
-                    <StateTransition stateToId="8:10" enableExitTime="true" exitTimeIsPercetange="true" duration="200" exitTime="100" interpolationType="2" id="0:56619">
+                    <StateTransition stateToId="8:10" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" interpolationType="2" id="0:56619">
                         <CubicEaseInterpolator id="0:101672"/>
                     </StateTransition>
                 </AnimationState>
@@ -633,17 +634,38 @@
                     </BindablePropertyTrigger>
                 </ListenerViewModelChange>
             </StateMachineListenerSingle>
-            <StateMachineListenerSingle listenerTypeValue="5" targetId="50:1" eventId="0:970001" name="Fan ready" id="0:970010">
+            <StateMachineListenerSingle listenerTypeValue="5" eventId="0:970001" targetId="50:1" name="Fan ready" id="0:970010">
                 <ListenerViewModelChange id="0:970011">
                     <BindablePropertyTrigger propertyValue="1" id="0:970012">
                         <DataBindContext sourcePathIds="10:1-10:30" propertyKey="686" direction="true" id="0:970013"/>
                     </BindablePropertyTrigger>
                 </ListenerViewModelChange>
             </StateMachineListenerSingle>
-            <StateMachineListenerSingle listenerTypeValue="5" targetId="50:1" eventId="0:970002" name="Card landed" id="0:970020">
+            <StateMachineListenerSingle listenerTypeValue="5" eventId="0:970002" targetId="50:1" name="Card landed" id="0:970020">
                 <ListenerViewModelChange id="0:970021">
                     <BindablePropertyTrigger propertyValue="1" id="0:970022">
                         <DataBindContext sourcePathIds="10:1-10:31" propertyKey="686" direction="true" id="0:970023"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+            <StateMachineListenerSingle listenerTypeValue="5" eventId="0:970003" targetId="50:1" name="Haptic tick" id="0:970050">
+                <ListenerViewModelChange id="0:970051">
+                    <BindablePropertyTrigger propertyValue="1" id="0:970052">
+                        <DataBindContext sourcePathIds="10:1-10:34" propertyKey="686" direction="true" id="0:970053"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+            <StateMachineListenerSingle listenerTypeValue="5" eventId="0:970004" targetId="50:1" name="Haptic charge" id="0:970060">
+                <ListenerViewModelChange id="0:970061">
+                    <BindablePropertyTrigger propertyValue="1" id="0:970062">
+                        <DataBindContext sourcePathIds="10:1-10:35" propertyKey="686" direction="true" id="0:970063"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+            <StateMachineListenerSingle listenerTypeValue="5" eventId="0:970005" targetId="50:1" name="Haptic impact" id="0:970070">
+                <ListenerViewModelChange id="0:970071">
+                    <BindablePropertyTrigger propertyValue="1" id="0:970072">
+                        <DataBindContext sourcePathIds="10:1-10:36" propertyKey="686" direction="true" id="0:970073"/>
                     </BindablePropertyTrigger>
                 </ListenerViewModelChange>
             </StateMachineListenerSingle>
@@ -866,7 +888,7 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <LinearAnimation duration="88" speed="0.75" name="Layout" id="7:1030">
+        <LinearAnimation duration="56" name="Layout" id="7:1030">
             <KeyedObject objectId="6:100" id="0:13965">
                 <KeyedProperty propertyKey="18" id="0:13966">
                     <KeyFrameDouble interpolationType="2" id="0:13967">
@@ -1242,12 +1264,6 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="180" loopValue="1" name="FanIdle" id="7:1002">
-            <!-- 0.25s in: the 200ms blend from Layout has finished. -->
-            <KeyedObject objectId="0:970001" id="0:970030">
-                <KeyedProperty propertyKey="395" id="0:970031">
-                    <KeyFrameCallback frame="15" id="0:970032"/>
-                </KeyedProperty>
-            </KeyedObject>
             <KeyedObject objectId="6:100" id="0:14216">
                 <KeyedProperty propertyKey="14" id="0:14217">
                     <KeyFrameDouble value="82" interpolationType="2" id="0:14218">
@@ -2196,8 +2212,19 @@
                     <KeyFrameDouble value="1" interpolationType="1" id="0:14834"/>
                 </KeyedProperty>
             </KeyedObject>
+            <KeyedObject objectId="0:970001" id="0:970030">
+                <KeyedProperty propertyKey="395" id="0:970031">
+                    <KeyFrameCallback frame="15" id="0:970032"/>
+                </KeyedProperty>
+            </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="42" name="Select1" id="7:1003">
+            <!-- Haptic tick: the card is picked. -->
+            <KeyedObject objectId="0:970003" id="0:9701010">
+                <KeyedProperty propertyKey="395" id="0:9701011">
+                    <KeyFrameCallback frame="1" id="0:9701012"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:105" id="0:1973">
                 <KeyedProperty propertyKey="121" id="0:1974">
                     <KeyFrameId value="6:106" id="0:1975"/>
@@ -2528,6 +2555,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="42" name="Select2" id="7:1004">
+            <!-- Haptic tick: the card is picked. -->
+            <KeyedObject objectId="0:970003" id="0:9701020">
+                <KeyedProperty propertyKey="395" id="0:9701021">
+                    <KeyFrameCallback frame="1" id="0:9701022"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:205" id="0:2182">
                 <KeyedProperty propertyKey="121" id="0:2183">
                     <KeyFrameId value="6:206" id="0:2184"/>
@@ -2858,6 +2891,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="42" name="Select3" id="7:1005">
+            <!-- Haptic tick: the card is picked. -->
+            <KeyedObject objectId="0:970003" id="0:9701030">
+                <KeyedProperty propertyKey="395" id="0:9701031">
+                    <KeyFrameCallback frame="1" id="0:9701032"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:305" id="0:2391">
                 <KeyedProperty propertyKey="121" id="0:2392">
                     <KeyFrameId value="6:306" id="0:2393"/>
@@ -3188,6 +3227,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="42" name="Select4" id="7:1006">
+            <!-- Haptic tick: the card is picked. -->
+            <KeyedObject objectId="0:970003" id="0:9701040">
+                <KeyedProperty propertyKey="395" id="0:9701041">
+                    <KeyFrameCallback frame="1" id="0:9701042"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:405" id="0:2600">
                 <KeyedProperty propertyKey="121" id="0:2601">
                     <KeyFrameId value="6:406" id="0:2602"/>
@@ -3518,6 +3563,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="42" name="Select5" id="7:1007">
+            <!-- Haptic tick: the card is picked. -->
+            <KeyedObject objectId="0:970003" id="0:9701050">
+                <KeyedProperty propertyKey="395" id="0:9701051">
+                    <KeyFrameCallback frame="1" id="0:9701052"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="6:505" id="0:2809">
                 <KeyedProperty propertyKey="121" id="0:2810">
                     <KeyFrameId value="6:506" id="0:2811"/>
@@ -3943,10 +3994,10 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="84" speed="0.75" name="RevealBurst" id="7:1009">
-            <!-- Frame 64: the flip has finished (62) and the card has settled. -->
-            <KeyedObject objectId="0:970002" id="0:970040">
-                <KeyedProperty propertyKey="395" id="0:970041">
-                    <KeyFrameCallback frame="64" id="0:970042"/>
+            <!-- Haptic impact: the burst explodes. -->
+            <KeyedObject objectId="0:970005" id="0:9701070">
+                <KeyedProperty propertyKey="395" id="0:9701071">
+                    <KeyFrameCallback frame="1" id="0:9701072"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="5:92" id="0:13595">
@@ -4126,8 +4177,19 @@
                     <KeyFrameDouble value="0.30000001" interpolationType="1" frame="84" id="0:56614"/>
                 </KeyedProperty>
             </KeyedObject>
+            <KeyedObject objectId="0:970002" id="0:970040">
+                <KeyedProperty propertyKey="395" id="0:970041">
+                    <KeyFrameCallback frame="64" id="0:970042"/>
+                </KeyedProperty>
+            </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="102" speed="0.75" name="Charge" id="7:1020">
+            <!-- Haptic: the charge begins. -->
+            <KeyedObject objectId="0:970004" id="0:9701060">
+                <KeyedProperty propertyKey="395" id="0:9701061">
+                    <KeyFrameCallback frame="1" id="0:9701062"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="5:91" id="0:13695">
                 <KeyedProperty propertyKey="243" id="0:13696">
                     <KeyFrameDouble interpolationType="2" id="0:13697">

@@ -126,6 +126,7 @@ fun PickerScreen(
             Log.i(TAG, if (signalled != null) "fanReady" else "fanReady timed out")
             ready = true
         }
+        RiveHaptics(instance.value)
         PickFlow(worker, instance.value, personas) { p, index ->
             phase = p
             picked = index

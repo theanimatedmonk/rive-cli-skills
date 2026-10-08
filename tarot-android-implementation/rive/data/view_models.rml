@@ -7,11 +7,14 @@
         <ViewModelPropertyTrigger name="pick5" id="10:6"/>
         <ViewModelPropertyTrigger name="reveal" id="10:7"/>
         <ViewModelPropertyAssetImage name="face" id="10:8"/>
-        <!-- Fired by the file for the host app: the fan has settled and takes
-             picks (FanIdle, after its blend), and the revealed card has landed
-             face up (RevealBurst). -->
         <ViewModelPropertyTrigger name="fanReady" id="10:30"/>
         <ViewModelPropertyTrigger name="revealed" id="10:31"/>
+        <!-- Haptic cues for the host app, fired at exact frames: a card is
+             picked (Select), the charge begins (Charge), the burst explodes
+             (RevealBurst). The card landing is `revealed`. -->
+        <ViewModelPropertyTrigger name="hapticTick" id="10:34"/>
+        <ViewModelPropertyTrigger name="hapticChargeStart" id="10:35"/>
+        <ViewModelPropertyTrigger name="hapticImpact" id="10:36"/>
         <ViewModelInstance name="Default" id="10:9">
             <ViewModelInstanceTrigger viewModelPropertyId="10:2" name="pick1" id="10:10"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:3" name="pick2" id="10:11"/>
@@ -22,6 +25,9 @@
             <ViewModelInstanceAssetImage propertyValue="11:2" viewModelPropertyId="10:8" name="face" id="10:16"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:30" name="fanReady" id="10:32"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:31" name="revealed" id="10:33"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:34" name="hapticTick" id="10:37"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:35" name="hapticChargeStart" id="10:38"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:36" name="hapticImpact" id="10:39"/>
         </ViewModelInstance>
     </ViewModel>
     <ViewModel name="CardFront" id="10:20">
