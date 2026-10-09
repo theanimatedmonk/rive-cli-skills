@@ -5,9 +5,11 @@ const STATE_MACHINE = "Divination";
 const REVEAL_DELAY_MS = 800;
 // From `reveal` to the card landing face-up in the .riv: Charge (1.7s of
 // comets and shaking) plus RevealBurst up to the landing (~1.05s), both
-// played at 0.75x speed in the editor. The result copy waits for it.
+// played at 0.75x speed in the editor. The card's name waits for it.
 const REVEAL_ANIMATION_MS = 3700;
 const HEADING_FADE_MS = 500;
+// How long the revealed card and its name hold before the reading opens.
+const REVEALED_HOLD_MS = 2000;
 // Matches the .phone.is-leaving fade in style.css.
 const LEAVE_FADE_MS = 600;
 const ORIENTATION = "Upright";
@@ -20,8 +22,6 @@ const canvas = document.getElementById("rive-canvas");
 const titleEl = document.getElementById("title");
 const subtitleEl = document.getElementById("subtitle");
 const introEl = document.querySelector(".intro");
-const resultEl = document.getElementById("result");
-const interpretButton = document.getElementById("start-interpreting");
 const readingEl = document.getElementById("reading");
 
 let vmi = null;
@@ -83,14 +83,9 @@ async function onRevealed() {
   subtitleEl.textContent = `- ${ORIENTATION} -`;
   introEl.classList.add("is-revealed");
   introEl.classList.remove("is-fading");
-  resultEl.classList.remove("is-hidden");
-}
-
-// "Reveal my reading" goes straight to the final screen, once the card image
-// is decoded (it is already cached from the reveal, so this is immediate).
-async function onStartInterpreting() {
-  interpretButton.disabled = true;
-  await fillReading();
+  // Hold on the revealed card, then open the reading. The card image is
+  // decoded during the hold, so the reading fades in complete.
+  await Promise.all([wait(REVEALED_HOLD_MS), fillReading()]);
   await showReading();
 }
 
@@ -313,7 +308,6 @@ const riveInstance = new rive.Rive({
   onLoadError: (error) => console.error("Failed to load tarot-animation.riv", error),
 });
 
-interpretButton.addEventListener("click", onStartInterpreting);
 // Back returns to the home screen, where Read More reopens this reading.
 document.getElementById("reading-back").addEventListener("click", returnHome);
 // Share is a placeholder for now.
