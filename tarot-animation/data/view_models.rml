@@ -7,6 +7,10 @@
         <ViewModelPropertyTrigger name="pick5" id="10:6"/>
         <ViewModelPropertyTrigger name="reveal" id="10:7"/>
         <ViewModelPropertyAssetImage name="face" id="10:8"/>
+        <!-- zoom (host fires it): the revealed card is thrown at the viewer.
+             zoomed (the file fires it): the card has flown off. -->
+        <ViewModelPropertyTrigger name="zoom" id="10:40"/>
+        <ViewModelPropertyTrigger name="zoomed" id="10:41"/>
         <ViewModelInstance name="Default" id="10:9">
             <ViewModelInstanceTrigger viewModelPropertyId="10:2" name="pick1" id="10:10"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:3" name="pick2" id="10:11"/>
@@ -15,6 +19,8 @@
             <ViewModelInstanceTrigger viewModelPropertyId="10:6" name="pick5" id="10:14"/>
             <ViewModelInstanceTrigger viewModelPropertyId="10:7" name="reveal" id="10:15"/>
             <ViewModelInstanceAssetImage propertyValue="11:2" viewModelPropertyId="10:8" name="face" id="10:16"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:40" name="zoom" id="10:42"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="10:41" name="zoomed" id="10:43"/>
         </ViewModelInstance>
     </ViewModel>
     <ViewModel name="CardFront" id="10:20">

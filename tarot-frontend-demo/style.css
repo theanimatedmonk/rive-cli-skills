@@ -225,13 +225,25 @@ body {
   display: none !important;
 }
 
-/* Leaving the reveal: the Rive stage and pick UI fade out together. */
-.phone__rive {
-  transition: opacity 0.6s ease;
+/* The card is thrown at the viewer (the .riv's Zoom state): the heading and
+   app bar fade as it starts. */
+.intro,
+.app-bar {
+  transition: opacity 0.4s ease;
 }
 
-.phone.is-leaving .phone__rive,
-.phone.is-leaving .intro {
+.phone.is-throwing .intro,
+.phone.is-throwing .app-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Then the Rive stage fades and the reading comes in (main.js). */
+.phone__rive {
+  transition: opacity 0.35s ease;
+}
+
+.phone.is-leaving .phone__rive {
   opacity: 0;
   pointer-events: none;
 }

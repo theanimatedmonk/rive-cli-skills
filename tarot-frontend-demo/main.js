@@ -1,4 +1,4 @@
-const RIV_URL = "tarot-animation.riv?v=2";
+const RIV_URL = "tarot-animation.riv?v=4";
 const PICKS = ["pick1", "pick2", "pick3", "pick4", "pick5"];
 const ARTBOARD = "DailyDivination";
 const STATE_MACHINE = "Divination";
@@ -10,8 +10,11 @@ const REVEAL_ANIMATION_MS = 3700;
 const HEADING_FADE_MS = 500;
 // How long the revealed card and its name hold before the reading opens.
 const REVEALED_HOLD_MS = 2000;
-// Matches the .phone.is-leaving fade in style.css.
-const LEAVE_FADE_MS = 600;
+// After the throw, the Rive stage fades (.phone.is-leaving in style.css)
+// and the reading comes in.
+const LEAVE_MS = 350;
+// Safety net in case the .riv's `zoomed` trigger never arrives.
+const ZOOM_TIMEOUT_MS = 2500;
 const ORIENTATION = "Upright";
 // The blend on the .riv's Layout -> FanIdle transition (200ms) plus a
 // margin. The state machine reports FanIdle when that blend starts.
@@ -83,10 +86,32 @@ async function onRevealed() {
   subtitleEl.textContent = `- ${ORIENTATION} -`;
   introEl.classList.add("is-revealed");
   introEl.classList.remove("is-fading");
-  // Hold on the revealed card, then open the reading. The card image is
-  // decoded during the hold, so the reading fades in complete.
+  // Hold on the revealed card, then throw it at the viewer and open the
+  // reading. The card image is decoded during the hold.
   await Promise.all([wait(REVEALED_HOLD_MS), fillReading()]);
+  await throwCard();
   await showReading();
+}
+
+// Fires the .riv's `zoom` (RevealBurst -> Zoom: the card flies at the
+// viewer) and resolves when the file fires `zoomed`.
+function throwCard() {
+  phoneEl.classList.add("is-throwing");
+  const zoom = vmi && vmi.trigger("zoom");
+  const zoomed = vmi && vmi.trigger("zoomed");
+  if (!zoom || !zoomed) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    const done = () => {
+      clearTimeout(timer);
+      zoomed.off(done);
+      resolve();
+    };
+    const timer = setTimeout(done, ZOOM_TIMEOUT_MS);
+    zoomed.on(done);
+    zoom.trigger();
+  });
 }
 
 const TOPICS = {
@@ -194,11 +219,11 @@ function fillReading() {
   return cardEl.decode().catch(() => {});
 }
 
-// Crossfade from the Rive reveal to the plain HTML reading: the reading
-// starts rising in halfway through the reveal fading out.
+// From the Rive reveal to the plain HTML reading: once the card has been
+// thrown, the Rive stage fades and the reading rises in.
 async function showReading() {
   phoneEl.classList.add("is-leaving");
-  await wait(LEAVE_FADE_MS / 2);
+  await wait(LEAVE_MS);
 
   readingEl.classList.add("is-entering");
   readingEl.hidden = false;
@@ -206,8 +231,6 @@ async function showReading() {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => readingEl.classList.remove("is-entering"));
   });
-  await wait(LEAVE_FADE_MS / 2);
-
   // The final screen is plain HTML; stop the animation behind it.
   riveInstance.stop();
   phoneEl.classList.add("is-reading");
