@@ -1,0 +1,215 @@
+<Rive version="1" kind="fragment">
+    <!-- Aleya Lights, scene 1: The River. Draw order: first child on top.
+         Boat > its reflection > the 3D world (Mangroves). -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:510" clip="true" width="1280" height="720" styleId="0:2" name="River" id="0:1">
+        <LayoutComponentStyle name="River Style" id="0:2"/>
+        <Node x="640" y="548" scaleX="0.8" scaleY="0.8" name="Boat" id="0:10">
+            <NestedArtboard artboardId="0:200" x="-180" y="-150" name="Boat" id="0:11">
+                <NestedStateMachine animationId="0:290" name="Drift" id="0:12"/>
+            </NestedArtboard>
+        </Node>
+        <!-- The boat mirrored about its waterline (y = 628), dim. -->
+        <Node x="640" y="708" scaleX="0.8" scaleY="-0.8" opacity="0.22" name="Reflection" id="0:20">
+            <NestedArtboard artboardId="0:200" x="-180" y="-150" name="Boat" id="0:21">
+                <NestedStateMachine animationId="0:290" name="Drift" id="0:22"/>
+            </NestedArtboard>
+        </Node>
+        <ScriptedDrawable scriptAssetId="0:900" name="Mangroves" id="0:30">
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:31"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="0:32"/>
+            <ScriptInputNumber propertyValue="1.2" name="speed" id="0:33">
+                <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:523"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.5" name="fog" id="0:34">
+                <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:524"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="mist" id="0:35">
+                <DataBindContext sourcePathIds="0:500-0:503" propertyKey="243" id="0:525"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.62" name="moonX" id="0:36"/>
+        </ScriptedDrawable>
+        <Fill name="Night" id="0:3">
+            <SolidColor colorValue="FF050B12" name="Color" id="0:4"/>
+        </Fill>
+        <StateMachine name="Scene" id="0:100">
+            <StateMachineLayer name="Flow" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- Scene 1: the river drifts by (the script moves the world). -->
+        <LinearAnimation duration="60" loopValue="1" name="TheRiver" id="0:110"/>
+    </Artboard>
+
+    <!-- The boat: a small wooden dugout seen from behind and above, as the
+         camera follows it. Its own loop bobs and rocks it, and pulses the
+         wake. Coordinates centred on the boat (the Rig node). -->
+    <Artboard isComponent="true" defaultStateMachineId="0:290" clip="false" width="360" height="300" styleId="0:201" x="1400" name="Boat" id="0:200">
+        <LayoutComponentStyle name="Boat Style" id="0:201"/>
+        <Node x="180" y="150" name="Rig" id="0:210">
+            <!-- Moonlight catching the stern rim. -->
+            <Shape name="Stern Light" id="0:220">
+                <PointsPath name="Path" id="0:221">
+                    <StraightVertex x="96" y="72" radius="0"/>
+                    <StraightVertex x="54" y="93" radius="24"/>
+                    <StraightVertex x="-54" y="93" radius="24"/>
+                    <StraightVertex x="-96" y="72" radius="0"/>
+                </PointsPath>
+                <Stroke thickness="2.5" cap="round" name="Stroke" id="0:222">
+                    <SolidColor colorValue="99B9C9A8" name="Color" id="0:223"/>
+                    <Feather strength="2" name="Feather" id="0:224"/>
+                </Stroke>
+            </Shape>
+            <Shape name="Bow Bench" id="0:230">
+                <Rectangle width="52" height="7" y="-50" cornerRadiusTL="2" name="Path" id="0:231"/>
+                <Fill name="Fill" id="0:232">
+                    <SolidColor colorValue="FF2C2A20" name="Color" id="0:233"/>
+                </Fill>
+            </Shape>
+            <Shape name="Bench" id="0:240">
+                <Rectangle width="164" height="13" y="14" cornerRadiusTL="3" name="Path" id="0:241"/>
+                <Fill name="Fill" id="0:242">
+                    <SolidColor colorValue="FF35321F" name="Color" id="0:243"/>
+                </Fill>
+            </Shape>
+            <Shape name="Gunwale" id="0:250">
+                <PointsPath isClosed="true" name="Path" id="0:251">
+                    <StraightVertex x="0" y="-108" radius="0"/>
+                    <StraightVertex x="33" y="-56" radius="50"/>
+                    <StraightVertex x="84" y="28" radius="50"/>
+                    <StraightVertex x="96" y="72" radius="24"/>
+                    <StraightVertex x="54" y="92" radius="24"/>
+                    <StraightVertex x="-54" y="92" radius="24"/>
+                    <StraightVertex x="-96" y="72" radius="24"/>
+                    <StraightVertex x="-84" y="28" radius="50"/>
+                    <StraightVertex x="-33" y="-56" radius="50"/>
+                </PointsPath>
+                <Stroke thickness="5" join="round" name="Rim" id="0:252">
+                    <SolidColor colorValue="FF3E3B2C" name="Color" id="0:253"/>
+                </Stroke>
+            </Shape>
+            <Shape name="Inside" id="0:260">
+                <PointsPath isClosed="true" name="Path" id="0:261">
+                    <StraightVertex x="0" y="-108" radius="0"/>
+                    <StraightVertex x="33" y="-56" radius="50"/>
+                    <StraightVertex x="84" y="28" radius="50"/>
+                    <StraightVertex x="96" y="72" radius="24"/>
+                    <StraightVertex x="54" y="92" radius="24"/>
+                    <StraightVertex x="-54" y="92" radius="24"/>
+                    <StraightVertex x="-96" y="72" radius="24"/>
+                    <StraightVertex x="-84" y="28" radius="50"/>
+                    <StraightVertex x="-33" y="-56" radius="50"/>
+                </PointsPath>
+                <Fill name="Fill" id="0:262">
+                    <LinearGradient startY="-108" endY="92" name="Depth" id="0:263">
+                        <GradientStop colorValue="FF0B0C09" name="Far" id="0:264"/>
+                        <GradientStop colorValue="FF1C1B14" position="1" name="Near" id="0:265"/>
+                    </LinearGradient>
+                </Fill>
+            </Shape>
+            <Shape name="Hull" id="0:270">
+                <PointsPath isClosed="true" name="Path" id="0:271">
+                    <StraightVertex x="0" y="-122" radius="0"/>
+                    <StraightVertex x="40" y="-62" radius="60"/>
+                    <StraightVertex x="96" y="28" radius="60"/>
+                    <StraightVertex x="112" y="84" radius="30"/>
+                    <StraightVertex x="62" y="120" radius="30"/>
+                    <StraightVertex x="-62" y="120" radius="30"/>
+                    <StraightVertex x="-112" y="84" radius="30"/>
+                    <StraightVertex x="-96" y="28" radius="60"/>
+                    <StraightVertex x="-40" y="-62" radius="60"/>
+                </PointsPath>
+                <Fill name="Fill" id="0:272">
+                    <LinearGradient startX="-112" endX="112" name="Moonside" id="0:273">
+                        <GradientStop colorValue="FF121310" name="Shade" id="0:274"/>
+                        <GradientStop colorValue="FF27261C" position="1" name="Lit" id="0:275"/>
+                    </LinearGradient>
+                </Fill>
+            </Shape>
+        </Node>
+        <!-- Wake: ripples spreading back from the stern, and a ring where the
+             hull sits in the water. -->
+        <Node x="180" y="150" name="Wake" id="0:280">
+            <Shape name="Ring" id="0:281">
+                <Ellipse width="250" height="34" y="112" name="Path" id="0:282"/>
+                <Stroke thickness="2" name="Stroke" id="0:283">
+                    <SolidColor colorValue="40A9C7BD" name="Color" id="0:284"/>
+                    <Feather strength="4" name="Feather" id="0:285"/>
+                </Stroke>
+            </Shape>
+            <Shape name="Trails" id="0:286">
+                <PointsPath name="Left" id="0:287">
+                    <StraightVertex x="-92" y="104" radius="0"/>
+                    <StraightVertex x="-180" y="150" radius="0"/>
+                </PointsPath>
+                <PointsPath name="Right" id="0:288">
+                    <StraightVertex x="92" y="104" radius="0"/>
+                    <StraightVertex x="180" y="150" radius="0"/>
+                </PointsPath>
+                <Stroke thickness="2.5" cap="round" name="Stroke" id="0:289">
+                    <SolidColor colorValue="4DA9C7BD" name="Color" id="0:3000"/>
+                    <Feather strength="5" name="Feather" id="0:3001"/>
+                </Stroke>
+            </Shape>
+        </Node>
+        <StateMachine name="Drift" id="0:290">
+            <StateMachineLayer name="Bob" id="0:291">
+                <AnyState x="200" y="-120" id="0:292"/>
+                <ExitState x="400" y="-120" id="0:293"/>
+                <EntryState id="0:294">
+                    <StateTransition stateToId="0:295" id="0:296"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:3002" id="0:295"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- 4s loop: a slow rock side to side, a gentle bob, the wake
+             breathing with it. -->
+        <LinearAnimation duration="240" loopValue="1" name="Bob" id="0:3002">
+            <KeyedObject objectId="0:210" id="0:3003">
+                <KeyedProperty propertyKey="15" id="0:3004">
+                    <KeyFrameDouble interpolationType="2" id="0:3005"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3006"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.026" interpolationType="2" frame="60" id="0:3007"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3008"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="2" frame="120" id="0:3009"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3010"/></KeyFrameDouble>
+                    <KeyFrameDouble value="-0.026" interpolationType="2" frame="180" id="0:3011"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3012"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="240" id="0:3013"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="14" id="0:3014">
+                    <KeyFrameDouble value="150" interpolationType="2" id="0:3015"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3016"/></KeyFrameDouble>
+                    <KeyFrameDouble value="146" interpolationType="2" frame="80" id="0:3017"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3018"/></KeyFrameDouble>
+                    <KeyFrameDouble value="151" interpolationType="2" frame="160" id="0:3019"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3020"/></KeyFrameDouble>
+                    <KeyFrameDouble value="150" interpolationType="1" frame="240" id="0:3021"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:280" id="0:3022">
+                <KeyedProperty propertyKey="18" id="0:3023">
+                    <KeyFrameDouble value="0.6" interpolationType="2" id="0:3024"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3025"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="120" id="0:3026"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3027"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.6" interpolationType="1" frame="240" id="0:3028"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="16" id="0:3029">
+                    <KeyFrameDouble value="0.96" interpolationType="2" id="0:3030"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3031"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1.06" interpolationType="2" frame="120" id="0:3032"><CubicEaseInterpolator x1="0.42" x2="0.58" y2="1" id="0:3033"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.96" interpolationType="1" frame="240" id="0:3034"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+    <!-- The page drives the world through these. -->
+    <ViewModel name="River" id="0:500">
+        <ViewModelPropertyNumber name="speed" id="0:501"/>
+        <ViewModelPropertyNumber name="fog" id="0:502"/>
+        <ViewModelPropertyNumber name="mist" id="0:503"/>
+        <ViewModelInstance exports="true" name="Default" id="0:510">
+            <ViewModelInstanceNumber propertyValue="1.2" viewModelPropertyId="0:501" id="0:511"/>
+            <ViewModelInstanceNumber propertyValue="0.5" viewModelPropertyId="0:502" id="0:512"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:503" id="0:513"/>
+        </ViewModelInstance>
+    </ViewModel>
+    <ComponentAsset artboardId="0:200" name="Boat" id="0:3035"/>
+
+    <ScriptAsset file="Mangroves.luau" scriptProtocolValue="1" name="Mangroves" id="0:900"/>
+</Rive>

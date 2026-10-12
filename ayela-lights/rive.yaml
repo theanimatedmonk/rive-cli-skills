@@ -1,0 +1,5 @@
+name: ayela-lights
+main: "River"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
