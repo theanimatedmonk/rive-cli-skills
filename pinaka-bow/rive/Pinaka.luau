@@ -1496,8 +1496,138 @@ local function drawArrowLight(self: Pinaka, renderer: Renderer, front: boolean)
 	end
 end
 
+-- Sigils at the arrow's tip, for the astras that have one, drawn in a frame
+-- on the tip: `a` forward along the arrow, `b` across it, in px before
+-- `size`.
+type TipFrame = { x: number, y: number, ux: number, uy: number, px: number, py: number, size: number }
+
+local function at(fr: TipFrame, a: number, b: number): Vector
+	local s = fr.size
+	return Vector.xy(fr.x + (fr.ux * a + fr.px * b) * s, fr.y + (fr.uy * a + fr.py * b) * s)
+end
+
+-- One lotus petal from (a0, 0) along angle `ang` (radians off the arrow).
+local function addPetal(path: Path, fr: TipFrame, a0: number, ang: number, len: number, wid: number)
+	local ca, sa = math.cos(ang), math.sin(ang)
+	local function p(along: number, across: number): Vector
+		return at(fr, a0 + ca * along - sa * across, sa * along + ca * across)
+	end
+	path:moveTo(p(0, 0))
+	path:cubicTo(p(len * 0.3, -wid), p(len * 0.8, -wid * 0.7), p(len, 0))
+	path:cubicTo(p(len * 0.8, wid * 0.7), p(len * 0.3, wid), p(0, 0))
+	path:close()
+end
+
+-- The lotus (Brahmashirsha): a centre petal along the arrow, two pairs
+-- either side and a cupped base, breathing slowly open and closed.
+local function lotusPath(fr: TipFrame, open: number): Path
+	local path = Path.new()
+	addPetal(path, fr, -2, 0, 24, 7)
+	for side = -1, 1, 2 do
+		addPetal(path, fr, -2, side * (0.42 + 0.12 * open), 21, 6)
+		addPetal(path, fr, -3, side * (0.95 + 0.2 * open), 16, 5)
+	end
+	-- The sepal cup under the petals.
+	path:moveTo(at(fr, -1, -11))
+	path:cubicTo(at(fr, -7, -9), at(fr, -9, -3), at(fr, -9, 0))
+	path:cubicTo(at(fr, -9, 3), at(fr, -7, 9), at(fr, -1, 11))
+	path:cubicTo(at(fr, -4, 5), at(fr, -4, -5), at(fr, -1, -11))
+	path:close()
+	return path
+end
+
+-- The serpent's blade (Nagastra): a leaf-shaped head on a slender socket,
+-- pointed at the tip, full in the middle and drawing in at the shoulders.
+local function leafBlade(fr: TipFrame): Path
+	local path = Path.new()
+	path:moveTo(at(fr, -2, -2.2))
+	-- The socket, up to the shoulder.
+	path:cubicTo(at(fr, 4, -2.2), at(fr, 8, -2.4), at(fr, 11, -3.5))
+	-- The blade's side, swelling out and sweeping to the point.
+	path:cubicTo(at(fr, 15, -9.5), at(fr, 24, -10.5), at(fr, 31, -7))
+	path:cubicTo(at(fr, 36, -4), at(fr, 40, -1.5), at(fr, 43, 0))
+	path:cubicTo(at(fr, 40, 1.5), at(fr, 36, 4), at(fr, 31, 7))
+	path:cubicTo(at(fr, 24, 10.5), at(fr, 15, 9.5), at(fr, 11, 3.5))
+	path:cubicTo(at(fr, 8, 2.4), at(fr, 4, 2.2), at(fr, -2, 2.2))
+	path:close()
+	return path
+end
+
+local function drawSigil(self: Pinaka, renderer: Renderer, style: number, k: number, charge: number, f: number)
+	local a, b = self.arrowNockS, self.arrowTipS
+	local dx, dy = b.x - a.x, b.y - a.y
+	local len = math.max(math.sqrt(dx * dx + dy * dy), 1e-3)
+	local ux, uy = dx / len, dy / len
+	local zoom = math.max(self.zoom, 0.05)
+	local size = zoom ^ 0.6 * (1 + 0.25 * charge + 0.35 * f)
+	local fr: TipFrame = { x = b.x, y = b.y, ux = ux, uy = uy, px = -uy, py = ux, size = size }
+	local col = self.arrowColor
+	local fl = self.fill
+	local st = self.stroke
+	local t = self.time
+
+	-- A soft glow behind it.
+	local centre = at(fr, if style == 2 then 20 else 10, 0)
+	local radius = 38 * size
+	fl.gradient = Gradient.radial(centre, radius, {
+		{ position = 0, color = rgba(col, k * 0.55) },
+		{ position = 1, color = rgba(col, 0) },
+	})
+	local halo = Path.new()
+	addCircle(halo, centre.x, centre.y, radius)
+	renderer:drawPath(halo, fl)
+	fl.gradient = nil
+
+	if style == 2 then
+		-- The serpent's body, winding down the shaft from the hood.
+		st.cap = 'round'
+		st.join = 'round'
+		local n = 22
+		for i = 0, n - 1 do
+			local s0, s1 = i / n, (i + 1) / n
+			local function body(s: number): Vector
+				return at(fr, 2 - s * 80, math.sin(s * 9 - t * 3.5) * 8 * (0.4 + 0.6 * (1 - s)))
+			end
+			local seg = Path.new()
+			seg:moveTo(body(s0))
+			seg:lineTo(body(s1))
+			st.thickness = (6 * (1 - s0) + 1) * size
+			st.feather = 4 * size
+			st.color = rgba(col, k * 0.5)
+			renderer:drawPath(seg, st)
+			st.feather = 0
+			st.thickness = (4.2 * (1 - s0) + 0.6) * size
+			st.color = lighten(col, 0.5, k * (1 - s0 * 0.6))
+			renderer:drawPath(seg, st)
+		end
+	end
+
+	local shape = if style == 2 then leafBlade(fr) else lotusPath(fr, 0.5 + 0.5 * math.sin(t * 1.6))
+	-- Glow, then the solid silhouette.
+	fl.color = rgba(col, k * 0.6)
+	fl.feather = 7 * size
+	renderer:drawPath(shape, fl)
+	fl.feather = 0
+	fl.color = lighten(col, 0.55, math.min(k * 1.1, 1))
+	renderer:drawPath(shape, fl)
+	if style == 2 then
+		-- A soft highlight down the blade's middle, as on polished metal.
+		st.cap = 'round'
+		st.thickness = 2.2 * size
+		st.feather = 2 * size
+		st.color = Color.rgba(255, 255, 255, math.floor(255 * clamp(k * 0.55, 0, 1)))
+		local ridge = Path.new()
+		ridge:moveTo(at(fr, 13, 0))
+		ridge:cubicTo(at(fr, 20, -1.5), at(fr, 30, -1.2), at(fr, 39, 0))
+		renderer:drawPath(ridge, st)
+		st.feather = 0
+	end
+end
+
 -- The glowing tip: a halo, a slowly turning star of rays and a white-hot
 -- core, once the arrow has formed. Hotter as the bow charges and in flight.
+-- Brahmashirsha (style 0) shows a lotus there instead, and Nagastra
+-- (style 2) a leaf-shaped blade with the serpent coiling down the shaft.
 local function drawTipGlow(self: Pinaka, renderer: Renderer)
 	if not self.arrowVisible then
 		return
@@ -1516,6 +1646,11 @@ local function drawTipGlow(self: Pinaka, renderer: Renderer)
 	local col = self.arrowColor
 	local zoom = math.max(self.zoom, 0.05)
 	local fl = self.fill
+	local style = math.floor(self.auraStyle + 0.5)
+	if style == 0 or style == 2 then
+		drawSigil(self, renderer, style, on * (0.75 + 0.25 * pulse), charge, f)
+		return
+	end
 
 	local radius = (40 + 16 * charge + 60 * f) * zoom * pulse
 	fl.gradient = Gradient.radial(tip, radius, {

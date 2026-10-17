@@ -1,6 +1,7 @@
 <Rive version="1" kind="fragment">
     <!-- Astra: the Pinaka looses an astra. The bow lies level, belly up, in
-         the lower part of the frame; a pull trigger (pullTest, pullAstra1-3, pullAgni)
+         the lower part of the frame; a pull trigger (pullBrahmashirsha,
+         pullParjanyastra, pullNagastra, pullVajrastra, pullAgneyastra)
          forms the arrow on the string and draws it, the aura and arrow in
          that astra's colour; `fire` looses it into the sky; 2s later the
          `blast` event fires the `blast` trigger, stars encircle the arrow's
@@ -137,7 +138,7 @@
                     <StateTransition stateToId="2:105" id="2:1605"/>
                 </EntryState>
                 <AnimationState x="100" animationId="2:110" id="2:105"/>
-                <!-- PulledTest. -->
+                <!-- PulledBrahmashirsha. -->
                 <AnimationState x="-150" y="160" animationId="2:111" id="2:141">
                     <StateTransition stateToId="2:150" id="2:1534">
                         <TransitionViewModelCondition id="2:1535">
@@ -150,7 +151,7 @@
                         </TransitionViewModelCondition>
                     </StateTransition>
                 </AnimationState>
-                <!-- PulledAstra1. -->
+                <!-- PulledParjanyastra. -->
                 <AnimationState x="50" y="160" animationId="2:112" id="2:142">
                     <StateTransition stateToId="2:150" id="2:1540">
                         <TransitionViewModelCondition id="2:1541">
@@ -163,7 +164,7 @@
                         </TransitionViewModelCondition>
                     </StateTransition>
                 </AnimationState>
-                <!-- PulledAstra2. -->
+                <!-- PulledNagastra. -->
                 <AnimationState x="250" y="160" animationId="2:113" id="2:143">
                     <StateTransition stateToId="2:150" id="2:1546">
                         <TransitionViewModelCondition id="2:1547">
@@ -176,7 +177,7 @@
                         </TransitionViewModelCondition>
                     </StateTransition>
                 </AnimationState>
-                <!-- PulledAstra3. -->
+                <!-- PulledVajrastra. -->
                 <AnimationState x="450" y="160" animationId="2:114" id="2:144">
                     <StateTransition stateToId="2:150" id="2:1552">
                         <TransitionViewModelCondition id="2:1553">
@@ -189,7 +190,7 @@
                         </TransitionViewModelCondition>
                     </StateTransition>
                 </AnimationState>
-                <!-- PulledAgni. -->
+                <!-- PulledAgneyastra. -->
                 <AnimationState x="650" y="160" animationId="2:115" id="2:145">
                     <StateTransition stateToId="2:150" id="2:1558">
                         <TransitionViewModelCondition id="2:1559">
@@ -297,8 +298,8 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- PullTest: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged. -->
-        <LinearAnimation duration="114" name="PullTest" id="2:111">
+        <!-- PullBrahmashirsha: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged. -->
+        <LinearAnimation duration="114" name="PullBrahmashirsha" id="2:111">
             <KeyedObject objectId="2:423" id="2:1042">
                 <KeyedProperty propertyKey="243" id="2:1043">
                     <KeyFrameDouble interpolationType="2" id="2:1039"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.4" y2="1" id="2:1040"/></KeyFrameDouble>
@@ -408,8 +409,8 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- PullAstra1: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Astra1's colour and aura (mist). -->
-        <LinearAnimation duration="114" name="PullAstra1" id="2:112">
+        <!-- PullParjanyastra: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Parjanyastra's colour and aura (mist). -->
+        <LinearAnimation duration="114" name="PullParjanyastra" id="2:112">
             <KeyedObject objectId="2:423" id="2:1115">
                 <KeyedProperty propertyKey="243" id="2:1116">
                     <KeyFrameDouble interpolationType="2" id="2:1112"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.4" y2="1" id="2:1113"/></KeyFrameDouble>
@@ -519,8 +520,8 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- PullAstra2: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Astra2's colour and aura (pollen). -->
-        <LinearAnimation duration="114" name="PullAstra2" id="2:113">
+        <!-- PullNagastra: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Nagastra's colour and aura (pollen). -->
+        <LinearAnimation duration="114" name="PullNagastra" id="2:113">
             <KeyedObject objectId="2:423" id="2:1188">
                 <KeyedProperty propertyKey="243" id="2:1189">
                     <KeyFrameDouble interpolationType="2" id="2:1185"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.4" y2="1" id="2:1186"/></KeyFrameDouble>
@@ -630,8 +631,8 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- PullAstra3: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Astra3's colour and aura (lightning). -->
-        <LinearAnimation duration="114" name="PullAstra3" id="2:114">
+        <!-- PullVajrastra: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Vajrastra's colour and aura (lightning). -->
+        <LinearAnimation duration="114" name="PullVajrastra" id="2:114">
             <KeyedObject objectId="2:423" id="2:1261">
                 <KeyedProperty propertyKey="243" id="2:1262">
                     <KeyFrameDouble interpolationType="2" id="2:1258"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.4" y2="1" id="2:1259"/></KeyFrameDouble>
@@ -741,8 +742,8 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- PullAgni: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Agni's colour and aura (fire). -->
-        <LinearAnimation duration="114" name="PullAgni" id="2:115">
+        <!-- PullAgneyastra: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged, in Agneyastra's colour and aura (fire). -->
+        <LinearAnimation duration="114" name="PullAgneyastra" id="2:115">
             <KeyedObject objectId="2:423" id="2:1334">
                 <KeyedProperty propertyKey="243" id="2:1335">
                     <KeyFrameDouble interpolationType="2" id="2:1331"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.4" y2="1" id="2:1332"/></KeyFrameDouble>
@@ -989,11 +990,11 @@
     </Artboard>
 
     <ViewModel name="Astra" id="2:500">
-        <ViewModelPropertyTrigger name="pullTest" id="2:501"/>
-        <ViewModelPropertyTrigger name="pullAstra1" id="2:502"/>
-        <ViewModelPropertyTrigger name="pullAstra2" id="2:503"/>
-        <ViewModelPropertyTrigger name="pullAstra3" id="2:504"/>
-        <ViewModelPropertyTrigger name="pullAgni" id="2:508"/>
+        <ViewModelPropertyTrigger name="pullBrahmashirsha" id="2:501"/>
+        <ViewModelPropertyTrigger name="pullParjanyastra" id="2:502"/>
+        <ViewModelPropertyTrigger name="pullNagastra" id="2:503"/>
+        <ViewModelPropertyTrigger name="pullVajrastra" id="2:504"/>
+        <ViewModelPropertyTrigger name="pullAgneyastra" id="2:508"/>
         <ViewModelPropertyTrigger name="fire" id="2:505"/>
         <ViewModelPropertyTrigger name="blast" id="2:506"/>
         <ViewModelPropertyNumber name="aura" id="2:507"/>

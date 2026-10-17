@@ -12,11 +12,11 @@ def nid(): return f"2:{next(ids)}"
 NUM, COL = 243, 836
 GOLD = dict(aura="FFFFB040", imprint="FFFFD28C", arrow="FFFFC060", tint="00000000", style=0)
 ASTRAS = [
-    ("Test",   "pullTest",   GOLD),
-    ("Astra1", "pullAstra1", dict(aura="FF1E9BFF", imprint="FF9AD8FF", arrow="FF35B6FF", tint="FF1C7CFF", style=1)),
-    ("Astra2", "pullAstra2", dict(aura="FF2CFF6A", imprint="FFB0FFC4", arrow="FF3DFF7A", tint="FF19E05A", style=2)),
-    ("Astra3", "pullAstra3", dict(aura="FFB040FF", imprint="FFE2B0FF", arrow="FFC060FF", tint="FF9B30FF", style=3)),
-    ("Agni", "pullAgni", dict(aura="FFFF5A1E", imprint="FFFFC08A", arrow="FFFF7A2A", tint="FFFF4A12", style=4)),
+    ("Brahmashirsha", "pullBrahmashirsha", GOLD),
+    ("Parjanyastra", "pullParjanyastra", dict(aura="FF1E9BFF", imprint="FF9AD8FF", arrow="FF35B6FF", tint="FF1C7CFF", style=1)),
+    ("Nagastra", "pullNagastra", dict(aura="FF2CFF6A", imprint="FFB0FFC4", arrow="FF3DFF7A", tint="FF19E05A", style=2)),
+    ("Vajrastra", "pullVajrastra", dict(aura="FFB040FF", imprint="FFE2B0FF", arrow="FFC060FF", tint="FF9B30FF", style=3)),
+    ("Agneyastra", "pullAgneyastra", dict(aura="FFFF5A1E", imprint="FFFFC08A", arrow="FFFF7A2A", tint="FFFF4A12", style=4)),
 ]
 
 # Inputs that animations key, by node.
@@ -92,7 +92,7 @@ for i, (name, trig, c) in enumerate(ASTRAS):
         keyed(FXB["charge"], NUM, [kf_num(0, 0)]), keyed(FXB["burst"], NUM, [kf_num(0, 0)]),
         keyed(FXF["tint"], COL, [kf_col(0, c["tint"])]),
         keyed(FXB["tint"], COL, [kf_col(0, c["tint"])]),
-    ], comment=f"Pull{name}: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged" + ("" if name == "Test" else f", in {name}'s colour and aura (" + ["", "mist", "pollen", "lightning", "fire"][c["style"]] + ")") + "."))
+    ], comment=f"Pull{name}: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged" + ("" if c["style"] == 0 else f", in {name}'s colour and aura (" + ["", "mist", "pollen", "lightning", "fire"][c["style"]] + ")") + "."))
 
 EVENT = "2:95"
 anims.append(anim("Flight", "2:120", 140, [
@@ -136,7 +136,7 @@ def trig_cond(prop):
             f'                            <TransitionValueTriggerComparator id="{nid()}"/>\n'
             f'                        </TransitionViewModelCondition>')
 
-VM_TRIG = {"pullTest": "2:501", "pullAstra1": "2:502", "pullAstra2": "2:503", "pullAstra3": "2:504", "pullAgni": "2:508", "fire": "2:505", "blast": "2:506"}
+VM_TRIG = {"pullBrahmashirsha": "2:501", "pullParjanyastra": "2:502", "pullNagastra": "2:503", "pullVajrastra": "2:504", "pullAgneyastra": "2:508", "fire": "2:505", "blast": "2:506"}
 
 PULL_STATE = {name: f"2:{141 + i}" for i, (name, _, _) in enumerate(ASTRAS)}
 any_trans = "\n".join(
@@ -199,7 +199,8 @@ vm_inst = "\n".join(f'            <ViewModelInstanceTrigger viewModelPropertyId=
 
 rml = f'''<Rive version="1" kind="fragment">
     <!-- Astra: the Pinaka looses an astra. The bow lies level, belly up, in
-         the lower part of the frame; a pull trigger (pullTest, pullAstra1-3, pullAgni)
+         the lower part of the frame; a pull trigger (pullBrahmashirsha,
+         pullParjanyastra, pullNagastra, pullVajrastra, pullAgneyastra)
          forms the arrow on the string and draws it, the aura and arrow in
          that astra's colour; `fire` looses it into the sky; 2s later the
          `blast` event fires the `blast` trigger, stars encircle the arrow's
