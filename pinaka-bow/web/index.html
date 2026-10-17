@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pinaka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Side panel: one tab per artboard, and that artboard's controls. -->
+      <aside class="panel">
+        <header class="brand">
+          <p class="brand__eyebrow">The celestial bow</p>
+          <h1 class="brand__name">Pinaka</h1>
+        </header>
+
+        <nav class="tabs" role="tablist" aria-label="Artboards">
+          <button type="button" class="tab" role="tab" id="tab-bow" aria-controls="controls-bow" aria-selected="true" data-scene="bow">
+            <span class="tab__name">The Bow</span>
+            <span class="tab__hint">Draw and test fire</span>
+          </button>
+          <button type="button" class="tab" role="tab" id="tab-astra" aria-controls="controls-astra" aria-selected="false" data-scene="astra">
+            <span class="tab__name">Astra</span>
+            <span class="tab__hint">Loose the arrow, then the blast</span>
+          </button>
+        </nav>
+
+        <section class="controls" id="controls-bow" role="tabpanel" aria-labelledby="tab-bow">
+          <div class="actions">
+            <button type="button" class="action" data-trigger="pullString">Pull String</button>
+            <button type="button" class="action" data-trigger="testFire">Test Fire</button>
+          </div>
+          <label class="slider">Aura <output id="aura-out">1</output>
+            <input type="range" id="aura" min="0" max="2" step="0.05" value="1" />
+          </label>
+          <label class="slider">Power <output id="power-out">0</output>
+            <input type="range" id="power" min="0" max="1" step="0.05" value="0" />
+          </label>
+        </section>
+
+        <section class="controls" id="controls-astra" role="tabpanel" aria-labelledby="tab-astra" hidden>
+          <p class="step">1. Pull with an astra</p>
+          <div class="astras">
+            <button type="button" class="action astra astra--test" data-trigger="pullTest">Test</button>
+            <button type="button" class="action astra astra--blue" data-trigger="pullAstra1">Astra 1</button>
+            <button type="button" class="action astra astra--green" data-trigger="pullAstra2">Astra 2</button>
+            <button type="button" class="action astra astra--violet" data-trigger="pullAstra3">Astra 3</button>
+            <button type="button" class="action astra astra--fire" data-trigger="pullAgni">Agni</button>
+          </div>
+          <p class="step">2. Loose it</p>
+          <button type="button" class="action action--fire" data-trigger="fire">Fire</button>
+          <p class="note">Two seconds into the flight the blast fires on its own.</p>
+        </section>
+      </aside>
+
+      <main class="stage" id="stage" data-scene="bow">
+        <canvas id="scene" width="1280" height="1280" aria-label="The Pinaka, a golden celestial bow, in a starry sky"></canvas>
+        <p class="status" id="status" role="status">Loading…</p>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.0"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
