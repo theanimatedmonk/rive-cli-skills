@@ -1,0 +1,216 @@
+<Rive version="1" kind="fragment">
+    <!-- Pinaka: the celestial bow in gold, its aura radiating. The Pinaka
+         node draws the 3D bow and the aura; it sits at the centre. -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:510" width="1280" height="1280" styleId="0:2" name="Pinaka" id="0:1">
+        <LayoutComponentStyle name="Pinaka Style" id="0:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="640" name="Bow" id="0:10">
+            <ScriptInputString propertyValue="pinaka" name="asset" id="0:11"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:12"/>
+            <ScriptInputNumber propertyValue="1280" name="height" id="0:13"/>
+            <ScriptInputNumber propertyValue="1.25" name="resolution" id="0:14"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="0:15"/>
+            <ScriptInputNumber name="power" id="0:16">
+                <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:17"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="aura" id="0:18">
+                <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:19"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="sway" id="0:20"/>
+            <ScriptInputNumber propertyValue="184" name="rotationX" id="0:30"/>
+            <ScriptInputNumber propertyValue="-54" name="rotationY" id="0:31"/>
+            <ScriptInputNumber propertyValue="14" name="rotationZ" id="0:32"/>
+            <ScriptInputNumber propertyValue="1" name="spinX" id="0:33"/>
+            <ScriptInputNumber name="spinY" id="0:34"/>
+            <ScriptInputNumber name="spinZ" id="0:35"/>
+            <ScriptInputBoolean name="showArrow" id="0:21"/>
+            <ScriptInputNumber name="stretch" id="0:40"/>
+            <ScriptInputNumber name="charge" id="0:41"/>
+            <ScriptInputNumber name="release" id="0:42"/>
+            <ScriptInputColor propertyValue="FFC4A058" name="goldColor" id="0:22"/>
+            <ScriptInputColor propertyValue="FF452014" name="woodColor" id="0:25"/>
+            <ScriptInputColor propertyValue="FFFFB040" name="auraColor" id="0:23"/>
+            <ScriptInputColor propertyValue="FFFFD28C" name="imprintColor" id="0:24"/>
+        </ScriptedDrawable>
+        <!-- The celestial sky from the tarot: stardust clouds, stars and
+             comets, behind the bow. It warms (`heat`) as the bow is drawn and
+             the release blasts the clouds out from the bow (`blast`). -->
+        <ScriptedDrawable scriptAssetId="0:905" name="Sky" id="0:200">
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:201"/>
+            <ScriptInputNumber propertyValue="1280" name="height" id="0:202"/>
+            <ScriptInputNumber name="heat" id="0:203"/>
+            <ScriptInputNumber propertyValue="640" name="focusY" id="0:204"/>
+            <ScriptInputNumber name="blast" id="0:205"/>
+            <ScriptInputNumber propertyValue="1" name="grain" id="0:206"/>
+            <ScriptInputNumber propertyValue="1" name="mist" id="0:207"/>
+            <ScriptInputNumber propertyValue="180" name="cursorRadius" id="0:208"/>
+            <ScriptInputNumber propertyValue="0.5" name="cursorStrength" id="0:209"/>
+        </ScriptedDrawable>
+        <Fill name="Night" id="0:3">
+            <RadialGradient name="Vignette" id="0:4" startX="640" startY="640" endX="1500" endY="640">
+                <GradientStop colorValue="FF0C0A18" name="Centre" id="0:5"/>
+                <GradientStop colorValue="FF020208" position="1" name="Edge" id="0:6"/>
+            </RadialGradient>
+        </Fill>
+        <StateMachine name="Scene" id="0:100">
+            <StateMachineLayer name="Flow" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105">
+                    <StateTransition stateToId="0:120" id="0:1210">
+                        <TransitionViewModelCondition id="0:1211">
+                            <TransitionPropertyViewModelComparator id="0:1212">
+                                <BindablePropertyTrigger id="0:1213">
+                                    <DataBindContext sourcePathIds="0:500-0:503" propertyKey="686" id="0:1214"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:1215"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <!-- Pulled: the string drawn back, the aura charged and restless. -->
+                <AnimationState x="200" y="140" animationId="0:111" id="0:120">
+                    <StateTransition stateToId="0:130" id="0:1310">
+                        <TransitionViewModelCondition id="0:1311">
+                            <TransitionPropertyViewModelComparator id="0:1312">
+                                <BindablePropertyTrigger id="0:1313">
+                                    <DataBindContext sourcePathIds="0:500-0:504" propertyKey="686" id="0:1314"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:1315"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <!-- TestFire: the string snaps and vibrates, a ripple and a burst
+                     of motes go out in 3D; then back to Idle. -->
+                <AnimationState x="200" y="280" animationId="0:112" id="0:130">
+                    <StateTransition stateToId="0:105" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:1320"/>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- Idle: everything at rest. -->
+        <LinearAnimation duration="60" loopValue="1" name="Idle" id="0:110">
+            <KeyedObject objectId="0:40" id="0:6001">
+                <KeyedProperty propertyKey="243" id="0:6002">
+                    <KeyFrameDouble interpolationType="1" id="0:70031"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:41" id="0:6004">
+                <KeyedProperty propertyKey="243" id="0:6005">
+                    <KeyFrameDouble interpolationType="1" id="0:70061"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:42" id="0:6007">
+                <KeyedProperty propertyKey="243" id="0:6008">
+                    <KeyFrameDouble interpolationType="1" id="0:70091"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:203" id="0:6101">
+                <KeyedProperty propertyKey="243" id="0:6102">
+                    <KeyFrameDouble interpolationType="1" id="0:6103"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:205" id="0:6104">
+                <KeyedProperty propertyKey="243" id="0:6105">
+                    <KeyFrameDouble interpolationType="1" id="0:6106"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Pull: the string is drawn back over 1.4s, steady at first and
+             easing into the anchor, then held; the aura charges up a beat
+             behind it. The bow follows on springs in the script. -->
+        <LinearAnimation duration="84" name="Pull" id="0:111">
+            <KeyedObject objectId="0:40" id="0:6010">
+                <KeyedProperty propertyKey="243" id="0:6011">
+                    <KeyFrameDouble interpolationType="2" id="0:70121"><CubicEaseInterpolator x1="0.33" y1="0" x2="0.2" y2="1" id="0:70122"/></KeyFrameDouble>
+                    <KeyFrameDouble value="10" interpolationType="1" frame="84" id="0:70131"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:41" id="0:6014">
+                <KeyedProperty propertyKey="243" id="0:6015">
+                    <KeyFrameDouble interpolationType="2" id="0:70161"><CubicEaseInterpolator x1="0.6" y1="0" x2="0.3" y2="1" id="0:70162"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="84" id="0:70171"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:42" id="0:6018">
+                <KeyedProperty propertyKey="243" id="0:6019">
+                    <KeyFrameDouble interpolationType="1" id="0:70201"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:203" id="0:6111">
+                <KeyedProperty propertyKey="243" id="0:6112">
+                    <KeyFrameDouble interpolationType="2" id="0:6113"><CubicEaseInterpolator x1="0.6" y1="0" x2="0.3" y2="1" id="0:6114"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.6" interpolationType="1" frame="84" id="0:6115"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:205" id="0:6116">
+                <KeyedProperty propertyKey="243" id="0:6117">
+                    <KeyFrameDouble interpolationType="1" id="0:6118"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- TestFire: the archer lets go (stretch drops at once; the script's
+             springs whip the string and limbs forward and ring them out,
+             and glide the bow back to centre); `release` runs 0 to 1 over
+             1.8s, driving the twang, the ripple and the burst; the charge
+             fades over 1s. -->
+        <LinearAnimation duration="108" name="TestFire" id="0:112">
+            <KeyedObject objectId="0:40" id="0:6021">
+                <KeyedProperty propertyKey="243" id="0:6022">
+                    <KeyFrameDouble value="10" interpolationType="1" id="0:70231"/>
+                    <KeyFrameDouble interpolationType="1" frame="1" id="0:70241"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:41" id="0:6025">
+                <KeyedProperty propertyKey="243" id="0:6026">
+                    <KeyFrameDouble value="1" interpolationType="2" id="0:70271"><CubicEaseInterpolator x1="0.15" y1="0.5" x2="0.35" y2="1" id="0:70272"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="60" id="0:70281"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:42" id="0:6029">
+                <KeyedProperty propertyKey="243" id="0:6030">
+                    <KeyFrameDouble interpolationType="1" id="0:70311"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="108" id="0:70321"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:203" id="0:6121">
+                <KeyedProperty propertyKey="243" id="0:6122">
+                    <KeyFrameDouble value="0.6" interpolationType="2" id="0:6123"><CubicEaseInterpolator x1="0.15" y1="0.5" x2="0.35" y2="1" id="0:6124"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="72" id="0:6125"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:205" id="0:6126">
+                <KeyedProperty propertyKey="243" id="0:6127">
+                    <KeyFrameDouble interpolationType="2" id="0:6128"><CubicEaseInterpolator x1="0.1" y1="0.7" x2="0.3" y2="1" id="0:6129"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="30" id="0:6130"><CubicEaseInterpolator x1="0.45" y1="0" x2="0.55" y2="1" id="0:6131"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="108" id="0:6132"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+
+    <!-- The page and the later states drive these. -->
+    <ViewModel name="Pinaka" id="0:500">
+        <ViewModelPropertyNumber name="power" id="0:501"/>
+        <ViewModelPropertyNumber name="aura" id="0:502"/>
+        <!-- Idle -> Pulled, and Pulled -> TestFire. -->
+        <ViewModelPropertyTrigger name="pullString" id="0:503"/>
+        <ViewModelPropertyTrigger name="testFire" id="0:504"/>
+        <ViewModelInstance exports="true" name="Default" id="0:510">
+            <ViewModelInstanceNumber viewModelPropertyId="0:501" id="0:511"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:502" id="0:512"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:503" id="0:513"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:504" id="0:514"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <ScriptAsset file="GLB.luau" isModule="true" name="GLB" id="0:901"/>
+    <ScriptAsset file="Pinaka.luau" scriptProtocolValue="1" name="Pinaka" id="0:902"/>
+    <ShaderAsset file="bow.wgsl" name="bow" id="0:903"/>
+    <ScriptAsset file="Nebula.luau" scriptProtocolValue="1" name="Nebula" id="0:905"/>
+    <ShaderAsset file="nebula.wgsl" name="nebula" id="0:906"/>
+    <ShaderAsset file="fire.wgsl" name="fire" id="0:908"/>
+    <BlobAsset file="../Pinaka_Bow_LP.glb" name="pinaka" id="0:904"/>
+</Rive>

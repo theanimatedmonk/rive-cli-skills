@@ -1,0 +1,513 @@
+<Rive version="1" kind="fragment">
+    <!-- Reload: the Pinaka as a pull-to-refresh on a phone (390x844). The
+         page drags `pull` (0-100) to draw the bow live, fires `fire` on
+         release, and listens for the `reload` and `done` events. Generated
+         by tools/gen_reload.py. -->
+    <Artboard defaultStateMachineId="3:100" viewModelId="3:500" viewModelInstanceId="3:510" x="2960" width="390" height="844" styleId="3:2" name="Reload" id="3:1">
+        <LayoutComponentStyle name="Reload Style" id="3:2"/>
+        <ScriptedDrawable scriptAssetId="2:907" x="195" y="232" name="BurstFront" id="3:20">
+            <ScriptInputNumber name="charge" id="3:21"/>
+            <ScriptInputNumber name="burst" id="3:22"/>
+            <ScriptInputNumber propertyValue="1" name="layer" id="3:1261"/>
+            <ScriptInputColor propertyValue="00000000" name="tint" id="3:1262">
+                <DataBindContext sourcePathIds="3:500-3:507" propertyKey="836" id="3:1263"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <ScriptedDrawable scriptAssetId="0:902" x="195" y="422" name="Bow" id="3:40">
+            <ScriptInputString propertyValue="pinaka" name="asset" id="3:1223"/>
+            <ScriptInputNumber propertyValue="390" name="width" id="3:1224"/>
+            <ScriptInputNumber propertyValue="844" name="height" id="3:1225"/>
+            <ScriptInputNumber propertyValue="2" name="resolution" id="3:1226"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="3:1227"/>
+            <ScriptInputNumber name="power" id="3:1228"/>
+            <ScriptInputNumber propertyValue="1" name="aura" id="3:1229"/>
+            <ScriptInputNumber propertyValue="4" name="sway" id="3:1230"/>
+            <ScriptInputNumber propertyValue="-10" name="rotationX" id="3:1231"/>
+            <ScriptInputNumber name="rotationY" id="3:1232"/>
+            <ScriptInputNumber name="rotationZ" id="3:1233"/>
+            <ScriptInputNumber name="spinX" id="3:1234"/>
+            <ScriptInputNumber name="spinY" id="3:1235"/>
+            <ScriptInputNumber name="spinZ" id="3:1236"/>
+            <ScriptInputBoolean name="showArrow" id="3:1237"/>
+            <ScriptInputNumber propertyValue="0.45" name="zoom" id="3:1238"/>
+            <ScriptInputNumber propertyValue="60" name="offsetY" id="3:1239"/>
+            <ScriptInputNumber propertyValue="0.8" name="drawDepth" id="3:1240"/>
+            <ScriptInputNumber propertyValue="-190" name="flightTipY" id="3:1241"/>
+            <ScriptInputNumber name="stretch" id="3:420"/>
+            <ScriptInputNumber name="charge" id="3:421"/>
+            <ScriptInputNumber name="release" id="3:422"/>
+            <ScriptInputNumber name="arrow" id="3:423"/>
+            <ScriptInputNumber name="flight" id="3:424"/>
+            <ScriptInputNumber name="astraFade" id="3:425"/>
+            <ScriptInputNumber name="auraStyle" id="3:1242">
+                <DataBindContext sourcePathIds="3:500-3:508" propertyKey="243" id="3:1243"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFC4A058" name="goldColor" id="3:1244"/>
+            <ScriptInputColor propertyValue="FF452014" name="woodColor" id="3:1245"/>
+            <ScriptInputColor propertyValue="FFFFB040" name="auraColor" id="3:1246">
+                <DataBindContext sourcePathIds="3:500-3:504" propertyKey="836" id="3:1247"/>
+            </ScriptInputColor>
+            <ScriptInputColor propertyValue="FFFFD28C" name="imprintColor" id="3:1248">
+                <DataBindContext sourcePathIds="3:500-3:505" propertyKey="836" id="3:1249"/>
+            </ScriptInputColor>
+            <ScriptInputColor propertyValue="FFFFC060" name="arrowColor" id="3:1250">
+                <DataBindContext sourcePathIds="3:500-3:506" propertyKey="836" id="3:1251"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <ScriptedDrawable scriptAssetId="2:907" x="195" y="232" name="BurstBack" id="3:60">
+            <ScriptInputNumber name="charge" id="3:61"/>
+            <ScriptInputNumber name="burst" id="3:62"/>
+            <ScriptInputNumber propertyValue="0" name="layer" id="3:1264"/>
+            <ScriptInputColor propertyValue="00000000" name="tint" id="3:1265">
+                <DataBindContext sourcePathIds="3:500-3:507" propertyKey="836" id="3:1266"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <ScriptedDrawable scriptAssetId="0:905" name="Sky" id="3:80">
+            <ScriptInputNumber propertyValue="390" name="width" id="3:1252"/>
+            <ScriptInputNumber propertyValue="844" name="height" id="3:1253"/>
+            <ScriptInputNumber name="heat" id="3:82"/>
+            <ScriptInputNumber propertyValue="232" name="focusY" id="3:1254"/>
+            <ScriptInputNumber name="blast" id="3:84"/>
+            <ScriptInputNumber propertyValue="1" name="grain" id="3:1255"/>
+            <ScriptInputNumber propertyValue="1" name="mist" id="3:1256"/>
+            <ScriptInputNumber propertyValue="80" name="cursorRadius" id="3:1257"/>
+            <ScriptInputNumber propertyValue="0" name="cursorStrength" id="3:1258"/>
+            <ScriptInputNumber name="speed" id="3:90"/>
+            <ScriptInputColor propertyValue="00000000" name="tint" id="3:1259">
+                <DataBindContext sourcePathIds="3:500-3:507" propertyKey="836" id="3:1260"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <Event name="blast" id="3:95"/>
+        <Event name="reload" id="3:96"/>
+        <Event name="done" id="3:97"/>
+        <Fill name="Night" id="3:3">
+            <RadialGradient name="Vignette" id="3:4" startX="195" startY="232" endX="195" endY="844">
+                <GradientStop colorValue="FF0C0A18" name="Centre" id="3:5"/>
+                <GradientStop colorValue="FF020208" position="1" name="Edge" id="3:6"/>
+            </RadialGradient>
+        </Fill>
+        <StateMachine name="Reload" id="3:100">
+            <StateMachineLayer name="Flow" id="3:101">
+                <AnyState x="300" y="-120" id="3:102"/>
+                <ExitState x="600" y="-120" id="3:103"/>
+                <EntryState id="3:104">
+                    <StateTransition stateToId="3:105" id="3:1267"/>
+                </EntryState>
+                <!-- Drag: `pull` poses the bow live; `fire` looses it. -->
+                <BlendState1DViewModel x="100" id="3:105">
+                    <BindablePropertyNumber id="3:1268">
+                        <DataBindContext sourcePathIds="3:500-3:501" propertyKey="636" id="3:1269"/>
+                    </BindablePropertyNumber>
+                    <BlendAnimation1D animationId="3:110" value="0" id="3:1270"/>
+                    <BlendAnimation1D animationId="3:111" value="30" id="3:1271"/>
+                    <BlendAnimation1D animationId="3:112" value="100" id="3:1272"/>
+                    <BlendStateTransition stateToId="3:150" id="3:1273">
+                        <TransitionViewModelCondition id="3:1274">
+                            <TransitionPropertyViewModelComparator id="3:1275">
+                                <BindablePropertyTrigger id="3:1276">
+                                    <DataBindContext sourcePathIds="3:500-3:502" propertyKey="686" id="3:1277"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="3:1278"/>
+                        </TransitionViewModelCondition>
+                    </BlendStateTransition>
+                </BlendState1DViewModel>
+                <AnimationState x="100" y="160" animationId="3:120" id="3:150">
+                    <StateTransition stateToId="3:160" id="3:1279">
+                        <TransitionViewModelCondition id="3:1280">
+                            <TransitionPropertyViewModelComparator id="3:1281">
+                                <BindablePropertyTrigger id="3:1282">
+                                    <DataBindContext sourcePathIds="3:500-3:503" propertyKey="686" id="3:1283"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="3:1284"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="100" y="300" animationId="3:130" id="3:160">
+                    <StateTransition stateToId="3:105" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="3:1285"/>
+                </AnimationState>
+            </StateMachineLayer>
+            <!-- The Fly animation's `blast` event fires the `blast` trigger. -->
+            <StateMachineListenerSingle targetId="3:1" listenerTypeValue="event" eventId="3:95" name="Blast on event" id="3:1286">
+                <ListenerViewModelChange id="3:1287">
+                    <BindablePropertyTrigger propertyValue="1" id="3:1288">
+                        <DataBindContext sourcePathIds="3:500-3:503" propertyKey="686" direction="true" id="3:1289"/>
+                    </BindablePropertyTrigger>
+                </ListenerViewModelChange>
+            </StateMachineListenerSingle>
+        </StateMachine>
+        <!-- DragRest (pull 0): the bow at rest, no arrow. -->
+        <LinearAnimation duration="1" name="DragRest" id="3:110">
+            <KeyedObject objectId="3:420" id="3:1001">
+                <KeyedProperty propertyKey="243" id="3:1002">
+                    <KeyFrameDouble interpolationType="1" id="3:1000"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:421" id="3:1004">
+                <KeyedProperty propertyKey="243" id="3:1005">
+                    <KeyFrameDouble interpolationType="1" id="3:1003"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:423" id="3:1007">
+                <KeyedProperty propertyKey="243" id="3:1008">
+                    <KeyFrameDouble interpolationType="1" id="3:1006"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:425" id="3:1010">
+                <KeyedProperty propertyKey="243" id="3:1011">
+                    <KeyFrameDouble interpolationType="1" id="3:1009"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:422" id="3:1013">
+                <KeyedProperty propertyKey="243" id="3:1014">
+                    <KeyFrameDouble interpolationType="1" id="3:1012"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:424" id="3:1016">
+                <KeyedProperty propertyKey="243" id="3:1017">
+                    <KeyFrameDouble interpolationType="1" id="3:1015"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:82" id="3:1019">
+                <KeyedProperty propertyKey="243" id="3:1020">
+                    <KeyFrameDouble interpolationType="1" id="3:1018"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:90" id="3:1022">
+                <KeyedProperty propertyKey="243" id="3:1023">
+                    <KeyFrameDouble interpolationType="1" id="3:1021"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:84" id="3:1025">
+                <KeyedProperty propertyKey="243" id="3:1026">
+                    <KeyFrameDouble interpolationType="1" id="3:1024"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21" id="3:1028">
+                <KeyedProperty propertyKey="243" id="3:1029">
+                    <KeyFrameDouble interpolationType="1" id="3:1027"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22" id="3:1031">
+                <KeyedProperty propertyKey="243" id="3:1032">
+                    <KeyFrameDouble interpolationType="1" id="3:1030"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:61" id="3:1034">
+                <KeyedProperty propertyKey="243" id="3:1035">
+                    <KeyFrameDouble interpolationType="1" id="3:1033"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:62" id="3:1037">
+                <KeyedProperty propertyKey="243" id="3:1038">
+                    <KeyFrameDouble interpolationType="1" id="3:1036"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- DragNock (pull 30): the arrow has formed on the string in the astra's light. -->
+        <LinearAnimation duration="1" name="DragNock" id="3:111">
+            <KeyedObject objectId="3:420" id="3:1040">
+                <KeyedProperty propertyKey="243" id="3:1041">
+                    <KeyFrameDouble value="1.5" interpolationType="1" id="3:1039"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:421" id="3:1043">
+                <KeyedProperty propertyKey="243" id="3:1044">
+                    <KeyFrameDouble value="0.2" interpolationType="1" id="3:1042"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:423" id="3:1046">
+                <KeyedProperty propertyKey="243" id="3:1047">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1045"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:425" id="3:1049">
+                <KeyedProperty propertyKey="243" id="3:1050">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1048"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:422" id="3:1052">
+                <KeyedProperty propertyKey="243" id="3:1053">
+                    <KeyFrameDouble interpolationType="1" id="3:1051"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:424" id="3:1055">
+                <KeyedProperty propertyKey="243" id="3:1056">
+                    <KeyFrameDouble interpolationType="1" id="3:1054"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:82" id="3:1058">
+                <KeyedProperty propertyKey="243" id="3:1059">
+                    <KeyFrameDouble value="0.15" interpolationType="1" id="3:1057"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:90" id="3:1061">
+                <KeyedProperty propertyKey="243" id="3:1062">
+                    <KeyFrameDouble interpolationType="1" id="3:1060"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:84" id="3:1064">
+                <KeyedProperty propertyKey="243" id="3:1065">
+                    <KeyFrameDouble interpolationType="1" id="3:1063"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21" id="3:1067">
+                <KeyedProperty propertyKey="243" id="3:1068">
+                    <KeyFrameDouble interpolationType="1" id="3:1066"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22" id="3:1070">
+                <KeyedProperty propertyKey="243" id="3:1071">
+                    <KeyFrameDouble interpolationType="1" id="3:1069"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:61" id="3:1073">
+                <KeyedProperty propertyKey="243" id="3:1074">
+                    <KeyFrameDouble interpolationType="1" id="3:1072"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:62" id="3:1076">
+                <KeyedProperty propertyKey="243" id="3:1077">
+                    <KeyFrameDouble interpolationType="1" id="3:1075"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- DragFull (pull 100): fully drawn and charged. -->
+        <LinearAnimation duration="1" name="DragFull" id="3:112">
+            <KeyedObject objectId="3:420" id="3:1079">
+                <KeyedProperty propertyKey="243" id="3:1080">
+                    <KeyFrameDouble value="10" interpolationType="1" id="3:1078"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:421" id="3:1082">
+                <KeyedProperty propertyKey="243" id="3:1083">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1081"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:423" id="3:1085">
+                <KeyedProperty propertyKey="243" id="3:1086">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1084"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:425" id="3:1088">
+                <KeyedProperty propertyKey="243" id="3:1089">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1087"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:422" id="3:1091">
+                <KeyedProperty propertyKey="243" id="3:1092">
+                    <KeyFrameDouble interpolationType="1" id="3:1090"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:424" id="3:1094">
+                <KeyedProperty propertyKey="243" id="3:1095">
+                    <KeyFrameDouble interpolationType="1" id="3:1093"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:82" id="3:1097">
+                <KeyedProperty propertyKey="243" id="3:1098">
+                    <KeyFrameDouble value="0.6" interpolationType="1" id="3:1096"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:90" id="3:1100">
+                <KeyedProperty propertyKey="243" id="3:1101">
+                    <KeyFrameDouble interpolationType="1" id="3:1099"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:84" id="3:1103">
+                <KeyedProperty propertyKey="243" id="3:1104">
+                    <KeyFrameDouble interpolationType="1" id="3:1102"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21" id="3:1106">
+                <KeyedProperty propertyKey="243" id="3:1107">
+                    <KeyFrameDouble interpolationType="1" id="3:1105"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22" id="3:1109">
+                <KeyedProperty propertyKey="243" id="3:1110">
+                    <KeyFrameDouble interpolationType="1" id="3:1108"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:61" id="3:1112">
+                <KeyedProperty propertyKey="243" id="3:1113">
+                    <KeyFrameDouble interpolationType="1" id="3:1111"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:62" id="3:1115">
+                <KeyedProperty propertyKey="243" id="3:1116">
+                    <KeyFrameDouble interpolationType="1" id="3:1114"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Fly: released, the arrow snaps off and streaks up the screen, the bow falling away; at 0.8s the `blast` event fires the `blast` trigger. -->
+        <LinearAnimation duration="50" name="Fly" id="3:120">
+            <KeyedObject objectId="3:420" id="3:1119">
+                <KeyedProperty propertyKey="243" id="3:1120">
+                    <KeyFrameDouble value="10" interpolationType="1" id="3:1117"/>
+                    <KeyFrameDouble interpolationType="1" frame="1" id="3:1118"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:422" id="3:1123">
+                <KeyedProperty propertyKey="243" id="3:1124">
+                    <KeyFrameDouble interpolationType="1" id="3:1121"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="48" id="3:1122"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:421" id="3:1128">
+                <KeyedProperty propertyKey="243" id="3:1129">
+                    <KeyFrameDouble value="1" interpolationType="2" id="3:1125"><CubicEaseInterpolator x1="0.15" y1="0.5" x2="0.35" y2="1" id="3:1126"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="30" id="3:1127"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:424" id="3:1132">
+                <KeyedProperty propertyKey="243" id="3:1133">
+                    <KeyFrameDouble interpolationType="1" id="3:1130"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="36" id="3:1131"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:423" id="3:1135">
+                <KeyedProperty propertyKey="243" id="3:1136">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1134"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:425" id="3:1138">
+                <KeyedProperty propertyKey="243" id="3:1139">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1137"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:90" id="3:1143">
+                <KeyedProperty propertyKey="243" id="3:1144">
+                    <KeyFrameDouble interpolationType="2" id="3:1140"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.3" y2="1" id="3:1141"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.8" interpolationType="1" frame="30" id="3:1142"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:82" id="3:1148">
+                <KeyedProperty propertyKey="243" id="3:1149">
+                    <KeyFrameDouble value="0.6" interpolationType="2" id="3:1145"><CubicEaseInterpolator x1="0.15" y1="0.5" x2="0.35" y2="1" id="3:1146"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.4" interpolationType="1" frame="36" id="3:1147"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:95" id="3:1150">
+                <KeyedProperty propertyKey="395" id="3:1151">
+                    <KeyFrameCallback frame="48" id="3:1152"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Blast: stars encircle the tip (0.35s), then it bursts; as it clears, `reload` and `done` fire and the page brings the inbox back. The bow does not return. -->
+        <LinearAnimation duration="120" name="Blast" id="3:130">
+            <KeyedObject objectId="3:423" id="3:1157">
+                <KeyedProperty propertyKey="243" id="3:1158">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1153"/>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="22" id="3:1154"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.7" y2="1" id="3:1155"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="30" id="3:1156"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:424" id="3:1160">
+                <KeyedProperty propertyKey="243" id="3:1161">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1159"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:420" id="3:1163">
+                <KeyedProperty propertyKey="243" id="3:1164">
+                    <KeyFrameDouble interpolationType="1" id="3:1162"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:421" id="3:1166">
+                <KeyedProperty propertyKey="243" id="3:1167">
+                    <KeyFrameDouble interpolationType="1" id="3:1165"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:425" id="3:1171">
+                <KeyedProperty propertyKey="243" id="3:1172">
+                    <KeyFrameDouble value="1" interpolationType="1" id="3:1168"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="30" id="3:1169"/>
+                    <KeyFrameDouble interpolationType="1" frame="40" id="3:1170"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:90" id="3:1176">
+                <KeyedProperty propertyKey="243" id="3:1177">
+                    <KeyFrameDouble value="0.8" interpolationType="2" id="3:1173"><CubicEaseInterpolator x1="0.2" y1="0.6" x2="0.4" y2="1" id="3:1174"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="22" id="3:1175"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:82" id="3:1183">
+                <KeyedProperty propertyKey="243" id="3:1184">
+                    <KeyFrameDouble value="0.4" interpolationType="2" id="3:1178"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.5" y2="1" id="3:1179"/></KeyFrameDouble>
+                    <KeyFrameDouble value="0.8" interpolationType="2" frame="22" id="3:1180"><CubicEaseInterpolator x1="0.3" y1="0" x2="0.5" y2="1" id="3:1181"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="96" id="3:1182"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:84" id="3:1191">
+                <KeyedProperty propertyKey="243" id="3:1192">
+                    <KeyFrameDouble interpolationType="1" id="3:1185"/>
+                    <KeyFrameDouble interpolationType="2" frame="22" id="3:1186"><CubicEaseInterpolator x1="0.1" y1="0.7" x2="0.3" y2="1" id="3:1187"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="44" id="3:1188"><CubicEaseInterpolator x1="0.4" y1="0" x2="0.6" y2="1" id="3:1189"/></KeyFrameDouble>
+                    <KeyFrameDouble interpolationType="1" frame="110" id="3:1190"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:21" id="3:1198">
+                <KeyedProperty propertyKey="243" id="3:1199">
+                    <KeyFrameDouble interpolationType="2" id="3:1193"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.5" y2="1" id="3:1194"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="22" id="3:1195"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="60" id="3:1196"/>
+                    <KeyFrameDouble interpolationType="1" frame="66" id="3:1197"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:61" id="3:1205">
+                <KeyedProperty propertyKey="243" id="3:1206">
+                    <KeyFrameDouble interpolationType="2" id="3:1200"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.5" y2="1" id="3:1201"/></KeyFrameDouble>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="22" id="3:1202"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="60" id="3:1203"/>
+                    <KeyFrameDouble interpolationType="1" frame="66" id="3:1204"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:22" id="3:1210">
+                <KeyedProperty propertyKey="243" id="3:1211">
+                    <KeyFrameDouble interpolationType="1" id="3:1207"/>
+                    <KeyFrameDouble interpolationType="1" frame="22" id="3:1208"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="90" id="3:1209"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:62" id="3:1215">
+                <KeyedProperty propertyKey="243" id="3:1216">
+                    <KeyFrameDouble interpolationType="1" id="3:1212"/>
+                    <KeyFrameDouble interpolationType="1" frame="22" id="3:1213"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="90" id="3:1214"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:96" id="3:1217">
+                <KeyedProperty propertyKey="395" id="3:1218">
+                    <KeyFrameCallback frame="82" id="3:1219"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:97" id="3:1220">
+                <KeyedProperty propertyKey="395" id="3:1221">
+                    <KeyFrameCallback frame="84" id="3:1222"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+
+    <ViewModel name="Reload" id="3:500">
+        <ViewModelPropertyNumber name="pull" id="3:501"/>
+        <ViewModelPropertyTrigger name="fire" id="3:502"/>
+        <ViewModelPropertyTrigger name="blast" id="3:503"/>
+        <ViewModelPropertyColor name="aura" id="3:504"/>
+        <ViewModelPropertyColor name="imprint" id="3:505"/>
+        <ViewModelPropertyColor name="arrow" id="3:506"/>
+        <ViewModelPropertyColor name="tint" id="3:507"/>
+        <ViewModelPropertyNumber name="style" id="3:508"/>
+        <ViewModelInstance exports="true" name="Default" id="3:510">
+            <ViewModelInstanceNumber viewModelPropertyId="3:501" id="3:1290"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="3:502" id="3:1291"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="3:503" id="3:1292"/>
+            <ViewModelInstanceColor propertyValue="FFFFB040" viewModelPropertyId="3:504" id="3:1293"/>
+            <ViewModelInstanceColor propertyValue="FFFFD28C" viewModelPropertyId="3:505" id="3:1294"/>
+            <ViewModelInstanceColor propertyValue="FFFFC060" viewModelPropertyId="3:506" id="3:1295"/>
+            <ViewModelInstanceColor propertyValue="00000000" viewModelPropertyId="3:507" id="3:1296"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:508" id="3:1297"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>
