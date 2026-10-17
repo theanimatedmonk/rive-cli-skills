@@ -45,6 +45,10 @@
             <ScriptInputNumber propertyValue="180" name="cursorRadius" id="0:208"/>
             <ScriptInputNumber propertyValue="0.5" name="cursorStrength" id="0:209"/>
         </ScriptedDrawable>
+        <!-- The string being drawn (on Pull), and the bow's twang as it is
+             released (on TestFire). -->
+        <AudioEvent assetId="0:910" name="draw" id="0:61"/>
+        <AudioEvent assetId="0:909" name="twang" id="0:60"/>
         <Fill name="Night" id="0:3">
             <RadialGradient name="Vignette" id="0:4" startX="640" startY="640" endX="1500" endY="640">
                 <GradientStop colorValue="FF0C0A18" name="Centre" id="0:5"/>
@@ -72,6 +76,7 @@
                 </AnimationState>
                 <!-- Pulled: the string drawn back, the aura charged and restless. -->
                 <AnimationState x="200" y="140" animationId="0:111" id="0:120">
+                    <StateMachineFireEvent eventId="0:61" occursValue="0"/>
                     <StateTransition stateToId="0:130" id="0:1310">
                         <TransitionViewModelCondition id="0:1311">
                             <TransitionPropertyViewModelComparator id="0:1312">
@@ -86,6 +91,7 @@
                 <!-- TestFire: the string snaps and vibrates, a ripple and a burst
                      of motes go out in 3D; then back to Idle. -->
                 <AnimationState x="200" y="280" animationId="0:112" id="0:130">
+                    <StateMachineFireEvent eventId="0:60" occursValue="0"/>
                     <StateTransition stateToId="0:105" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:1320"/>
                 </AnimationState>
             </StateMachineLayer>
@@ -213,4 +219,9 @@
     <ShaderAsset file="nebula.wgsl" name="nebula" id="0:906"/>
     <ShaderAsset file="fire.wgsl" name="fire" id="0:908"/>
     <BlobAsset file="../Pinaka_Bow_LP.glb" name="pinaka" id="0:904"/>
+    <!-- bow-sound.mp3 with its 0.17s lead-in trimmed, so the twang lands on
+         the release. -->
+    <AudioAsset file="../bow-release.flac" name="bowRelease" id="0:909"/>
+    <!-- The string being drawn. -->
+    <AudioAsset file="../stretch.mp3" name="bowPull" id="0:910"/>
 </Rive>

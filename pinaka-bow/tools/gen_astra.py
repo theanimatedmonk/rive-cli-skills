@@ -69,6 +69,9 @@ anims.append(anim("Idle", "2:110", 60, [
     keyed(FXB["charge"], NUM, [kf_num(0, 0)]), keyed(FXB["burst"], NUM, [kf_num(0, 0)]),
 ], loop=True, comment="Idle: the bow at rest, no arrow, the sky still."))
 
+# The string-drawing sound (scene.rml's `bowPull` audio asset, 0:910).
+DRAW_SOUND = "2:96"
+
 pull_ids = {}
 for i, (name, trig, c) in enumerate(ASTRAS):
     aid = f"2:{111 + i}"
@@ -92,6 +95,11 @@ for i, (name, trig, c) in enumerate(ASTRAS):
         keyed(FXB["charge"], NUM, [kf_num(0, 0)]), keyed(FXB["burst"], NUM, [kf_num(0, 0)]),
         keyed(FXF["tint"], COL, [kf_col(0, c["tint"])]),
         keyed(FXB["tint"], COL, [kf_col(0, c["tint"])]),
+        # The stretch sound, as the string starts to draw.
+        f'            <KeyedObject objectId="{DRAW_SOUND}" id="{nid()}">\n'
+        f'                <KeyedProperty propertyKey="395" id="{nid()}">\n'
+        f'                    <KeyFrameCallback frame="30" id="{nid()}"/>\n'
+        f'                </KeyedProperty>\n            </KeyedObject>',
     ], comment=f"Pull{name}: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged" + ("" if c["style"] == 0 else f", in {name}'s colour and aura (" + ["", "mist", "pollen", "lightning", "fire"][c["style"]] + ")") + "."))
 
 EVENT = "2:95"
@@ -219,6 +227,7 @@ rml = f'''<Rive version="1" kind="fragment">
 {sky_inputs}
         </ScriptedDrawable>
         <Event name="blast" id="{EVENT}"/>
+        <AudioEvent assetId="0:910" name="draw" id="{DRAW_SOUND}"/>
         <Fill name="Night" id="2:3">
             <RadialGradient name="Vignette" id="2:4" startX="640" startY="360" endX="1400" endY="360">
                 <GradientStop colorValue="FF0C0A18" name="Centre" id="2:5"/>
