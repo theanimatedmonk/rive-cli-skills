@@ -10,7 +10,7 @@
 //                letting go past the threshold fires (`fire`); the file's
 //                `reload` event brings in new mail and `done` hands the
 //                screen back. Each pull uses the next astra.
-const SRC = "pinaka-bow.riv?v=28";
+const SRC = "pinaka-bow.riv?v=31";
 
 const SCENES = {
   bow: { artboard: "Pinaka", stateMachine: "Scene", width: 1280, height: 1280, canvas: "scene" },

@@ -117,6 +117,14 @@ export type Pinaka = {
 	imprintNow: Color,
 	arrowLength: number,
 	stringX: number,
+	-- The drawn pose, from the GLB's shape keys: whether it has one, how far
+	-- its nock is pulled back, how far the string's ends move back and in,
+	-- and the spine in that pose.
+	hasMorph: boolean,
+	morphPull: number,
+	morphEndBack: number,
+	morphEndIn: number,
+	spineDrawn: { { number } },
 	roll: number,
 	arrowWorld: Mat4,
 	arrowVisible: boolean,
@@ -147,6 +155,8 @@ type Kind = 'limb' | 'gold' | 'wood' | 'string' | 'arrow'
 type Part = {
 	kind: Kind,
 	vertexBuffer: GPUBuffer,
+	-- The drawn pose's shape-key deltas (zeros for parts without one).
+	morphBuffer: GPUBuffer,
 	indexBuffer: GPUBuffer,
 	indexCount: number,
 	uniforms: GPUBuffer,
@@ -159,7 +169,7 @@ type Mote = { x: number, y: number, r: number, phase: number, speed: number }
 -- (model space), flying along a 3D direction.
 type Burst = { t: number, dx: number, dy: number, dz: number, speed: number, r: number, phase: number }
 
-local UNIFORM_SIZE = 304
+local UNIFORM_SIZE = 320
 -- Drawing: at `draw` 10 the nock is pulled this far back (model units, the
 -- bow is about 1.6 long) and the tips flex this much.
 local PULL_MAX = 0.95
@@ -174,9 +184,9 @@ local TAUT_HZ, TAUT_DAMPING = 18, 0.45
 local SHIFT_HZ, SHIFT_DAMPING = 1.4, 0.55
 local BURSTS = 240
 -- The arrow is lengthened (shaft only) to this, in model units, so that at
--- a full draw at `drawDepth` 0.8 its head still clears the grip; and made
+-- a full draw its head still clears the grip; and made
 -- this much thicker, so it reads at the bow's scale.
-local ARROW_LENGTH = 1.24
+local ARROW_LENGTH = 1.1
 local ARROW_GIRTH = 2.2
 -- Aloft, the arrow recedes to this fraction of its size.
 local ALOFT_SCALE = 0.6
@@ -558,10 +568,14 @@ local function load(self: Pinaka): boolean
 	self.halfLength = (maxY - minY) / 2
 
 	-- The spine: the centre line of the limbs and grip, bin by bin along Y.
+	-- Each vertex also lands, by its rest bin, in the drawn spine, at its
+	-- drawn position (the shape key's), so the two line up point for point.
 	local bx, bz, bn = table.create(SPINE_BINS, 0), table.create(SPINE_BINS, 0), table.create(SPINE_BINS, 0)
+	local dx, dy, dz = table.create(SPINE_BINS, 0), table.create(SPINE_BINS, 0), table.create(SPINE_BINS, 0)
 	for _, p in model.primitives do
 		local k = kindOf(p.nodeName .. p.meshName)
 		if k == 'gold' or k == 'wood' or k == 'limb' then
+			local m = p.morph
 			for i = 0, p.vertexCount - 1, 3 do
 				local o = i * GLB.VERTEX_STRIDE
 				local x, y, z = buffer.readf32(p.vertices, o), buffer.readf32(p.vertices, o + 4), buffer.readf32(p.vertices, o + 8)
@@ -569,13 +583,19 @@ local function load(self: Pinaka): boolean
 				bx[bin] += x
 				bz[bin] += z
 				bn[bin] += 1
+				local mo = i * GLB.MORPH_STRIDE
+				dx[bin] += x + (if m then buffer.readf32(m, mo) else 0)
+				dy[bin] += y + (if m then buffer.readf32(m, mo + 4) else 0)
+				dz[bin] += z + (if m then buffer.readf32(m, mo + 8) else 0)
 			end
 		end
 	end
 	self.spine = {}
+	self.spineDrawn = {}
 	for i = 1, SPINE_BINS do
 		if bn[i] > 0 then
 			table.insert(self.spine, { bx[i] / bn[i], minY + (i - 0.5) / SPINE_BINS * (maxY - minY), bz[i] / bn[i] })
+			table.insert(self.spineDrawn, { dx[i] / bn[i], dy[i] / bn[i], dz[i] / bn[i] })
 		end
 	end
 	-- Smooth it: collars and carving make the slice centres bumpy, which
@@ -588,12 +608,51 @@ local function load(self: Pinaka): boolean
 			smoothed[i] = { (a[1] + 2 * p[1] + b[1]) / 4, p[2], (a[3] + 2 * p[3] + b[3]) / 4 }
 		end
 		self.spine = smoothed
+		local drawn = {}
+		for i, p in self.spineDrawn do
+			local a = self.spineDrawn[math.max(i - 1, 1)]
+			local b = self.spineDrawn[math.min(i + 1, #self.spineDrawn)]
+			drawn[i] = { (a[1] + 2 * p[1] + b[1]) / 4, (a[2] + 2 * p[2] + b[2]) / 4, (a[3] + 2 * p[3] + b[3]) / 4 }
+		end
+		self.spineDrawn = drawn
 	end
 
 	for _, p in model.primitives do
 		local kind = kindOf(p.nodeName .. p.meshName)
+		local morph = p.morph
+		if morph and (kind == 'limb' or kind == 'gold') then
+			self.hasMorph = true
+		end
 		if kind == 'string' then
+			-- The drawn string: how far its nock comes back, and its ends'
+			-- move back and in, so the procedural string matches the pose.
+			if morph then
+				local nock: number = math.huge
+				local endX: number = 0
+				local endY: number = 0
+				local restY: number = 0
+				for i = 0, p.vertexCount - 1 do
+					local o, mo = i * GLB.VERTEX_STRIDE, i * GLB.MORPH_STRIDE
+					local x, y = buffer.readf32(p.vertices, o), buffer.readf32(p.vertices, o + 4)
+					local mx, my = buffer.readf32(morph, mo), buffer.readf32(morph, mo + 4)
+					nock = math.min(nock, x + mx)
+					local ay = math.abs(y - self.center[2])
+					if ay > restY then
+						restY = ay
+						endX = mx
+						endY = math.abs(y + my - self.center[2])
+					end
+				end
+				self.morphPull = self.stringX - nock
+				self.morphEndBack = -endX
+				self.morphEndIn = restY - endY
+			end
 			rebuildString(p)
+			morph = nil
+		end
+		if kind == 'arrow' then
+			-- Placed by its own matrix; its shape key is not used.
+			morph = nil
 		end
 		if kind == 'gold' or kind == 'limb' then
 			measureCavity(p)
@@ -612,6 +671,12 @@ local function load(self: Pinaka): boolean
 		table.insert(self.parts, {
 			kind = kind,
 			vertexBuffer = GPUBuffer.new({ size = buffer.len(p.vertices), usage = 'vertex', data = p.vertices, immutable = true }),
+			morphBuffer = GPUBuffer.new({
+				size = p.vertexCount * GLB.MORPH_STRIDE,
+				usage = 'vertex',
+				data = morph or buffer.create(p.vertexCount * GLB.MORPH_STRIDE),
+				immutable = true,
+			}),
 			indexBuffer = GPUBuffer.new({ size = buffer.len(p.indices), usage = 'index', data = p.indices, immutable = true }),
 			indexCount = p.indexCount,
 			uniforms = GPUBuffer.new({ size = UNIFORM_SIZE, usage = 'uniform' }),
@@ -623,7 +688,7 @@ local function load(self: Pinaka): boolean
 	local span = math.max(self.halfLength - self.gripHalf, 1e-3)
 	local f = clamp((self.stringHalf - self.gripHalf) / span, 0, 1)
 	self.tipFollow = f * f
-	print(`Pinaka: {#self.parts} parts, {model.triangleCount} triangles, spine {#self.spine} points`)
+	print(`Pinaka: {#self.parts} parts, {model.triangleCount} triangles, spine {#self.spine} points, drawn pose {if self.hasMorph then string.format('%.3f', self.morphPull) else 'none'}`)
 	return #self.parts > 0
 end
 
@@ -768,6 +833,13 @@ local function ensureTargets(self: Pinaka): GPUCanvas?
 						{ format = 'float32x2', slot = 2, offset = 24 },
 					},
 				},
+				{
+					stride = GLB.MORPH_STRIDE,
+					attributes = {
+						{ format = 'float32x3', slot = 3, offset = 0 },
+						{ format = 'float32x3', slot = 4, offset = 12 },
+					},
+				},
 			},
 			colorTargets = { { format = canvas.format } },
 			depthStencil = { format = DEPTH_FORMAT, compare = 'less', write = true },
@@ -787,16 +859,25 @@ end
 -- at full draw the string trembles with the strain; after release it twangs:
 -- a fast, quickly damped wobble read from `release` (0 at the release, 1
 -- once settled).
+-- With a drawn pose in the GLB, the draw is a blend toward it: the limbs
+-- follow its shape key (the second value is then the blend weight), and the
+-- nock comes back STRING_REACH times as far as the pose's, for a deeper V.
+-- Without one the limbs are bent here.
+local STRING_REACH = 1.25
+local function pullMax(self: Pinaka): number
+	return if self.hasMorph then self.morphPull * STRING_REACH else PULL_MAX
+end
+
 local function deform(self: Pinaka): (number, number)
 	local d = clamp(self.drawPos, -0.25, 1.1) * math.max(self.drawDepth, 0)
-	local pull = d * PULL_MAX
+	local pull = d * pullMax(self)
 	local strain = clamp(d, 0, 1) ^ 6
 	pull += strain * 0.006 * (math.sin(self.time * 41) + 0.6 * math.sin(self.time * 67 + 1.3))
 	local release = clamp(self.release, 0, 1)
 	if release > 0 and release < 1 then
 		pull += math.sin(self.time * 75) * 0.035 * math.exp(-release * 9)
 	end
-	return pull, d * BEND_MAX
+	return pull, if self.hasMorph then d else d * BEND_MAX
 end
 
 -- Per-part material, written into that part's uniforms.
@@ -872,6 +953,11 @@ local function writeUniforms(self: Pinaka, part: Part, mvp: Mat4, model: Mat4)
 	buffer.writef32(u, 292, bend)
 	buffer.writef32(u, 296, self.stringHalf)
 	buffer.writef32(u, 300, self.tipFollow)
+	-- The drawn pose: blend weight, the string ends' move back and in, on.
+	buffer.writef32(u, 304, bend)
+	buffer.writef32(u, 308, self.morphEndBack)
+	buffer.writef32(u, 312, self.morphEndIn)
+	buffer.writef32(u, 316, if self.hasMorph then 1 else 0)
 	if part.kind == 'arrow' then
 		-- The arrow: its length, how far it has formed (from the nock), and
 		-- how hot its head glows.
@@ -897,7 +983,7 @@ local function render(self: Pinaka): Image?
 	local c = self.center
 	-- As it draws, the bow shifts away from the string by half the pull, so
 	-- the bow and the drawn string stay centred together.
-	local recentre = self.shift * PULL_MAX * 0.5 * math.max(self.drawDepth, 0)
+	local recentre = self.shift * pullMax(self) * 0.5 * math.max(self.drawDepth, 0)
 	-- World units per node pixel at the bow's depth.
 	local wpp = CAM_Z * math.tan(FOV / 2) / (self.height / 2)
 	-- In flight the arrow snaps away fast, overshoots a touch and settles
@@ -1006,6 +1092,7 @@ local function render(self: Pinaka): Image?
 		if bindings and (part.kind ~= 'arrow' or arrowOn) then
 			pass:setBindGroup(0, bindings)
 			pass:setVertexBuffer(0, part.vertexBuffer)
+			pass:setVertexBuffer(1, part.morphBuffer)
 			pass:setIndexBuffer(part.indexBuffer, 'uint32')
 			pass:drawIndexed(part.indexCount)
 		end
@@ -1016,9 +1103,18 @@ local function render(self: Pinaka): Image?
 	-- with the limbs as in the vertex shader, so the aura follows the draw.
 	local m = viewProj * model
 	local _, bend = deform(self)
+	self.screenSpine = {}
+	if self.hasMorph and #self.spineDrawn == #self.spine then
+		-- Blended toward the drawn pose's spine.
+		for i, p in self.spine do
+			local q2 = self.spineDrawn[i]
+			local q = m:transformPoint(p[1] + (q2[1] - p[1]) * bend, p[2] + (q2[2] - p[2]) * bend, p[3] + (q2[3] - p[3]) * bend)
+			table.insert(self.screenSpine, Vector.xy(q.x * 0.5 * self.width, -q.y * 0.5 * self.height))
+		end
+		return canvas.image
+	end
 	local limb = math.max(self.halfLength - self.gripHalf, 1e-3)
 	local shorten = 2 / 3 * bend * bend / limb
-	self.screenSpine = {}
 	for _, p in self.spine do
 		local dy = p[2] - self.center[2]
 		local side = if dy < 0 then -1 else 1
@@ -1152,15 +1248,25 @@ local RIBBONS: { Ribbon } = {
 }
 local RIBBON_POINTS = 56
 
+-- The waves and embers are sized in pixels for a full-size bow; a smaller
+-- bow (`zoom` under 1, as on the phone) scales them down with it, and
+-- softens them a little.
+local function auraScale(self: Pinaka): (number, number)
+	local s = clamp(self.zoom, 0.05, 1)
+	return s, 0.4 + 0.6 * s
+end
+
 local function drawWaves(self: Pinaka, renderer: Renderer, amount: number, front: boolean)
 	if #self.screenSpine < 2 then
 		return
 	end
+	local sz, soft = auraScale(self)
+	amount *= soft
 	local t = self.time
 	local charge = clamp(self.charge, 0, 1.5)
 	local release = clamp(self.release, 0, 1)
 	local active = release > 0 and release < 1
-	local blow = if active then math.sin(release * math.pi) * 90 else 0
+	local blow = if active then math.sin(release * math.pi) * 90 * sz else 0
 	local fade = if active then 1 - 0.7 * math.sin(release * math.pi) else 1
 	local st = self.stroke
 	st.cap = 'round'
@@ -1168,7 +1274,7 @@ local function drawWaves(self: Pinaka, renderer: Renderer, amount: number, front
 	for r, rib in RIBBONS do
 		-- Alternate ribbons behind the bow and in front of it.
 		if (r % 2 == 0) == front then
-			local amp = rib.amp * (1 + 1.6 * charge)
+			local amp = rib.amp * (1 + 1.6 * charge) * sz
 			local speed = rib.speed * (1 + 2.5 * charge)
 			local points: { Vector } = {}
 			for k = 0, RIBBON_POINTS do
@@ -1176,8 +1282,8 @@ local function drawWaves(self: Pinaka, renderer: Renderer, amount: number, front
 				local base = spineAt(self, u)
 				local n = spineNormal(self, u)
 				-- Charged: a fast shiver that stays smooth along the ribbon.
-				local tremble = charge * 7 * math.sin(t * 17 + u * 11 + r * 1.3)
-				local off = rib.lift * (1 + charge) + amp * math.sin(u * rib.freq * math.pi * 2 + t * speed + rib.phase) + tremble
+				local tremble = charge * 7 * sz * math.sin(t * 17 + u * 11 + r * 1.3)
+				local off = rib.lift * (1 + charge) * sz + amp * math.sin(u * rib.freq * math.pi * 2 + t * speed + rib.phase) + tremble
 				off += blow * (if rib.lift >= 0 then 1 else -1)
 				table.insert(points, Vector.xy(base.x + n.x * off, base.y + n.y * off))
 			end
@@ -1189,8 +1295,8 @@ local function drawWaves(self: Pinaka, renderer: Renderer, amount: number, front
 					glow:lineTo(pt)
 				end
 			end
-			st.thickness = 5 + 4 * charge
-			st.feather = 10
+			st.thickness = (5 + 4 * charge) * sz
+			st.feather = 10 * sz
 			st.color = rgba(self.auraNow, (0.16 + 0.18 * charge) * amount * fade)
 			renderer:drawPath(glow, st)
 			-- Pulses: short bright stretches running along it.
@@ -1208,8 +1314,8 @@ local function drawWaves(self: Pinaka, renderer: Renderer, amount: number, front
 						seg:lineTo(points[k])
 					end
 				end
-				st.thickness = 1.6 + 1.4 * charge
-				st.feather = 3
+				st.thickness = (1.6 + 1.4 * charge) * math.max(sz, 0.6)
+				st.feather = 3 * sz
 				st.color = Color.rgba(255, 238, 200, math.floor(clamp((0.55 + 0.35 * charge) * amount * fade, 0, 1) * 255))
 				renderer:drawPath(seg, st)
 			end
@@ -1222,6 +1328,8 @@ end
 -- charged they swarm and jitter; on release they are flung away.
 local function drawWisps(self: Pinaka, renderer: Renderer, amount: number)
 	local f = self.fill
+	local sz, soft = auraScale(self)
+	amount *= soft
 	local charge = clamp(self.charge, 0, 1.5)
 	local release = clamp(self.release, 0, 1)
 	local active = release > 0 and release < 1
@@ -1231,16 +1339,16 @@ local function drawWisps(self: Pinaka, renderer: Renderer, amount: number)
 	for _, w in self.wisps do
 		local k = w.age / w.life
 		local base = spineAt(self, w.t)
-		local jitter = charge * 7
-		local x = base.x + w.drift * k + math.sin(self.time * 2 + w.t * 20) * 6 * k + math.sin(self.time * 23 + w.t * 90) * jitter
-		local y = base.y - w.rise * k * (1.6 + 1.2 * charge) + w.side * 4 + math.cos(self.time * 19 + w.t * 70) * jitter
+		local jitter = charge * 7 * sz
+		local x = base.x + (w.drift * k + math.sin(self.time * 2 + w.t * 20) * 6 * k) * sz + math.sin(self.time * 23 + w.t * 90) * jitter
+		local y = base.y + (-w.rise * k * (1.6 + 1.2 * charge) + w.side * 4) * sz + math.cos(self.time * 19 + w.t * 70) * jitter
 		if push > 0 then
 			local dx, dy = x - center.x, y - center.y
 			local d = math.max(math.sqrt(dx * dx + dy * dy), 1)
 			x += dx / d * push * (0.6 + w.t * 0.8)
 			y += dy / d * push * (0.6 + w.t * 0.8)
 		end
-		local r = w.size * (1 - k * 0.5) * (1 + 0.5 * charge)
+		local r = w.size * (1 - k * 0.5) * (1 + 0.5 * charge) * math.max(sz, 0.6)
 		local alpha = math.sin(k * math.pi) * (0.8 + 0.2 * charge) * amount * pushFade
 		local blob = Path.new()
 		addCircle(blob, x, y, r)
@@ -2225,6 +2333,11 @@ return function(): Node<Pinaka>
 		fireFailed = false,
 		auraNow = Color.rgb(255, 176, 64),
 		imprintNow = Color.rgb(255, 210, 140),
+		hasMorph = false,
+		morphPull = PULL_MAX,
+		morphEndBack = 0,
+		morphEndIn = 0,
+		spineDrawn = {},
 		arrowLength = ARROW_LENGTH,
 		stringX = -0.17,
 		roll = 0,

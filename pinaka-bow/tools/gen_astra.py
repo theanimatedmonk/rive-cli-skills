@@ -180,7 +180,7 @@ bow_inputs = "\n".join([
     sin("rotationX", nid(), -10), sin("rotationY", nid()), sin("rotationZ", nid()),
     sin("spinX", nid()), sin("spinY", nid()), sin("spinZ", nid()),
     f'            <ScriptInputBoolean name="showArrow" id="{nid()}"/>',
-    sin("zoom", nid(), 1.2), sin("offsetY", nid(), 65), sin("drawDepth", nid(), 0.8), sin("flightTipY", nid(), -170),
+    sin("zoom", nid(), 1.2), sin("offsetY", nid(), 65), sin("drawDepth", nid(), 1), sin("flightTipY", nid(), -170),
     sin("stretch", BOW["stretch"]), sin("charge", BOW["charge"]), sin("release", BOW["release"]),
     sin("arrow", BOW["arrow"]), sin("flight", BOW["flight"]),
     sic("goldColor", nid(), "FFC4A058"), sic("woodColor", nid(), "FF452014"),

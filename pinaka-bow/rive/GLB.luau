@@ -12,13 +12,20 @@
 -- plus a uint32 index buffer and its material. Images are returned as raw
 -- PNG/JPEG bytes for `context:decodeImage`.
 --
+-- A primitive with morph targets (shape keys) also gets `morph`: the first
+-- target's deltas, in the same space as the vertices, ready for a second
+-- vertex buffer:
+--
+--   position delta float32x3 | normal delta float32x3   (24 bytes/vertex)
+--
 -- Supported: triangles (mode 4), indexed or not; any component type, with
 -- `normalized` (so KHR_mesh_quantization data reads correctly); interleaved
 -- buffer views; node matrix or TRS; missing normals (computed smooth);
 -- baseColor / metallic / roughness / emissive factors and the base colour
 -- texture.
 -- Not supported: .gltf with external files or data URIs, Draco / meshopt
--- compression, sparse accessors, skins, morph targets, animations, cameras,
+-- compression, sparse accessors, skins, morph targets past the first,
+-- animations (read them yourself if you need the timing), cameras,
 -- lights, normal/occlusion/metal-rough textures, texture transforms.
 
 export type Material = {
@@ -41,6 +48,7 @@ export type Primitive = {
 	indices: buffer, -- uint32
 	indexCount: number,
 	material: Material,
+	morph: buffer?, -- first morph target's deltas, MORPH_STRIDE bytes per vertex
 }
 
 export type Image = { data: buffer, mimeType: string }
@@ -59,6 +67,7 @@ export type Model = {
 local GLB = {}
 
 GLB.VERTEX_STRIDE = 32
+GLB.MORPH_STRIDE = 24
 
 -- ---------------------------------------------------------------------------
 -- JSON
@@ -440,6 +449,34 @@ local function buildPrimitive(gltf: any, bin: buffer, binOffset: number, prim: a
 		end
 	end
 
+	-- The first morph target, if any: deltas through the same transform,
+	-- without the translation.
+	local morph: buffer? = nil
+	local target = prim.targets and prim.targets[1]
+	if target and target.POSITION ~= nil then
+		local _, _, getDp = accessorReader(gltf, bin, binOffset, target.POSITION)
+		local getDn: Reader? = nil
+		if target.NORMAL ~= nil then
+			local _, _, g = accessorReader(gltf, bin, binOffset, target.NORMAL)
+			getDn = g
+		end
+		local m = buffer.create(vcount * GLB.MORPH_STRIDE)
+		for i = 0, vcount - 1 do
+			local o = i * GLB.MORPH_STRIDE
+			local x, y, z = getDp(i, 0), getDp(i, 1), getDp(i, 2)
+			buffer.writef32(m, o, world[1] * x + world[5] * y + world[9] * z)
+			buffer.writef32(m, o + 4, world[2] * x + world[6] * y + world[10] * z)
+			buffer.writef32(m, o + 8, world[3] * x + world[7] * y + world[11] * z)
+			if getDn then
+				local nx, ny, nz = getDn(i, 0), getDn(i, 1), getDn(i, 2)
+				buffer.writef32(m, o + 12, nm[1] * nx + nm[4] * ny + nm[7] * nz)
+				buffer.writef32(m, o + 16, nm[2] * nx + nm[5] * ny + nm[8] * nz)
+				buffer.writef32(m, o + 20, nm[3] * nx + nm[6] * ny + nm[9] * nz)
+			end
+		end
+		morph = m
+	end
+
 	-- Flip winding if the node transform mirrors the mesh.
 	local det = world[1] * (world[6] * world[11] - world[10] * world[7])
 		- world[5] * (world[2] * world[11] - world[10] * world[3])
@@ -496,6 +533,7 @@ local function buildPrimitive(gltf: any, bin: buffer, binOffset: number, prim: a
 		indices = idx,
 		indexCount = icount,
 		material = readMaterial(gltf, prim.material),
+		morph = morph,
 		_px = px,
 		_py = py,
 		_pz = pz,

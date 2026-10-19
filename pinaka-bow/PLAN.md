@@ -25,6 +25,14 @@ The Pinaka (Shiva's bow, strung by Lord Ram) as a 3D Rive scene: gold with glowi
 
 The bow uses WGSL on a GPU canvas, so it renders on the web. It does not render on the native Android runtime; see `skills/rive-android` for why.
 
+## The drawn pose
+
+`Pinaka_Bow_LP.glb` carries a drawn pose as shape keys (one morph target on the limbs, collars, spurs, string and arrow; its `BowDraw` animation just ramps the weight). `GLB.luau` reads the first target, and the bow shader blends the limbs, collars and spurs toward it by the draw amount. The draw amount comes from the spring physics, so the pull, the overshoot on release and the vibration all drive the blend.
+- **String:** stays procedural. Its ends' movement is measured from the drawn string, so the V meets the drawn limb tips. The nock comes back 1.25× as far as the drawn string's (`STRING_REACH`), for a deeper V.
+- **Aura:** the line along the bow that the aura follows is measured in both poses and blended.
+- **Arrow:** placed by the script. Its shape key is ignored.
+- **Fallback:** without shape keys, the limbs are bent mathematically as before.
+
 ## Built: the Astra artboard
 
 **Astra** (1280×720, `rive/astra.rml`, view model `Astra`) plays the storyboard: a pull, a shot into the sky, and a blast. Its states:

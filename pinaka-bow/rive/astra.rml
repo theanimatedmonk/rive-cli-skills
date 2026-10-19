@@ -35,7 +35,7 @@
             <ScriptInputBoolean name="showArrow" id="2:1594"/>
             <ScriptInputNumber propertyValue="1.2" name="zoom" id="2:1595"/>
             <ScriptInputNumber propertyValue="65" name="offsetY" id="2:1596"/>
-            <ScriptInputNumber propertyValue="0.8" name="drawDepth" id="2:1597"/>
+            <ScriptInputNumber propertyValue="1" name="drawDepth" id="2:1597"/>
             <ScriptInputNumber propertyValue="-170" name="flightTipY" id="2:1598"/>
             <ScriptInputNumber name="stretch" id="2:420"/>
             <ScriptInputNumber name="charge" id="2:421"/>

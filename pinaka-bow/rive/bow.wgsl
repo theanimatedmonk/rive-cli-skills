@@ -35,6 +35,9 @@ struct Uniforms {
                            // y tip flex (both toward the archer, -x),
                            // z the string's half length, w how much of the
                            // tip flex the string's ends follow
+    morph: vec4<f32>,      // the drawn pose from the GLB's shape keys:
+                           // x blend weight, y how far the string's ends
+                           // move back, z how far in, w 1 when there is one
 };
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
@@ -43,6 +46,9 @@ struct VertexIn {
     @location(0) position: vec3<f32>,
     @location(1) normal: vec3<f32>,
     @location(2) extra: vec2<f32>,
+    // The drawn pose's deltas (zero for parts without one).
+    @location(3) morphPosition: vec3<f32>,
+    @location(4) morphNormal: vec3<f32>,
 };
 
 struct VertexOut {
@@ -70,8 +76,20 @@ fn vs_main(v: VertexIn) -> VertexOut {
     let bend = u.deform.y;
     let limb = max(u.mode.w, 1e-4);
     let shorten = 0.6667 * bend * bend / limb;
+    let w = u.morph.x;
     if (u.mode.x > 3.5) {
         // The arrow: placed by its own matrix, not bent.
+    } else if (u.morph.w > 0.5) {
+        // The drawn pose, from the GLB: the limbs, collars and spurs blend
+        // to it; the string makes its V, its ends riding the limb tips.
+        if (u.mode.x > 2.5) {
+            let s = clamp(abs(dy) / max(u.deform.z, 1e-4), 0.0, 1.0);
+            p.x = p.x - mix(u.deform.x, u.morph.y * w, s);
+            p.y = p.y - side * u.morph.z * w * s;
+        } else {
+            p = p + v.morphPosition * w;
+            n = n + v.morphNormal * w;
+        }
     } else if (u.mode.x > 2.5) {
         let s = clamp(abs(dy) / max(u.deform.z, 1e-4), 0.0, 1.0);
         p.x = p.x - mix(u.deform.x, bend * u.deform.w, s);
