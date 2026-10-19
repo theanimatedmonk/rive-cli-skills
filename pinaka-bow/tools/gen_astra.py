@@ -17,12 +17,14 @@ ASTRAS = [
     ("Nagastra", "pullNagastra", dict(aura="FF2CFF6A", imprint="FFB0FFC4", arrow="FF3DFF7A", tint="FF19E05A", style=2)),
     ("Vajrastra", "pullVajrastra", dict(aura="FFB040FF", imprint="FFE2B0FF", arrow="FFC060FF", tint="FF9B30FF", style=3)),
     ("Agneyastra", "pullAgneyastra", dict(aura="FFFF5A1E", imprint="FFFFC08A", arrow="FFFF7A2A", tint="FFFF4A12", style=4)),
+    # Shiva's own astra: the trident arrow, neon purple blended with neon pink.
+    ("Pashupatastra", "pullPashupatastra", dict(aura="FF7A2BFF", accent="FFFF2BD6", imprint="FFE9B8FF", arrow="FFC77BFF", tint="FFA02BE0", style=5, trident=1, omen="FFFF1F2E", spread=55)),
 ]
 
 # Inputs that animations key, by node.
 BOW = dict(stretch="2:420", charge="2:421", release="2:422", arrow="2:423", flight="2:424",
-           auraColor="2:430", imprintColor="2:431", arrowColor="2:432", auraStyle="2:433", astraFade="2:434")
-SKY = dict(heat="2:82", blast="2:84", speed="2:90", tint="2:91")
+           auraColor="2:430", imprintColor="2:431", arrowColor="2:432", auraStyle="2:433", astraFade="2:434", trident="2:435", accentColor="2:436")
+SKY = dict(heat="2:82", blast="2:84", speed="2:90", tint="2:91", omen="2:92", omenColor="2:93", spread="2:94", complement="2:97", hueA="2:98", hueB="2:99")
 FXF = dict(charge="2:21", burst="2:22", tint="2:24")
 FXB = dict(charge="2:61", burst="2:62", tint="2:64")
 
@@ -65,6 +67,7 @@ anims.append(anim("Idle", "2:110", 60, [
     keyed(SKY["heat"], NUM, [kf_num(0, 0)]),
     keyed(SKY["blast"], NUM, [kf_num(0, 0)]),
     keyed(SKY["speed"], NUM, [kf_num(0, 0)]),
+    keyed(SKY["omen"], NUM, [kf_num(0, 0)]),
     keyed(FXF["charge"], NUM, [kf_num(0, 0)]), keyed(FXF["burst"], NUM, [kf_num(0, 0)]),
     keyed(FXB["charge"], NUM, [kf_num(0, 0)]), keyed(FXB["burst"], NUM, [kf_num(0, 0)]),
 ], loop=True, comment="Idle: the bow at rest, no arrow, the sky still."))
@@ -87,10 +90,17 @@ for i, (name, trig, c) in enumerate(ASTRAS):
         keyed(BOW["astraFade"], NUM, [kf_num(0, 0, (0.4, 0, 0.6, 1)), kf_num(40, 1)]),
         keyed(BOW["arrowColor"], COL, [kf_col(0, c["arrow"])]),
         keyed(BOW["auraStyle"], NUM, [kf_num(0, c["style"])]),
+        keyed(BOW["trident"], NUM, [kf_num(0, c.get("trident", 0))]),
+        keyed(BOW["accentColor"], COL, [kf_col(0, c.get("accent", "00000000"))]),
         keyed(SKY["heat"], NUM, [kf_num(0, 0), kf_num(30, 0, EASE_CHARGE), kf_num(114, 0.6)]),
         keyed(SKY["speed"], NUM, [kf_num(0, 0)]),
         keyed(SKY["blast"], NUM, [kf_num(0, 0)]),
         keyed(SKY["tint"], COL, [kf_col(0, c["tint"])]),
+        keyed(SKY["omenColor"], COL, [kf_col(0, c.get("omen", "00000000"))]),
+        keyed(SKY["spread"], NUM, [kf_num(0, c.get("spread", 0))]),
+        keyed(SKY["complement"], NUM, [kf_num(0, c.get("complement", 0))]),
+        keyed(SKY["hueA"], NUM, [kf_num(0, c.get("harmony", (130, 130))[0])]),
+        keyed(SKY["hueB"], NUM, [kf_num(0, c.get("harmony", (130, 130))[1])]),
         keyed(FXF["charge"], NUM, [kf_num(0, 0)]), keyed(FXF["burst"], NUM, [kf_num(0, 0)]),
         keyed(FXB["charge"], NUM, [kf_num(0, 0)]), keyed(FXB["burst"], NUM, [kf_num(0, 0)]),
         keyed(FXF["tint"], COL, [kf_col(0, c["tint"])]),
@@ -100,7 +110,7 @@ for i, (name, trig, c) in enumerate(ASTRAS):
         f'                <KeyedProperty propertyKey="395" id="{nid()}">\n'
         f'                    <KeyFrameCallback frame="30" id="{nid()}"/>\n'
         f'                </KeyedProperty>\n            </KeyedObject>',
-    ], comment=f"Pull{name}: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged" + ("" if c["style"] == 0 else f", in {name}'s colour and aura (" + ["", "mist", "pollen", "lightning", "fire"][c["style"]] + ")") + "."))
+    ], comment=f"Pull{name}: the arrow forms on the string out of light, then the bow draws over 1.4s and holds, charged" + ("" if c["style"] == 0 else f", in {name}'s colour and aura (" + ["", "mist", "pollen", "lightning", "fire", "fine pollen, purple and pink, the trident"][c["style"]] + ")") + "."))
 
 EVENT = "2:95"
 anims.append(anim("Flight", "2:120", 140, [
@@ -128,6 +138,9 @@ anims.append(anim("Blast", "2:130", 210, [
     keyed(SKY["speed"], NUM, [kf_num(0, 0.8, (0.2, 0.6, 0.4, 1)), kf_num(54, 0)]),
     keyed(SKY["heat"], NUM, [kf_num(0, 0.35, (0.5, 0, 0.5, 1)), kf_num(54, 0.8, (0.3, 0, 0.5, 1)), kf_num(190, 0)]),
     keyed(SKY["blast"], NUM, [kf_num(0, 0), kf_num(54, 0, (0.1, 0.7, 0.3, 1)), kf_num(86, 1, (0.4, 0, 0.6, 1)), kf_num(200, 0)]),
+    # The astra's omen (if it has one) flushes the clouds as the stars
+    # encircle the tip, and clears after the burst.
+    keyed(SKY["omen"], NUM, [kf_num(0, 0, (0.4, 0, 0.6, 1)), kf_num(50, 1), kf_num(62, 1, (0.4, 0, 0.6, 1)), kf_num(120, 0)]),
     *[keyed(fx["charge"], NUM, [kf_num(0, 0, (0.5, 0, 0.5, 1)), kf_num(54, 1), kf_num(140, 1), kf_num(150, 0)]) for fx in (FXF, FXB)],
     # The burst ends at 1 (drawing nothing) and stays there: dropping it
     # back to 0 a frame later replays mid-explosion in between. Idle resets it.
@@ -144,7 +157,7 @@ def trig_cond(prop):
             f'                            <TransitionValueTriggerComparator id="{nid()}"/>\n'
             f'                        </TransitionViewModelCondition>')
 
-VM_TRIG = {"pullBrahmashirsha": "2:501", "pullParjanyastra": "2:502", "pullNagastra": "2:503", "pullVajrastra": "2:504", "pullAgneyastra": "2:508", "fire": "2:505", "blast": "2:506"}
+VM_TRIG = {"pullBrahmashirsha": "2:501", "pullParjanyastra": "2:502", "pullNagastra": "2:503", "pullVajrastra": "2:504", "pullAgneyastra": "2:508", "pullPashupatastra": "2:509", "fire": "2:505", "blast": "2:506"}
 
 PULL_STATE = {name: f"2:{141 + i}" for i, (name, _, _) in enumerate(ASTRAS)}
 any_trans = "\n".join(
@@ -186,14 +199,19 @@ bow_inputs = "\n".join([
     sic("goldColor", nid(), "FFC4A058"), sic("woodColor", nid(), "FF452014"),
     sic("auraColor", BOW["auraColor"], GOLD["aura"]), sic("imprintColor", BOW["imprintColor"], GOLD["imprint"]),
     sic("arrowColor", BOW["arrowColor"], GOLD["arrow"]),
+    sic("accentColor", BOW["accentColor"], "00000000"),
     sin("auraStyle", BOW["auraStyle"]),
     sin("astraFade", BOW["astraFade"]),
+    sin("trident", BOW["trident"]),
 ])
 sky_inputs = "\n".join([
     sin("width", nid(), 1280), sin("height", nid(), 720), sin("heat", SKY["heat"]), sin("focusY", nid(), 190),
     sin("blast", SKY["blast"]), sin("grain", nid(), 1), sin("mist", nid(), 1),
     sin("cursorRadius", nid(), 180), sin("cursorStrength", nid(), 0.5), sin("speed", SKY["speed"]),
     sic("tint", SKY["tint"], "00000000"),
+    sin("omen", SKY["omen"]), sic("omenColor", SKY["omenColor"], "00000000"),
+    sin("tintSpread", SKY["spread"]), sin("tintComplement", SKY["complement"]),
+    sin("harmonyA", SKY["hueA"], 130), sin("harmonyB", SKY["hueB"], 130),
 ])
 
 listener_change = (f'            <ListenerViewModelChange id="{nid()}">\n'
@@ -208,7 +226,8 @@ vm_inst = "\n".join(f'            <ViewModelInstanceTrigger viewModelPropertyId=
 rml = f'''<Rive version="1" kind="fragment">
     <!-- Astra: the Pinaka looses an astra. The bow lies level, belly up, in
          the lower part of the frame; a pull trigger (pullBrahmashirsha,
-         pullParjanyastra, pullNagastra, pullVajrastra, pullAgneyastra)
+         pullParjanyastra, pullNagastra, pullVajrastra, pullAgneyastra,
+         pullPashupatastra)
          forms the arrow on the string and draws it, the aura and arrow in
          that astra's colour; `fire` looses it into the sky; 2s later the
          `blast` event fires the `blast` trigger, stars encircle the arrow's

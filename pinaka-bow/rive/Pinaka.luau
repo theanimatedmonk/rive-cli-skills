@@ -43,7 +43,11 @@
 -- `drawDepth` scales how far it draws.
 --
 -- `auraStyle` picks the aura that wraps the bow and arrow as it charges:
--- 0 the gold waves, 1 mist, 2 pollen, 3 lightning, 4 fire (the astras).
+-- 0 the gold waves, 1 mist, 2 pollen, 3 lightning, 4 fire, 5 Pashupatastra's
+-- (a haze of very fine pollen). `accentColor`, when set, is blended with the
+-- aura colour grain by grain and bolt by bolt (and on one strand of the
+-- arrow's helix). `trident` (1) swaps the arrow for the
+-- trident.
 -- `astraFade` (0-1) blends from the bow's resting look (`restAura`,
 -- `restImprint`, the waves) to the astra's (`auraColor`, `imprintColor`,
 -- `auraStyle`); it is a number, so it tweens in every runtime.
@@ -73,6 +77,8 @@ export type Pinaka = {
 	offsetY: Input<number>,
 	drawDepth: Input<number>,
 	arrowColor: Input<Color>,
+	accentColor: Input<Color>,
+	trident: Input<number>,
 	auraStyle: Input<number>,
 	astraFade: Input<number>,
 	restAura: Input<Color>,
@@ -115,6 +121,9 @@ export type Pinaka = {
 	-- This frame's aura and imprint colours (see `astraFade`).
 	auraNow: Color,
 	imprintNow: Color,
+	-- A second aura colour to blend with (`accentColor`; the aura's own when
+	-- it is clear).
+	accentNow: Color,
 	arrowLength: number,
 	stringX: number,
 	-- The drawn pose, from the GLB's shape keys: whether it has one, how far
@@ -150,7 +159,7 @@ export type Pinaka = {
 	stroke: Paint,
 }
 
-type Kind = 'limb' | 'gold' | 'wood' | 'string' | 'arrow'
+type Kind = 'limb' | 'gold' | 'wood' | 'string' | 'arrow' | 'trident'
 
 type Part = {
 	kind: Kind,
@@ -237,7 +246,9 @@ end
 
 local function kindOf(name: string): Kind
 	local n = string.lower(name)
-	if string.find(n, 'arrow') then
+	if string.find(n, 'trident') then
+		return 'trident'
+	elseif string.find(n, 'arrow') then
 		return 'arrow'
 	elseif string.find(n, 'string') then
 		return 'string'
@@ -247,6 +258,11 @@ local function kindOf(name: string): Kind
 		return 'limb'
 	end
 	return 'gold'
+end
+
+-- The two arrows: the plain one, and Pashupatastra's trident.
+local function isArrow(kind: Kind): boolean
+	return kind == 'arrow' or kind == 'trident'
 end
 
 -- Cavity per vertex (how far it sits below its neighbours, over the mean
@@ -430,10 +446,12 @@ end
 -- than a full draw. Put every arrow part on one axis (local +x, the nock at
 -- 0, the tip at ARROW_LENGTH) and lengthen the shaft between the fletching
 -- and the head, leaving those as modelled.
-local function prepareArrow(self: Pinaka, primitives: { GLB.Primitive })
+-- `kind` picks the arrow ('arrow' or 'trident'); the trident's broad head
+-- (`head` long) is thickened less than its shaft.
+local function prepareArrow(self: Pinaka, primitives: { GLB.Primitive }, kind: Kind, head: number, headGirth: number)
 	local arrows: { GLB.Primitive } = {}
 	for _, p in primitives do
-		if kindOf(p.nodeName .. p.meshName) == 'arrow' then
+		if kindOf(p.nodeName .. p.meshName) == kind then
 			table.insert(arrows, p)
 		end
 	end
@@ -484,7 +502,7 @@ local function prepareArrow(self: Pinaka, primitives: { GLB.Primitive })
 	end
 	local L0 = umax - umin
 	local extra = ARROW_LENGTH - L0
-	local shaftStart, headStart = 0.25 * L0, L0 - 0.17
+	local shaftStart, headStart = 0.25 * L0, L0 - head
 	local k = (headStart + extra - shaftStart) / (headStart - shaftStart)
 	for _, p in arrows do
 		local v = p.vertices
@@ -492,14 +510,16 @@ local function prepareArrow(self: Pinaka, primitives: { GLB.Primitive })
 			local o = i * stride
 			local x, y, z = buffer.readf32(v, o), buffer.readf32(v, o + 4) - y0, buffer.readf32(v, o + 8) - z0
 			local u = x * ax + y * ay + z * az - umin
+			local hk = clamp((u - headStart + 0.02) / 0.08, 0, 1)
+			local girth = ARROW_GIRTH + (headGirth - ARROW_GIRTH) * hk * hk * (3 - 2 * hk)
 			if u > headStart then
 				u += extra
 			elseif u > shaftStart then
 				u = shaftStart + (u - shaftStart) * k
 			end
 			buffer.writef32(v, o, u)
-			buffer.writef32(v, o + 4, (x * e2x + y * e2y + z * e2z) * ARROW_GIRTH)
-			buffer.writef32(v, o + 8, (x * e3x + y * e3y + z * e3z) * ARROW_GIRTH)
+			buffer.writef32(v, o + 4, (x * e2x + y * e2y + z * e2z) * girth)
+			buffer.writef32(v, o + 8, (x * e3x + y * e3y + z * e3z) * girth)
 			local nx, ny, nz = buffer.readf32(v, o + 12), buffer.readf32(v, o + 16), buffer.readf32(v, o + 20)
 			buffer.writef32(v, o + 12, nx * ax + ny * ay + nz * az)
 			buffer.writef32(v, o + 16, nx * e2x + ny * e2y + nz * e2z)
@@ -530,7 +550,7 @@ local function load(self: Pinaka): boolean
 	local minZ: number = math.huge
 	local maxZ: number = -math.huge
 	for _, p in model.primitives do
-		if kindOf(p.nodeName .. p.meshName) ~= 'arrow' then
+		if not isArrow(kindOf(p.nodeName .. p.meshName)) then
 			for i = 0, p.vertexCount - 1 do
 				local o = i * GLB.VERTEX_STRIDE
 				local x, y, z = buffer.readf32(p.vertices, o), buffer.readf32(p.vertices, o + 4), buffer.readf32(p.vertices, o + 8)
@@ -555,7 +575,8 @@ local function load(self: Pinaka): boolean
 			self.stringX = sxSum / math.max(p.vertexCount, 1)
 		end
 	end
-	prepareArrow(self, model.primitives)
+	prepareArrow(self, model.primitives, 'arrow', 0.17, ARROW_GIRTH)
+	prepareArrow(self, model.primitives, 'trident', 0.24, 1.35)
 	for _, p in model.primitives do
 		if kindOf(p.nodeName .. p.meshName) == 'wood' then
 			local gy = 0
@@ -650,7 +671,7 @@ local function load(self: Pinaka): boolean
 			rebuildString(p)
 			morph = nil
 		end
-		if kind == 'arrow' then
+		if isArrow(kind) then
 			-- Placed by its own matrix; its shape key is not used.
 			morph = nil
 		end
@@ -898,12 +919,16 @@ local function writeUniforms(self: Pinaka, part: Part, mvp: Mat4, model: Mat4)
 		metallic, roughness, emissive, rimK, imprintK, mode = 0, 0.6, 2.2, 0, 0, 3
 	elseif part.kind == 'arrow' then
 		metallic, roughness, rimK, imprintK, mode = 1, 0.3, 0.5, 0, 4
+	elseif part.kind == 'trident' then
+		-- Dark star-steel, lit by its astra's light.
+		base = { linear(Color.rgb(78, 70, 112)) }
+		metallic, roughness, rimK, imprintK, mode = 1, 0.32, 0.12, 0, 4
 	end
 	buffer.writef32(u, 128, base[1])
 	buffer.writef32(u, 132, base[2])
 	buffer.writef32(u, 136, base[3])
 	buffer.writef32(u, 140, 1)
-	local ar, ag, ab = linear(if part.kind == 'arrow' then self.arrowColor else self.auraNow)
+	local ar, ag, ab = linear(if isArrow(part.kind) then self.arrowColor else self.auraNow)
 	local er, eg, eb = linear(Color.rgb(255, 228, 170))
 	local glow = emissive * (1 + power)
 	buffer.writef32(u, 144, er * glow)
@@ -958,13 +983,16 @@ local function writeUniforms(self: Pinaka, part: Part, mvp: Mat4, model: Mat4)
 	buffer.writef32(u, 308, self.morphEndBack)
 	buffer.writef32(u, 312, self.morphEndIn)
 	buffer.writef32(u, 316, if self.hasMorph then 1 else 0)
-	if part.kind == 'arrow' then
+	if isArrow(part.kind) then
 		-- The arrow: its length, how far it has formed (from the nock), and
 		-- how hot its head glows.
 		local formed = if self.showArrow then 1 else clamp(self.arrow, 0, 1)
 		buffer.writef32(u, 276, self.arrowLength)
 		buffer.writef32(u, 280, formed * self.arrowLength * 1.02)
-		buffer.writef32(u, 284, 0.6 + 1.4 * clamp(self.charge, 0, 1.5) + 1.6 * clamp(self.flight, 0, 1))
+		-- The trident's whole head is in the glow zone: only a touch, so its
+		-- dark steel reads, lit at the edges.
+		local headGlow = 0.6 + 1.4 * clamp(self.charge, 0, 1.5) + 1.6 * clamp(self.flight, 0, 1)
+		buffer.writef32(u, 284, if part.kind == 'trident' then headGlow * 0.04 else headGlow)
 	end
 	part.uniforms:write(u)
 end
@@ -1065,13 +1093,15 @@ local function render(self: Pinaka): Image?
 		self.arrowTipS = Vector.xy(qt.x * 0.5 * self.width, -qt.y * 0.5 * self.height)
 	end
 
+	-- Which arrow: the trident for Pashupatastra, the plain one otherwise.
+	local which: Kind = if self.trident > 0.5 then 'trident' else 'arrow'
 	for _, part in self.parts do
-		if part.kind == 'arrow' and arrowOn then
+		if part.kind == which and arrowOn then
 			writeUniforms(self, part, arrowMvp, self.arrowWorld)
 			if part.bindings == nil then
 				part.bindings = GPUBindGroup.new({ layout = pipeline:getBindGroupLayout(0), ubos = { { slot = 0, buffer = part.uniforms } } })
 			end
-		elseif part.kind ~= 'arrow' then
+		elseif not isArrow(part.kind) then
 			writeUniforms(self, part, mvp, model)
 			if part.bindings == nil then
 				part.bindings = GPUBindGroup.new({ layout = pipeline:getBindGroupLayout(0), ubos = { { slot = 0, buffer = part.uniforms } } })
@@ -1089,7 +1119,7 @@ local function render(self: Pinaka): Image?
 	pass:setPipeline(pipeline)
 	for _, part in self.parts do
 		local bindings = part.bindings
-		if bindings and (part.kind ~= 'arrow' or arrowOn) then
+		if bindings and (not isArrow(part.kind) or (arrowOn and part.kind == which)) then
 			pass:setBindGroup(0, bindings)
 			pass:setVertexBuffer(0, part.vertexBuffer)
 			pass:setVertexBuffer(1, part.morphBuffer)
@@ -1525,6 +1555,8 @@ local function drawArrowLight(self: Pinaka, renderer: Renderer, front: boolean)
 	st.cap = 'round'
 	st.join = 'round'
 	local px, py = -dy / len, dx / len
+	-- With an accent, the second strand of the helix takes it.
+	local accent = if (Color.alpha(self.accentColor) :: number) > 0 then self.accentNow else col
 	local ux, uy = dx / len, dy / len
 	local zoom = math.max(self.zoom, 0.05)
 
@@ -1592,11 +1624,12 @@ local function drawArrowLight(self: Pinaka, renderer: Renderer, front: boolean)
 					path:moveTo(Vector.xy(a.x + dx * u0 + px * r0, a.y + dy * u0 + py * r0))
 					path:lineTo(Vector.xy(a.x + dx * u1 + px * r1, a.y + dy * u1 + py * r1))
 					local alpha = strength * (env0 + env1) * 0.5 * (0.35 + 0.65 * math.abs(depth))
+					local sc = if strand == 1 then accent else col
 					st.thickness = 5 * zoom
-					st.color = rgba(col, alpha * 0.3)
+					st.color = rgba(sc, alpha * 0.3)
 					renderer:drawPath(path, st)
 					st.thickness = 1.5 * zoom
-					st.color = lighten(col, 0.55, alpha)
+					st.color = lighten(sc, 0.55, alpha)
 					renderer:drawPath(path, st)
 				end
 			end
@@ -1840,6 +1873,18 @@ local function mixColor(c: Color, r: number, g: number, b: number, k: number, al
 	)
 end
 
+local function blend(a: Color, b: Color, k: number): Color
+	local function ch(x: number, y: number): number
+		return math.floor(x + (y - x) * k + 0.5)
+	end
+	return Color.rgba(
+		ch(Color.red(a) :: number, Color.red(b) :: number),
+		ch(Color.green(a) :: number, Color.green(b) :: number),
+		ch(Color.blue(a) :: number, Color.blue(b) :: number),
+		ch(Color.alpha(a) :: number, Color.alpha(b) :: number)
+	)
+end
+
 -- Where an aura particle lives: `u` (0..1) along the bow's spine, or along
 -- the arrow's shaft when `onArrow` and the arrow is out. The point and the
 -- unit normal there, on screen.
@@ -1907,7 +1952,8 @@ end
 -- the bow and arrow, drifting up and glinting; they swirl faster as it
 -- charges.
 local POLLEN = 190
-local function drawPollen(self: Pinaka, renderer: Renderer, amount: number, front: boolean)
+-- `fine` (Pashupatastra): many more, much finer grains, a smaller halo.
+local function drawPollen(self: Pinaka, renderer: Renderer, amount: number, front: boolean, fine: boolean?)
 	local strength = auraStrength(self, amount, true)
 	if strength < 0.01 or #self.screenSpine == 0 then
 		return
@@ -1919,7 +1965,8 @@ local function drawPollen(self: Pinaka, renderer: Renderer, amount: number, fron
 	local t = self.time
 	local swirl = 1 + 1.6 * k
 	local onBow = auraStrength(self, amount)
-	for i = 1, POLLEN do
+	local accent = self.accentNow
+	for i = 1, if fine then POLLEN * 2 else POLLEN do
 		if (i % 2 == 0) == front then
 			local onArrow = i % 4 == 0
 			local u = if onArrow then 0.05 + 0.9 * hash01(i * 3.1) else hash01(i * 3.1)
@@ -1934,18 +1981,25 @@ local function drawPollen(self: Pinaka, renderer: Renderer, amount: number, fron
 			local y = p.y + n.y * across + math.cos(t * sp * 0.8 * swirl + ph * 1.3) * spread * 0.35 - age * 55 * zoom
 			local fade = math.sin(math.pi * age)
 			local glint = math.max(0, math.sin(t * (2 + 3 * hash01(i + 31)) + ph)) ^ 6
-			local r = (1.8 + 2.2 * hash01(i + 35)) * zoom * (0.9 + 0.2 * math.sin(t * 3 + ph))
+			local r = (if fine then 0.6 + 0.8 * hash01(i + 35) else 1.8 + 2.2 * hash01(i + 35))
+				* zoom
+				* (0.9 + 0.2 * math.sin(t * 3 + ph))
 			local a = (if onArrow then strength else onBow) * fade * (0.55 + 0.45 * glint)
-			-- Halo, then the grain: green-gold, lit at the glint.
-			fl.gradient = Gradient.radial(Vector.xy(x, y), r * 4.5, {
-				{ position = 0, color = rgba(col, a * 0.6) },
-				{ position = 1, color = rgba(col, 0) },
+			-- Each grain in the aura colour, the accent, or between.
+			local gc = blend(col, accent, hash01(i + 51))
+			local haloR = r * (if fine then 3.5 else 4.5)
+			-- Halo, then the grain, lit at the glint.
+			fl.gradient = Gradient.radial(Vector.xy(x, y), haloR, {
+				{ position = 0, color = rgba(gc, a * 0.6) },
+				{ position = 1, color = rgba(gc, 0) },
 			})
 			local halo = Path.new()
-			addCircle(halo, x, y, r * 4.5)
+			addCircle(halo, x, y, haloR)
 			renderer:drawPath(halo, fl)
 			fl.gradient = nil
-			fl.color = mixColor(col, 255, 246, 150, 0.35 + 0.5 * glint, a)
+			fl.color = if fine
+				then lighten(gc, 0.3 + 0.5 * glint, a)
+				else mixColor(gc, 255, 246, 150, 0.35 + 0.5 * glint, a)
 			local grain = Path.new()
 			addCircle(grain, x, y, r)
 			renderer:drawPath(grain, fl)
@@ -1973,14 +2027,14 @@ local function bolt(a: Vector, b: Vector, seed: number, rough: number): { Vector
 	return pts
 end
 
-local function strokeBolt(self: Pinaka, renderer: Renderer, pts: { Vector }, alpha: number, width: number)
+local function strokeBolt(self: Pinaka, renderer: Renderer, pts: { Vector }, alpha: number, width: number, colour: Color?)
 	local path = Path.new()
 	path:moveTo(pts[1])
 	for i = 2, #pts do
 		path:lineTo(pts[i])
 	end
 	local st = self.stroke
-	local col = self.auraNow
+	local col = colour or self.auraNow
 	st.cap = 'round'
 	st.join = 'round'
 	st.thickness = 9 * width
@@ -2051,30 +2105,21 @@ local function drawLightning(self: Pinaka, renderer: Renderer, amount: number)
 			end
 			local flick = 0.6 + 0.4 * hash01(s + 7.7)
 			local pts = bolt(p0, p1, s, 0.42)
-			strokeBolt(self, renderer, pts, strength * flick, zoom * (0.8 + 0.4 * hash01(s + 8.8)))
+			-- Each bolt in the aura colour, the accent, or between.
+			local bc = blend(self.auraNow, self.accentNow, hash01(s + 12.3))
+			strokeBolt(self, renderer, pts, strength * flick, zoom * (0.8 + 0.4 * hash01(s + 8.8)), bc)
 			-- A fork off the middle now and then.
 			if hash01(s + 9.9) < 0.45 then
 				local m = pts[math.floor(#pts / 2)]
 				local ang = hash01(s + 10.1) * TAU
 				local l = (20 + 40 * hash01(s + 11.1)) * zoom
 				local fork = bolt(m, Vector.xy(m.x + math.cos(ang) * l, m.y + math.sin(ang) * l), s + 50, 0.5)
-				strokeBolt(self, renderer, fork, strength * flick * 0.7, zoom * 0.6)
+				strokeBolt(self, renderer, fork, strength * flick * 0.7, zoom * 0.6, bc)
 			end
 		end
 	end
 end
 
-local function blend(a: Color, b: Color, k: number): Color
-	local function ch(x: number, y: number): number
-		return math.floor(x + (y - x) * k + 0.5)
-	end
-	return Color.rgba(
-		ch(Color.red(a) :: number, Color.red(b) :: number),
-		ch(Color.green(a) :: number, Color.green(b) :: number),
-		ch(Color.blue(a) :: number, Color.blue(b) :: number),
-		ch(Color.alpha(a) :: number, Color.alpha(b) :: number)
-	)
-end
 
 -- Fire (Agni, auraStyle 4): roaring, turbulent flames engulfing the bow and
 -- arrow, from fire.wgsl. The bow's spine and the arrow's shaft go to the
@@ -2211,6 +2256,9 @@ function draw(self: Pinaka, renderer: Renderer)
 	local astra = clamp(self.astraFade, 0, 1)
 	self.auraNow = blend(self.restAura, self.auraColor, astra)
 	self.imprintNow = blend(self.restImprint, self.imprintColor, astra)
+	self.accentNow = if (Color.alpha(self.accentColor) :: number) > 0
+		then blend(self.restAura, self.accentColor, astra)
+		else self.auraNow
 	local ok, result = pcall(render, self)
 	if not ok then
 		print('Pinaka: render failed: ' .. tostring(result))
@@ -2226,11 +2274,13 @@ function draw(self: Pinaka, renderer: Renderer)
 	-- The astra's aura crossfades with the resting waves by `astraFade`.
 	local style = math.floor(self.auraStyle + 0.5)
 	local styled = if style > 0 then amount * astra else 0
+	-- Pashupatastra (5) keeps the waves, in its own purple, under its lightning.
 	local waves = if style > 0 then amount * (1 - astra) else amount
 	if style == 1 then
 		drawMist(self, renderer, styled, false)
-	elseif style == 2 then
-		drawPollen(self, renderer, styled, false)
+	elseif style == 2 or style == 5 then
+		-- Pashupatastra (5): a haze of very fine pollen.
+		drawPollen(self, renderer, styled, false, style == 5)
 	end
 	local fire: Image? = nil
 	if style == 4 and styled > 0.001 then
@@ -2243,8 +2293,14 @@ function draw(self: Pinaka, renderer: Renderer)
 	if waves > 0.001 then
 		drawWaves(self, renderer, waves, false)
 	end
-	drawWisps(self, renderer, if style == 2 then waves else amount)
+	drawWisps(self, renderer, if style == 2 or style == 5 then waves else amount)
 	drawArrowLight(self, renderer, false)
+	-- The trident's radiance shines from behind it, so its dark steel stands
+	-- out against the light; the other tips glow in front.
+	local trident = self.trident > 0.5
+	if trident then
+		drawTipGlow(self, renderer)
+	end
 	if image then
 		renderer:save()
 		renderer:transform(
@@ -2256,9 +2312,10 @@ function draw(self: Pinaka, renderer: Renderer)
 	end
 	if style == 1 then
 		drawMist(self, renderer, styled, true)
-	elseif style == 2 then
-		drawPollen(self, renderer, styled, true)
-	elseif style == 3 then
+	elseif style == 2 or style == 5 then
+		drawPollen(self, renderer, styled, true, style == 5)
+	end
+	if style == 3 then
 		drawLightning(self, renderer, styled)
 	end
 	if fire then
@@ -2268,7 +2325,9 @@ function draw(self: Pinaka, renderer: Renderer)
 		drawWaves(self, renderer, waves, true)
 	end
 	drawArrowLight(self, renderer, true)
-	drawTipGlow(self, renderer)
+	if not trident then
+		drawTipGlow(self, renderer)
+	end
 	drawSparks(self, renderer, amount)
 	drawRipple(self, renderer, amount)
 	drawBurst(self, renderer, amount)
@@ -2298,6 +2357,8 @@ return function(): Node<Pinaka>
 		offsetY = 0,
 		drawDepth = 1,
 		arrowColor = Color.rgb(255, 190, 90),
+		accentColor = Color.rgba(0, 0, 0, 0),
+		trident = 0,
 		auraStyle = 0,
 		astraFade = 1,
 		restAura = Color.rgb(255, 176, 64),
@@ -2333,6 +2394,7 @@ return function(): Node<Pinaka>
 		fireFailed = false,
 		auraNow = Color.rgb(255, 176, 64),
 		imprintNow = Color.rgb(255, 210, 140),
+		accentNow = Color.rgb(255, 176, 64),
 		hasMorph = false,
 		morphPull = PULL_MAX,
 		morphEndBack = 0,

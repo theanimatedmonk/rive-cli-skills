@@ -9,6 +9,7 @@
   --green: #3dff7a;
   --violet: #c060ff;
   --fire: #ff6a2a;
+  --purple: #c04bff;
   /* The inbox on the phone: a light mail app. */
   --mail-bg: #ffffff;
   --mail-text: #1b1d22;
@@ -172,6 +173,14 @@ body {
 .astra--fire:hover {
   border-color: var(--fire);
   color: var(--fire);
+}
+
+.astra--purple {
+  border-color: color-mix(in srgb, var(--purple) 55%, transparent);
+}
+.astra--purple:hover {
+  border-color: var(--purple);
+  color: var(--purple);
 }
 
 .action--fire {

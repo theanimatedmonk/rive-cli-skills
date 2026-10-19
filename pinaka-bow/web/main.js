@@ -10,7 +10,7 @@
 //                letting go past the threshold fires (`fire`); the file's
 //                `reload` event brings in new mail and `done` hands the
 //                screen back. Each pull uses the next astra.
-const SRC = "pinaka-bow.riv?v=31";
+const SRC = "pinaka-bow.riv?v=41";
 
 const SCENES = {
   bow: { artboard: "Pinaka", stateMachine: "Scene", width: 1280, height: 1280, canvas: "scene" },
@@ -144,6 +144,7 @@ const ASTRAS = [
   { name: "Nagastra", aura: 0xff2cff6a, imprint: 0xffb0ffc4, arrow: 0xff3dff7a, tint: 0xff19e05a, style: 2 },
   { name: "Vajrastra", aura: 0xffb040ff, imprint: 0xffe2b0ff, arrow: 0xffc060ff, tint: 0xff9b30ff, style: 3 },
   { name: "Agneyastra", aura: 0xffff5a1e, imprint: 0xffffc08a, arrow: 0xffff7a2a, tint: 0xffff4a12, style: 4 },
+  { name: "Pashupatastra", aura: 0xff7a2bff, accent: 0xffff2bd6, imprint: 0xffe9b8ff, arrow: 0xffc77bff, tint: 0xffa02be0, style: 5, trident: 1, omen: 0xffff1f2e, spread: 55 },
 ];
 let astraIndex = 0;
 
@@ -158,7 +159,12 @@ function applyAstra(astra) {
   setColor("imprint", astra.imprint);
   setColor("arrow", astra.arrow);
   setColor("tint", astra.tint);
+  setColor("accent", astra.accent || 0);
+  setColor("omen", astra.omen || 0);
+  setNumber("spread", astra.spread || 0);
+  setNumber("complement", astra.complement || 0);
   setNumber("style", astra.style);
+  setNumber("trident", astra.trident || 0);
 }
 
 // The inbox. Fictional mail for the demo.

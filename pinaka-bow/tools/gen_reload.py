@@ -6,8 +6,9 @@
 # The host page drives it through the `Reload` view model:
 #   pull   0-100, how far the finger has dragged down; poses the bow live
 #   fire   trigger, on release past the threshold
-#   aura, imprint, arrow, tint (colours) and style (0-4): the astra for
-#          this pull, set before the drag starts
+#   aura, accent, imprint, arrow, tint, omen (colours), style (0-5),
+#          trident (0/1):
+#          the astra for this pull, set before the drag starts
 # and listens for two events as the blast clears: `reload` (bring in the new
 # mail) and `done` (fade the sky away to the inbox).
 import itertools, sys
@@ -21,10 +22,10 @@ W, H = 390, 844
 TIP_Y = 232          # where the arrow's tip stands in flight, and the blast
 
 BOW = dict(stretch="3:420", charge="3:421", release="3:422", arrow="3:423", flight="3:424", astraFade="3:425")
-SKY = dict(heat="3:82", blast="3:84", speed="3:90")
+SKY = dict(heat="3:82", blast="3:84", speed="3:90", omen="3:92")
 FXF = dict(charge="3:21", burst="3:22")
 FXB = dict(charge="3:61", burst="3:62")
-VM = dict(pull="3:501", fire="3:502", blast="3:503", aura="3:504", imprint="3:505", arrow="3:506", tint="3:507", style="3:508")
+VM = dict(pull="3:501", fire="3:502", blast="3:503", aura="3:504", imprint="3:505", arrow="3:506", tint="3:507", style="3:508", trident="3:509", accent="3:511", omen="3:512", spread="3:513", complement="3:514", hueA="3:515", hueB="3:516")
 EVENTS = dict(blast="3:95", reload="3:96", done="3:97")
 
 def kf(frame, value, ease=None):
@@ -67,6 +68,7 @@ def pose(name, aid, v, comment):
         keyed(SKY["heat"], [kf(0, v["heat"])]),
         keyed(SKY["speed"], [kf(0, 0)]),
         keyed(SKY["blast"], [kf(0, 0)]),
+        keyed(SKY["omen"], [kf(0, 0)]),
         *[keyed(fx[p], [kf(0, 0)]) for fx in (FXF, FXB) for p in ("charge", "burst")],
     ], comment)
 
@@ -98,6 +100,8 @@ anims = [
         keyed(SKY["speed"], [kf(0, 0.8, (0.2, 0.6, 0.4, 1)), kf(22, 0)]),
         keyed(SKY["heat"], [kf(0, 0.4, (0.5, 0, 0.5, 1)), kf(22, 0.8, (0.3, 0, 0.5, 1)), kf(96, 0)]),
         keyed(SKY["blast"], [kf(0, 0), kf(22, 0, (0.1, 0.7, 0.3, 1)), kf(44, 1, (0.4, 0, 0.6, 1)), kf(110, 0)]),
+        # The astra's omen (if it has one) flushes the clouds in the build-up.
+        keyed(SKY["omen"], [kf(0, 0, (0.4, 0, 0.6, 1)), kf(20, 1), kf(28, 1, (0.4, 0, 0.6, 1)), kf(76, 0)]),
         *[keyed(fx["charge"], [kf(0, 0, (0.5, 0, 0.5, 1)), kf(22, 1), kf(60, 1), kf(66, 0)]) for fx in (FXF, FXB)],
         # The burst ends at 1 and stays (the drag's poses reset it).
         *[keyed(fx["burst"], [kf(0, 0), kf(22, 0), kf(90, 1)]) for fx in (FXF, FXB)],
@@ -157,16 +161,23 @@ bow_inputs = "\n".join([
     sin("stretch", BOW["stretch"]), sin("charge", BOW["charge"]), sin("release", BOW["release"]),
     sin("arrow", BOW["arrow"]), sin("flight", BOW["flight"]), sin("astraFade", BOW["astraFade"]),
     sin_bound("auraStyle", nid(), VM["style"]),
+    sin_bound("trident", nid(), VM["trident"]),
     sic("goldColor", nid(), "FFC4A058"), sic("woodColor", nid(), "FF452014"),
     sic_bound("auraColor", nid(), VM["aura"], GOLD["aura"]),
     sic_bound("imprintColor", nid(), VM["imprint"], GOLD["imprint"]),
     sic_bound("arrowColor", nid(), VM["arrow"], GOLD["arrow"]),
+    sic_bound("accentColor", nid(), VM["accent"], "00000000"),
 ])
 sky_inputs = "\n".join([
     sin("width", nid(), W), sin("height", nid(), H), sin("heat", SKY["heat"]), sin("focusY", nid(), TIP_Y),
     sin("blast", SKY["blast"]), sin("grain", nid(), 1), sin("mist", nid(), 1),
     sin("cursorRadius", nid(), 80), sin("cursorStrength", nid(), 0), sin("speed", SKY["speed"]),
     sic_bound("tint", nid(), VM["tint"], "00000000"),
+    sin("omen", SKY["omen"]), sic_bound("omenColor", nid(), VM["omen"], "00000000"),
+    sin_bound("tintSpread", nid(), VM["spread"]),
+    sin_bound("tintComplement", nid(), VM["complement"]),
+    sin_bound("harmonyA", nid(), VM["hueA"]),
+    sin_bound("harmonyB", nid(), VM["hueB"]),
 ])
 
 rml = f'''<Rive version="1" kind="fragment">
@@ -241,7 +252,14 @@ rml = f'''<Rive version="1" kind="fragment">
         <ViewModelPropertyColor name="imprint" id="{VM["imprint"]}"/>
         <ViewModelPropertyColor name="arrow" id="{VM["arrow"]}"/>
         <ViewModelPropertyColor name="tint" id="{VM["tint"]}"/>
+        <ViewModelPropertyColor name="accent" id="{VM["accent"]}"/>
+        <ViewModelPropertyColor name="omen" id="{VM["omen"]}"/>
+        <ViewModelPropertyNumber name="spread" id="{VM["spread"]}"/>
+        <ViewModelPropertyNumber name="complement" id="{VM["complement"]}"/>
+        <ViewModelPropertyNumber name="hueA" id="{VM["hueA"]}"/>
+        <ViewModelPropertyNumber name="hueB" id="{VM["hueB"]}"/>
         <ViewModelPropertyNumber name="style" id="{VM["style"]}"/>
+        <ViewModelPropertyNumber name="trident" id="{VM["trident"]}"/>
         <ViewModelInstance exports="true" name="Default" id="3:510">
             <ViewModelInstanceNumber viewModelPropertyId="{VM["pull"]}" id="{nid()}"/>
             <ViewModelInstanceTrigger viewModelPropertyId="{VM["fire"]}" id="{nid()}"/>
@@ -250,7 +268,14 @@ rml = f'''<Rive version="1" kind="fragment">
             <ViewModelInstanceColor propertyValue="{GOLD["imprint"]}" viewModelPropertyId="{VM["imprint"]}" id="{nid()}"/>
             <ViewModelInstanceColor propertyValue="{GOLD["arrow"]}" viewModelPropertyId="{VM["arrow"]}" id="{nid()}"/>
             <ViewModelInstanceColor propertyValue="00000000" viewModelPropertyId="{VM["tint"]}" id="{nid()}"/>
+            <ViewModelInstanceColor propertyValue="00000000" viewModelPropertyId="{VM["accent"]}" id="{nid()}"/>
+            <ViewModelInstanceColor propertyValue="00000000" viewModelPropertyId="{VM["omen"]}" id="{nid()}"/>
+            <ViewModelInstanceNumber viewModelPropertyId="{VM["spread"]}" id="{nid()}"/>
+            <ViewModelInstanceNumber viewModelPropertyId="{VM["complement"]}" id="{nid()}"/>
+            <ViewModelInstanceNumber propertyValue="130" viewModelPropertyId="{VM["hueA"]}" id="{nid()}"/>
+            <ViewModelInstanceNumber propertyValue="130" viewModelPropertyId="{VM["hueB"]}" id="{nid()}"/>
             <ViewModelInstanceNumber viewModelPropertyId="{VM["style"]}" id="{nid()}"/>
+            <ViewModelInstanceNumber viewModelPropertyId="{VM["trident"]}" id="{nid()}"/>
         </ViewModelInstance>
     </ViewModel>
 </Rive>

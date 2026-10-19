@@ -5,7 +5,7 @@ The Pinaka (Shiva's bow, strung by Lord Ram) as a 3D Rive scene: gold with glowi
 ## Built: the bow in its aura
 
 - **`rive/`** (Rive CLI project):
-  - `Pinaka.luau` loads `Pinaka_Bow_LP.glb` through the shared GLB importer (`GLB.luau`, from Ten Rings) and renders it on a GPU canvas with `bow.wgsl`.
+  - `Pinaka.luau` loads `Pinaka_Bow_Arrows.glb` through the shared GLB importer (`GLB.luau`, from Ten Rings) and renders it on a GPU canvas with `bow.wgsl`.
   - Materials per part:
     - **Gold:** limbs, collars and spurs. The carving glows, with light flowing from the grip to the tips.
     - **Wood:** the grip, a deep red-brown.
@@ -27,10 +27,10 @@ The bow uses WGSL on a GPU canvas, so it renders on the web. It does not render 
 
 ## The drawn pose
 
-`Pinaka_Bow_LP.glb` carries a drawn pose as shape keys (one morph target on the limbs, collars, spurs, string and arrow; its `BowDraw` animation just ramps the weight). `GLB.luau` reads the first target, and the bow shader blends the limbs, collars and spurs toward it by the draw amount. The draw amount comes from the spring physics, so the pull, the overshoot on release and the vibration all drive the blend.
+`Pinaka_Bow_Arrows.glb` carries a drawn pose as shape keys (one morph target on the limbs, collars, spurs, string and arrow; its `BowDraw` animation just ramps the weight). `GLB.luau` reads the first target, and the bow shader blends the limbs, collars and spurs toward it by the draw amount. The draw amount comes from the spring physics, so the pull, the overshoot on release and the vibration all drive the blend.
 - **String:** stays procedural. Its ends' movement is measured from the drawn string, so the V meets the drawn limb tips. The nock comes back 1.25× as far as the drawn string's (`STRING_REACH`), for a deeper V.
 - **Aura:** the line along the bow that the aura follows is measured in both poses and blended.
-- **Arrow:** placed by the script. Its shape key is ignored.
+- **Arrows:** two: the plain arrow and `Trident_Arrow_LP`, the trident. Both are placed by the script, and their shape keys are ignored.
 - **Fallback:** without shape keys, the limbs are bent mathematically as before.
 
 ## Built: the Astra artboard
@@ -40,7 +40,7 @@ The bow uses WGSL on a GPU canvas, so it renders on the web. It does not render 
 | Trigger | State | What happens |
 | --- | --- | --- |
 | (entry) | **Idle** | The bow lies level, belly up, in the lower part of the frame. There is no arrow. |
-| `pullBrahmashirsha`, `pullParjanyastra`, `pullNagastra`, `pullVajrastra`, `pullAgneyastra` (AnyState) | **Pulled…** | The arrow forms out of light on the string, then the bow draws over 1.4s and holds. The arrow's head glows and a helix of light winds round the shaft. The aura, arrow and sky take the astra's colour: gold (Brahmashirsha), neon blue (Parjanyastra), neon green (Nagastra), neon violet (Vajrastra) or fire orange (Agneyastra). Each astra wraps the bow and arrow in its own aura: the gold waves, mist, pollen, lightning, or roaring shader fire (`fire.wgsl`). |
+| `pullBrahmashirsha`, `pullParjanyastra`, `pullNagastra`, `pullVajrastra`, `pullAgneyastra`, `pullPashupatastra` (AnyState) | **Pulled…** | The arrow forms out of light on the string, then the bow draws over 1.4s and holds. The arrow's head glows and a helix of light winds round the shaft. The aura, arrow and sky take the astra's colour: gold (Brahmashirsha), neon blue (Parjanyastra), neon green (Nagastra), neon violet (Vajrastra), fire orange (Agneyastra) or neon purple blended with neon pink (Pashupatastra). Each astra wraps the bow and arrow in its own aura: the gold waves, mist, pollen, lightning, roaring shader fire (`fire.wgsl`), or for Pashupatastra a haze of very fine pollen, each grain somewhere between its purple and pink (`accentColor`). Pashupatastra looses the trident arrow (`trident` on the bow). Before its blast the nebula flushes blood-red (the sky's `omen`, keyed in Blast; only Pashupatastra sets an omen colour). Its nebula uses a colour harmony: the sky's `tintComplement` turns pockets of the clouds to the accents at `harmonyA` and `harmonyB` degrees round from the tint (on the painter's wheel: 130 + 130 complementary gold; 110 + 150 split complementary amber and chartreuse; 100 + 220 triadic orange and green). Set per astra with `harmony=(a, b)` in `tools/gen_astra.py`. Pashupatastra uses the analogous palette (`spread=55`, no harmony accents); the harmony stays available for other astras. `tintSpread` gives an analogous palette instead (55° swung it indigo to magenta). |
 | `fire` | **Flight** | The arrow snaps off the string and recedes into the sky, drifting with a glowing, spark-shedding tail and a flare at its tip, carrying its astra's aura. The bow falls away, tilting back. The stars streak past, but the clouds stay still until the blast. At 2s the Flight animation fires the `blast` event, and a listener turns it into the `blast` trigger. |
 | `blast` | **Blast** → Idle | Stars encircle the arrow's tip, then it bursts like the tarot reveal: flash, rays, shockwave, sparks, and the clouds blown back. Then the bow rises back to rest. |
 
@@ -58,7 +58,7 @@ The parts:
 - **Drag:** dragging down on the inbox sets `pull` (0–100). A blend state poses the bow live from three poses: at rest, nocked with the arrow formed, and fully drawn and charged. The sky fades in over the inbox as you pull.
 - **Release:** letting go past 60% fires `fire`, which plays a quick flight (0.8s) and a short blast (1.7s). Letting go earlier springs back.
 - **Events:** as the blast clears, `reload` fires and the page adds new mail, then `done` fires and the page fades the sky away to the inbox. The bow doesn't come back.
-- **Astra:** the page sets each pull's astra through the view model (`aura`, `imprint`, `arrow`, `tint`, `style`), cycling Brahmashirsha → Parjanyastra → Nagastra → Vajrastra → Agneyastra.
+- **Astra:** the page sets each pull's astra through the view model (`aura`, `imprint`, `arrow`, `tint`, `style`), cycling Brahmashirsha → Parjanyastra → Nagastra → Vajrastra → Agneyastra → Pashupatastra.
 
 ## Next: states for the bow and arrow (first artboard)
 

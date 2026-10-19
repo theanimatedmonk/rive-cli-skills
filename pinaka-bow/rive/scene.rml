@@ -218,7 +218,7 @@
     <ScriptAsset file="Nebula.luau" scriptProtocolValue="1" name="Nebula" id="0:905"/>
     <ShaderAsset file="nebula.wgsl" name="nebula" id="0:906"/>
     <ShaderAsset file="fire.wgsl" name="fire" id="0:908"/>
-    <BlobAsset file="../Pinaka_Bow_LP.glb" name="pinaka" id="0:904"/>
+    <BlobAsset file="../Pinaka_Bow_Arrows.glb" name="pinaka" id="0:904"/>
     <!-- bow-sound.mp3 with its 0.17s lead-in trimmed, so the twang lands on
          the release. -->
     <AudioAsset file="../bow-release.flac" name="bowRelease" id="0:909"/>

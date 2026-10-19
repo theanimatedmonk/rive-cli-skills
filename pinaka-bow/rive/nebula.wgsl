@@ -19,11 +19,16 @@ struct Params {
     cursorX: f32,       // cursor in uv, 0 = left
     cursorY: f32,       // cursor in uv, 0 = top
     cursorRadius: f32,  // in units of the artboard height
-    pad0: f32,
+    hueA: f32,          // colour harmony: the first accent's hue, radians
+                        // round from the tint
     tint: vec4<f32>,    // hot palette tint rgb, a = how much (0 = tarot)
-    pad1: f32,
-    pad2: f32,
-    pad3: f32,
+    omenAmt: f32,       // 0..1, the omen colour flushing the clouds
+    spread: f32,        // analogous range: the tint's hue swings this many
+                        // radians either way across the clouds
+    complement: f32,    // 0..1, how much the harmony's accents show, in
+                        // pockets of the clouds
+    hueB: f32,          // the second accent's hue (= hueA for one accent)
+    omen: vec4<f32>,    // the omen colour, a = whether there is one
 };
 
 @group(0) @binding(0) var<uniform> u: Params;
@@ -73,6 +78,13 @@ fn fbm(p0: vec2<f32>) -> f32 {
         amp = amp * 0.5;
     }
     return sum;
+}
+
+// Rotates a colour's hue by `a` radians (about the grey axis).
+fn hueRotate(c: vec3<f32>, a: f32) -> vec3<f32> {
+    let k = vec3<f32>(0.57735);
+    let cs = cos(a);
+    return c * cs + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - cs);
 }
 
 @fragment
@@ -128,14 +140,33 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
         vec3<f32>(1.0, 0.86, 0.5),
         smoothstep(0.72, 1.0, f),
     );
-    // An astra's tint in place of the tarot's magenta and ember.
-    let tintRgb = clamp(u.tint.rgb, vec3<f32>(0.0), vec3<f32>(1.0));
+    // An astra's tint in place of the tarot's magenta and ember, its hue
+    // swinging across the clouds through its analogous neighbours.
+    let swing = (fbm(p * 0.6 + vec2<f32>(7.3, 2.1) + q * 0.8) - 0.5) * 4.5;
+    var tintRgb = clamp(hueRotate(u.tint.rgb, u.spread * clamp(swing, -1.0, 1.0)), vec3<f32>(0.0), vec3<f32>(1.0));
+    // Colour harmony: pockets of the clouds turn to the accents at hueA and
+    // hueB round from the tint (one accent: complementary; two: split
+    // complementary or triadic), each where its own slow field runs high.
+    let amt = clamp(u.complement, 0.0, 1.0);
+    let pocketA = smoothstep(0.48, 0.62, fbm(p * 0.45 + vec2<f32>(3.9, 8.2) - q * 0.6)) * amt;
+    let pocketB = smoothstep(0.42, 0.56, fbm(p * 0.5 + vec2<f32>(12.7, 1.9) + q * 0.7)) * amt * (1.0 - pocketA);
+    let accentA = clamp(hueRotate(u.tint.rgb, u.hueA), vec3<f32>(0.0), vec3<f32>(1.0));
+    let accentB = clamp(hueRotate(u.tint.rgb, u.hueB), vec3<f32>(0.0), vec3<f32>(1.0));
     let tinted = mix(
         mix(tintRgb * 0.35, tintRgb, clamp(length(r) * 0.85, 0.0, 1.0)),
         mix(tintRgb, vec3<f32>(1.0), 0.55),
         smoothstep(0.72, 1.0, f),
     );
-    let color = mix(cool, mix(hot, tinted, clamp(u.tint.a, 0.0, 1.0)), heat);
+    var color = mix(cool, mix(hot, tinted, clamp(u.tint.a, 0.0, 1.0)), heat);
+    // The accents go on after the mix, so they stay clean rather than
+    // greying into the cool base; brightest where the dust is dense.
+    let lift = 0.75 + 0.6 * smoothstep(0.4, 0.9, f);
+    color = mix(color, accentA * lift, pocketA * 0.8);
+    color = mix(color, accentB * lift, pocketB * 0.8);
+    // An omen before the blast: the clouds flush with its colour, deepest in
+    // the dense dust.
+    let omen = clamp(u.omenAmt, 0.0, 1.0) * clamp(u.omen.a, 0.0, 1.0);
+    color = mix(color, u.omen.rgb * (0.7 + 0.5 * smoothstep(0.4, 0.9, f)), omen * 0.85);
 
     // Heat gathers around the card.
     let toFocus = (in.uv - vec2<f32>(0.5, u.focusY)) * vec2<f32>(u.aspect, 1.0);

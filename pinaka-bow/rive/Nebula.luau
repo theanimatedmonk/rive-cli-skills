@@ -20,6 +20,13 @@
 -- `speed` (0..1) flies up through the sky: the stars streak down past,
 -- nearer (bigger) ones faster. The clouds stay where they are. `tint` sets the
 -- hot palette (alpha is how much; 0 keeps the tarot's magenta and ember).
+-- `omen` (0..1) flushes the clouds with `omenColor` (when it is set), keyed
+-- in the build-up to a blast. `tintSpread` (degrees) swings the tint's hue
+-- that far either way across the clouds, for an analogous palette;
+-- `tintComplement` (0..1) turns pockets of them to a colour harmony's
+-- accents, `harmonyA` and `harmonyB` degrees round from the tint (painter's
+-- wheel, for purple: 130 alone complementary gold; 110 + 150 split
+-- complementary amber and chartreuse; 100 + 220 triadic orange and green).
 
 type Star = {
 	x: number,
@@ -55,6 +62,12 @@ export type Nebula = {
 	cursorStrength: Input<number>,
 	speed: Input<number>,
 	tint: Input<Color>,
+	omen: Input<number>,
+	omenColor: Input<Color>,
+	tintSpread: Input<number>,
+	tintComplement: Input<number>,
+	harmonyA: Input<number>,
+	harmonyB: Input<number>,
 
 	time: number,
 	scale: number,
@@ -142,7 +155,7 @@ local function buildClouds(self: Nebula, context: Context)
 			vertexLayout = {},
 			colorTargets = { { format = canvas.format } },
 		})
-		local uniforms = GPUBuffer.new({ size = 80, usage = 'uniform' })
+		local uniforms = GPUBuffer.new({ size = 96, usage = 'uniform' })
 		self.bindings = GPUBindGroup.new({
 			layout = pipeline:getBindGroupLayout(0),
 			ubos = { { slot = 0, buffer = uniforms } },
@@ -299,6 +312,16 @@ local function drawClouds(self: Nebula, renderer: Renderer, heat: number)
 	buffer.writef32(self.params, 52, (Color.green(tint) :: number) / 255)
 	buffer.writef32(self.params, 56, (Color.blue(tint) :: number) / 255)
 	buffer.writef32(self.params, 60, (Color.alpha(tint) :: number) / 255)
+	local omen = self.omenColor
+	buffer.writef32(self.params, 64, self.omen)
+	buffer.writef32(self.params, 68, math.rad(self.tintSpread))
+	buffer.writef32(self.params, 72, self.tintComplement)
+	buffer.writef32(self.params, 44, math.rad(self.harmonyA))
+	buffer.writef32(self.params, 76, math.rad(self.harmonyB))
+	buffer.writef32(self.params, 80, (Color.red(omen) :: number) / 255)
+	buffer.writef32(self.params, 84, (Color.green(omen) :: number) / 255)
+	buffer.writef32(self.params, 88, (Color.blue(omen) :: number) / 255)
+	buffer.writef32(self.params, 92, (Color.alpha(omen) :: number) / 255)
 	uniforms:write(self.params)
 
 	local pass = canvas:beginRenderPass({
@@ -419,6 +442,12 @@ return function(): Node<Nebula>
 		cursorStrength = 1,
 		speed = 0,
 		tint = Color.rgba(0, 0, 0, 0),
+		omen = 0,
+		omenColor = Color.rgba(0, 0, 0, 0),
+		tintSpread = 0,
+		tintComplement = 0,
+		harmonyA = 130,
+		harmonyB = 130,
 
 		time = 0,
 		scale = 1,
@@ -437,7 +466,7 @@ return function(): Node<Nebula>
 		canvas = nil,
 		uniforms = nil,
 		bindings = nil,
-		params = buffer.create(80),
+		params = buffer.create(96),
 		sampler = ImageSampler('clamp', 'clamp', 'bilinear'),
 		solid = Paint.with({ style = 'fill', color = Color.rgb(255, 255, 255) }),
 		trail = Paint.with({ style = 'stroke', cap = 'round', thickness = 2, color = Color.rgb(255, 255, 255) }),
