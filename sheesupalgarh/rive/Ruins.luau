@@ -47,6 +47,10 @@
 -- pixels) drag it as the pointer does, e.g. from a trackpad's two-finger
 -- scroll. The inputs stay the camera's home.
 --
+-- Mountains: `mountains` scales the distant ranges' height (0 hides them),
+-- `mountainColor` is the nearest range's colour (the farther ones fade into
+-- the haze).
+--
 -- Pollen: `pollenAmount` (motes, up to 3000), `pollenSize` (metres),
 -- `pollenSpeed`, `petals` (the fraction that are tumbling petals),
 -- `pollenColor`.
@@ -102,6 +106,8 @@ export type Ruins = {
 	shadowColor: Input<Color>,
 	skyColor: Input<Color>,
 	skyMidColor: Input<Color>,
+	mountains: Input<number>,
+	mountainColor: Input<Color>,
 	horizonColor: Input<Color>,
 	hazeColor: Input<Color>,
 
@@ -235,7 +241,7 @@ type Camera = {
 	tanX: number, tanY: number,
 }
 
-local UNIFORM_SIZE = 544
+local UNIFORM_SIZE = 560
 local POST_SIZE = 96
 -- The sun's shadow map: its size, and how much of the world it covers (a
 -- square this many metres across, centred on the ruins).
@@ -817,7 +823,8 @@ local function frameUniforms(self: Ruins)
 	writeColor(u, 96, self.sunColor, 0.2)
 	writeColor(u, 112, self.shadowColor, 0.08)
 	writeColor(u, 128, self.skyColor, clamp(self.clouds, 0, 1))
-	writeColor(u, 528, self.skyMidColor, 0)
+	writeColor(u, 528, self.skyMidColor, math.max(self.mountains, 0))
+	writeColor(u, 544, self.mountainColor, 1)
 	do
 		local hr, hg, hb = linear(self.horizonColor)
 		write4(u, 144, hr + (1.0 - hr) * g * 0.5, hg + (0.78 - hg) * g * 0.5, hb + (0.55 - hb) * g * 0.5, math.max(self.haze, 0) * 0.014 * (1 - 0.35 * g))
@@ -1379,6 +1386,8 @@ return function(): Node<Ruins>
 		shadowColor = Color.rgb(160, 148, 190),
 		skyColor = Color.rgb(70, 128, 230),
 		skyMidColor = Color.rgb(186, 160, 232),
+		mountains = 1.8,
+		mountainColor = Color.rgb(84, 92, 150),
 		horizonColor = Color.rgb(255, 226, 170),
 		hazeColor = Color.rgb(236, 214, 222),
 

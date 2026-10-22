@@ -92,6 +92,8 @@
             <ScriptInputColor propertyValue="FFA094BE" name="shadowColor" id="0:56"/>
             <ScriptInputColor propertyValue="FF4680E6" name="skyColor" id="0:57"/>
             <ScriptInputColor propertyValue="FFBAA0E8" name="skyMidColor" id="0:97"/>
+            <ScriptInputNumber propertyValue="1.8" name="mountains" id="0:98"/>
+            <ScriptInputColor propertyValue="FF545C96" name="mountainColor" id="0:99"/>
             <ScriptInputColor propertyValue="FFFFE2AA" name="horizonColor" id="0:58"/>
             <ScriptInputColor propertyValue="FFECD6DE" name="hazeColor" id="0:59"/>
         </ScriptedDrawable>
