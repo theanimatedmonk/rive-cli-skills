@@ -1,0 +1,236 @@
+<Rive version="1" kind="fragment">
+    <!-- Shishupalgarh: sunlit ruins in a meadow, wind in the leaves, pink
+         pollen drifting in the haze. The Ruins node draws the whole 3D scene
+         (see Ruins.luau); it sits at the artboard's centre. -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:520" width="1280" height="720" styleId="0:2" name="Shishupalgarh" id="0:1">
+        <LayoutComponentStyle name="Shishupalgarh Style" id="0:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="Ruins" id="0:10">
+            <ScriptInputString propertyValue="ruins" name="asset" id="0:11"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:12"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="0:13"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="0:14"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="0:15"/>
+            <ScriptInputNumber propertyValue="1" name="drift" id="0:16"/>
+            <ScriptInputNumber propertyValue="15" name="sunAzimuth" id="0:80"/>
+            <ScriptInputNumber propertyValue="26" name="sunElevation" id="0:81"/>
+            <ScriptInputNumber propertyValue="1" name="sunIntensity" id="0:82"/>
+            <ScriptInputNumber propertyValue="0.35" name="lightLeak" id="0:83"/>
+            <ScriptInputNumber propertyValue="0.6" name="shafts" id="0:96"/>
+            <!-- 0 the ruins, 1 full glory; keyed by the state machine's timelines. -->
+            <ScriptInputNumber name="glory" id="0:84"/>
+            <!-- Viewport navigation (drag, pinch, double-tap); a page maps its
+                 mouse wheel and Shift/Ctrl through these. -->
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="0:85"/>
+            <ScriptInputNumber name="navMode" id="0:86">
+                <DataBindContext sourcePathIds="0:500-0:516" propertyKey="243" id="0:87"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="0:88">
+                <DataBindContext sourcePathIds="0:500-0:517" propertyKey="243" id="0:89"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="0:90">
+                <DataBindContext sourcePathIds="0:500-0:518" propertyKey="243" id="0:91"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="0:92">
+                <DataBindContext sourcePathIds="0:500-0:560" propertyKey="243" id="0:93"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="0:94">
+                <DataBindContext sourcePathIds="0:500-0:561" propertyKey="243" id="0:95"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="0:17"/>
+            <ScriptInputNumber propertyValue="1" name="flutter" id="0:18"/>
+            <ScriptInputNumber propertyValue="0.5" name="clouds" id="0:19"/>
+            <ScriptInputNumber propertyValue="0.7" name="bloom" id="0:20"/>
+            <ScriptInputNumber propertyValue="0.18" name="glow" id="0:21"/>
+            <ScriptInputNumber propertyValue="0.5" name="depthOfField" id="0:22"/>
+            <ScriptInputNumber propertyValue="0.95" name="exposure" id="0:23"/>
+            <ScriptInputNumber propertyValue="0.03" name="pollenSize" id="0:24"/>
+            <ScriptInputNumber propertyValue="1" name="pollenSpeed" id="0:25"/>
+            <ScriptInputNumber propertyValue="0.12" name="petals" id="0:26"/>
+            <!-- Bound to the Scene view model, so a page or a state can move the camera and set the wind. -->
+            <ScriptInputNumber propertyValue="-14" name="cameraX" id="0:27">
+                <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:28"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2" name="cameraY" id="0:29">
+                <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:30"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="17.5" name="cameraZ" id="0:31">
+                <DataBindContext sourcePathIds="0:500-0:503" propertyKey="243" id="0:32"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2" name="rotationX" id="0:33">
+                <DataBindContext sourcePathIds="0:500-0:504" propertyKey="243" id="0:34"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="-38" name="rotationY" id="0:35">
+                <DataBindContext sourcePathIds="0:500-0:505" propertyKey="243" id="0:36"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="rotationZ" id="0:37">
+                <DataBindContext sourcePathIds="0:500-0:506" propertyKey="243" id="0:38"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="46" name="fov" id="0:39">
+                <DataBindContext sourcePathIds="0:500-0:507" propertyKey="243" id="0:40"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="0:41">
+                <DataBindContext sourcePathIds="0:500-0:508" propertyKey="243" id="0:42"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="0:43">
+                <DataBindContext sourcePathIds="0:500-0:509" propertyKey="243" id="0:44"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="30" name="windDirection" id="0:45">
+                <DataBindContext sourcePathIds="0:500-0:510" propertyKey="243" id="0:46"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.45" name="haze" id="0:47">
+                <DataBindContext sourcePathIds="0:500-0:511" propertyKey="243" id="0:48"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1400" name="pollenAmount" id="0:49">
+                <DataBindContext sourcePathIds="0:500-0:512" propertyKey="243" id="0:50"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="18" name="focusDistance" id="0:51">
+                <DataBindContext sourcePathIds="0:500-0:513" propertyKey="243" id="0:52"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFFF78BE" name="pollenColor" id="0:53"/>
+            <ScriptInputColor propertyValue="FFFFAAC8" name="flowerColor" id="0:54"/>
+            <ScriptInputColor propertyValue="FFFFDEAA" name="sunColor" id="0:55"/>
+            <ScriptInputColor propertyValue="FFA094BE" name="shadowColor" id="0:56"/>
+            <ScriptInputColor propertyValue="FF4680E6" name="skyColor" id="0:57"/>
+            <ScriptInputColor propertyValue="FFBAA0E8" name="skyMidColor" id="0:97"/>
+            <ScriptInputColor propertyValue="FFFFE2AA" name="horizonColor" id="0:58"/>
+            <ScriptInputColor propertyValue="FFECD6DE" name="hazeColor" id="0:59"/>
+        </ScriptedDrawable>
+        <Fill name="Haze" id="0:3">
+            <SolidColor colorValue="FFF6D6D4" name="Color" id="0:4"/>
+        </Fill>
+        <!-- Ruins -> (restore) -> Restoring -> Glory -> (ruin) -> Decaying -> Ruins.
+             The timelines key `glory`; the script does the rest: fragments fly
+             back onto their pillars, the overgrowth recedes, the light warms. -->
+        <StateMachine name="Scene" id="0:100">
+            <StateMachineLayer name="Glory" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105">
+                    <StateTransition stateToId="0:120" id="0:1210">
+                        <TransitionViewModelCondition id="0:1211">
+                            <TransitionPropertyViewModelComparator id="0:1212">
+                                <BindablePropertyTrigger id="0:1213">
+                                    <DataBindContext sourcePathIds="0:500-0:514" propertyKey="686" id="0:1214"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:1215"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="200" y="140" animationId="0:130" id="0:120">
+                    <StateTransition stateToId="0:121" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:1220"/>
+                </AnimationState>
+                <AnimationState x="200" y="280" animationId="0:140" id="0:121">
+                    <StateTransition stateToId="0:122" id="0:1230">
+                        <TransitionViewModelCondition id="0:1231">
+                            <TransitionPropertyViewModelComparator id="0:1232">
+                                <BindablePropertyTrigger id="0:1233">
+                                    <DataBindContext sourcePathIds="0:500-0:515" propertyKey="686" id="0:1234"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator id="0:1235"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="400" y="140" animationId="0:150" id="0:122">
+                    <StateTransition stateToId="0:105" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" id="0:1240"/>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- Ruins: overgrown, the fragments lying in the grass. -->
+        <LinearAnimation duration="60" loopValue="1" name="Ruins" id="0:110">
+            <KeyedObject objectId="0:84" id="0:111">
+                <KeyedProperty propertyKey="243" id="0:112">
+                    <KeyFrameDouble interpolationType="1" id="0:113"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Restoring: the 10 s RuinsToGlory animation from Blender. -->
+        <LinearAnimation duration="600" name="Restore" id="0:130">
+            <KeyedObject objectId="0:84" id="0:131">
+                <KeyedProperty propertyKey="243" id="0:132">
+                    <KeyFrameDouble interpolationType="1" id="0:133"/>
+                    <KeyFrameDouble value="1" interpolationType="1" frame="600" id="0:134"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Full glory. -->
+        <LinearAnimation duration="60" loopValue="1" name="Glory" id="0:140">
+            <KeyedObject objectId="0:84" id="0:141">
+                <KeyedProperty propertyKey="243" id="0:142">
+                    <KeyFrameDouble value="1" interpolationType="1" id="0:143"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Back to ruin, faster. -->
+        <LinearAnimation duration="180" name="Decay" id="0:150">
+            <KeyedObject objectId="0:84" id="0:151">
+                <KeyedProperty propertyKey="243" id="0:152">
+                    <KeyFrameDouble value="1" interpolationType="1" id="0:153"/>
+                    <KeyFrameDouble interpolationType="1" frame="180" id="0:154"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+
+    <!-- The camera and the weather, for a page or later states to drive. -->
+    <ViewModel name="Scene" id="0:500">
+        <ViewModelPropertyNumber name="cameraX" id="0:501"/>
+        <ViewModelPropertyNumber name="cameraY" id="0:502"/>
+        <ViewModelPropertyNumber name="cameraZ" id="0:503"/>
+        <ViewModelPropertyNumber name="rotationX" id="0:504"/>
+        <ViewModelPropertyNumber name="rotationY" id="0:505"/>
+        <ViewModelPropertyNumber name="rotationZ" id="0:506"/>
+        <ViewModelPropertyNumber name="fov" id="0:507"/>
+        <ViewModelPropertyNumber name="windStrength" id="0:508"/>
+        <ViewModelPropertyNumber name="windSpeed" id="0:509"/>
+        <ViewModelPropertyNumber name="windDirection" id="0:510"/>
+        <ViewModelPropertyNumber name="haze" id="0:511"/>
+        <ViewModelPropertyNumber name="pollenAmount" id="0:512"/>
+        <ViewModelPropertyNumber name="focusDistance" id="0:513"/>
+        <!-- Ruins -> full glory, and back. -->
+        <ViewModelPropertyTrigger name="restore" id="0:514"/>
+        <ViewModelPropertyTrigger name="ruin" id="0:515"/>
+        <!-- Navigation from the page: 0 orbit, 1 pan, 2 zoom; the zoom;
+             change resetView to go back to the camera inputs. -->
+        <ViewModelPropertyNumber name="navMode" id="0:516"/>
+        <ViewModelPropertyNumber name="zoom" id="0:517"/>
+        <ViewModelPropertyNumber name="resetView" id="0:518"/>
+        <!-- Running totals of a drag from the page (a trackpad's two-finger
+             scroll), in pixels: it orbits, or pans in navMode 1. -->
+        <ViewModelPropertyNumber name="dragX" id="0:560"/>
+        <ViewModelPropertyNumber name="dragY" id="0:561"/>
+        <ViewModelInstance exports="true" name="Default" id="0:520">
+            <ViewModelInstanceNumber propertyValue="-14" viewModelPropertyId="0:501" id="0:521"/>
+            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:502" id="0:522"/>
+            <ViewModelInstanceNumber propertyValue="17.5" viewModelPropertyId="0:503" id="0:523"/>
+            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:504" id="0:524"/>
+            <ViewModelInstanceNumber propertyValue="-38" viewModelPropertyId="0:505" id="0:525"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:506" id="0:526"/>
+            <ViewModelInstanceNumber propertyValue="46" viewModelPropertyId="0:507" id="0:527"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:508" id="0:528"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:509" id="0:529"/>
+            <ViewModelInstanceNumber propertyValue="30" viewModelPropertyId="0:510" id="0:530"/>
+            <ViewModelInstanceNumber propertyValue="0.45" viewModelPropertyId="0:511" id="0:531"/>
+            <ViewModelInstanceNumber propertyValue="1400" viewModelPropertyId="0:512" id="0:532"/>
+            <ViewModelInstanceNumber propertyValue="18" viewModelPropertyId="0:513" id="0:533"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:514" id="0:534"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:515" id="0:535"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:516" id="0:536"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:517" id="0:537"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:518" id="0:538"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:560" id="0:562"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:561" id="0:563"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <ScriptAsset file="Ruins.luau" scriptProtocolValue="1" name="Ruins" id="0:902"/>
+    <ShaderAsset file="ruins.wgsl" name="ruins" id="0:903"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <!-- Written by ../tools/export_scene.py from Shishupalgarh_Ruins.blend. -->
+    <BlobAsset file="../ruins.bin" name="ruins" id="0:905"/>
+</Rive>
