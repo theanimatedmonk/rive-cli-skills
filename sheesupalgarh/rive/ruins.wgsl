@@ -781,7 +781,7 @@ fn fs_sky(in: SkyOut) -> FragOut {
     return out;
 }
 
-// Distant mountains, painted into the sky: three ranges of ridged
+// Distant hills, painted into the sky: three ranges of soft, rounded
 // silhouettes, the nearest darkest and tallest, the farthest pale and lost
 // in the haze. They wrap all the way round (noise sampled on a circle), sit
 // in front of the clouds, and fade into the haze at their feet.
@@ -789,10 +789,9 @@ fn ridge(az: f32, layer: f32, scale: f32) -> f32 {
     let ring = vec2<f32>(cos(az), sin(az));
     let a = noise3(vec3<f32>(ring * scale, layer * 7.3));
     let b = noise3(vec3<f32>(ring * scale * 2.7, layer * 7.3 + 3.1));
-    let c = noise3(vec3<f32>(ring * scale * 7.1, layer * 7.3 + 5.7));
-    // Ridged: sharp peaks, broad valleys.
-    let peaks = 1.0 - abs(a * 2.0 - 1.0);
-    return peaks * 0.6 + b * 0.3 + c * 0.1;
+    // Rounded: broad swells with a gentle wobble, no sharp peaks.
+    let swell = smoothstep(0.0, 1.0, a);
+    return swell * 0.75 + b * 0.25;
 }
 
 fn mountains(dir: vec3<f32>, sky: vec3<f32>, edge: f32) -> vec3<f32> {
@@ -809,15 +808,15 @@ fn mountains(dir: vec3<f32>, sky: vec3<f32>, edge: f32) -> vec3<f32> {
     for (var i = 0; i < 3; i++) {
         let fi = f32(i);
         let base = -0.004 + fi * 0.004;
-        let peak = (0.045 + fi * 0.03) * height;
-        let top = base + peak * ridge(az, fi, 2.2 + fi * 1.6);
+        let peak = (0.03 + fi * 0.015) * height;
+        let top = base + peak * ridge(az, fi, 1.4 + fi * 0.9);
         let inside = 1.0 - smoothstep(top - edge, top + edge, elev);
         if (inside <= 0.0) {
             continue;
         }
         // Each range is the near colour, lost into the haze with distance,
         // lighter toward its feet, warmed on the side toward the sun.
-        let haze = 0.78 - fi * 0.3;
+        let haze = 0.84 - fi * 0.22;
         var col = mix(u.mountain.rgb, horizonHaze, haze);
         let depth = clamp((top - elev) / max(peak, 1e-3), 0.0, 1.0);
         col = mix(col, horizonHaze, smoothstep(0.35, 1.0, depth) * 0.35);

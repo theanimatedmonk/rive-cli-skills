@@ -47,7 +47,7 @@
 -- pixels) drag it as the pointer does, e.g. from a trackpad's two-finger
 -- scroll. The inputs stay the camera's home.
 --
--- Mountains: `mountains` scales the distant ranges' height (0 hides them),
+-- Hills: `mountains` scales the distant ranges' height (0 hides them),
 -- `mountainColor` is the nearest range's colour (the farther ones fade into
 -- the haze).
 --
@@ -1386,7 +1386,7 @@ return function(): Node<Ruins>
 		shadowColor = Color.rgb(160, 148, 190),
 		skyColor = Color.rgb(70, 128, 230),
 		skyMidColor = Color.rgb(186, 160, 232),
-		mountains = 1.8,
+		mountains = 1,
 		mountainColor = Color.rgb(84, 92, 150),
 		horizonColor = Color.rgb(255, 226, 170),
 		hazeColor = Color.rgb(236, 214, 222),

@@ -1,7 +1,7 @@
 // Shishupalgarh preview: the ruins scene full-bleed, with sliders for the
 // camera (position and axes), the wind and the air. Each slider sets a
 // number on the Scene view model, which is bound to the Ruins node's inputs.
-const SRC = "shishupalgarh.riv?v=15";
+const SRC = "shishupalgarh.riv?v=16";
 
 // The file's defaults (the Scene view model's Default instance).
 const DEFAULTS = {
