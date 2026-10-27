@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Cremation Ground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <canvas id="scene" width="1280" height="720"></canvas>
+      <p class="status" id="status">Loading…</p>
+    </main>
+
+    <!-- The camera and the weather: each slider sets the Scene view model. -->
+    <aside class="panel" id="panel">
+      <header class="brand">
+        <p class="brand__eyebrow">Vikram &amp; Vetal · the scene</p>
+        <h1 class="brand__name">The cremation ground</h1>
+        <p class="hint"><a class="link" href="index.html">The story</a> · <a class="link" href="king.html">King Vikram</a></p>
+      </header>
+      <button type="button" class="panel__toggle" id="toggle" aria-expanded="true" aria-controls="controls">Hide controls</button>
+      <div class="controls" id="controls">
+        <section>
+          <h2>View</h2>
+          <p class="hint">Drag or two-finger swipe to orbit · Shift to pan · pinch, scroll or Ctrl+drag to zoom · double-click to reset</p>
+          <button type="button" class="reset" id="reset-view">Reset view</button>
+        </section>
+        <section>
+          <h2>Camera position</h2>
+          <div data-slider="cameraX" data-label="X" data-min="-20" data-max="20" data-step="0.1"></div>
+          <div data-slider="cameraY" data-label="Y (height)" data-min="0.2" data-max="12" data-step="0.05"></div>
+          <div data-slider="cameraZ" data-label="Z" data-min="-20" data-max="20" data-step="0.1"></div>
+        </section>
+        <section>
+          <h2>Camera axes</h2>
+          <div data-slider="rotationX" data-label="Tilt (X)" data-min="-60" data-max="60" data-step="0.5"></div>
+          <div data-slider="rotationY" data-label="Turn (Y)" data-min="-180" data-max="180" data-step="0.5"></div>
+          <div data-slider="rotationZ" data-label="Roll (Z)" data-min="-30" data-max="30" data-step="0.5"></div>
+          <div data-slider="fov" data-label="Field of view" data-min="20" data-max="90" data-step="1"></div>
+        </section>
+        <section>
+          <h2>Wind</h2>
+          <div data-slider="windStrength" data-label="Strength" data-min="0" data-max="2.5" data-step="0.05"></div>
+          <div data-slider="windSpeed" data-label="Speed" data-min="0" data-max="3" data-step="0.05"></div>
+          <div data-slider="windDirection" data-label="Direction" data-min="-180" data-max="180" data-step="1"></div>
+        </section>
+        <section>
+          <h2>Air</h2>
+          <div data-slider="moon" data-label="Moonlight (0 = amavas)" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="haze" data-label="Mist" data-min="0" data-max="4" data-step="0.05"></div>
+          <div data-slider="fireflies" data-label="Fireflies" data-min="0" data-max="3000" data-step="10"></div>
+          <div data-slider="ghostLights" data-label="Ghost lights (round the peepal)" data-min="0" data-max="16" data-step="1"></div>
+          <div data-slider="focusDistance" data-label="Focus distance" data-min="1" data-max="40" data-step="0.5"></div>
+        </section>
+        <button type="button" class="reset" id="reset">Reset</button>
+      </div>
+    </aside>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
+    <script src="main.js"></script>
+    <script src="../../site-nav.js"></script>
+  </body>
+</html>

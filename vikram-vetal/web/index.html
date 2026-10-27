@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vikram and Vetal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="story">
+    <main class="stage">
+      <canvas id="scene" width="1280" height="720"></canvas>
+      <p class="status" id="status">Loading…</p>
+    </main>
+
+    <!-- The teaser plays in Rive (the Story state machine); these captions
+         follow its chapters, and the chapter buttons jump to one. -->
+    <header class="title">
+      <p class="title__eyebrow">A tale of the night</p>
+      <h1 class="title__name">Vikram &amp; Vetal</h1>
+    </header>
+
+    <section class="caption" aria-live="polite">
+      <p class="caption__chapter" id="chapter"></p>
+      <p class="caption__line" id="line"></p>
+    </section>
+
+    <nav class="chapters" aria-label="Chapters">
+      <button type="button" class="chapter" data-trigger="toPeepal" data-state="Peepal">I · The peepal</button>
+      <button type="button" class="chapter" data-trigger="toKing" data-state="Vikram">II · The king</button>
+      <button type="button" class="chapter" data-trigger="toAstra" data-state="Astra">III · The astra</button>
+    </nav>
+
+    <p class="explore">
+      <a class="link" href="scene.html">Explore the scene</a> · <a class="link" href="king.html">Meet King Vikram</a>
+    </p>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
+    <script src="story.js"></script>
+    <script src="../../site-nav.js"></script>
+  </body>
+</html>

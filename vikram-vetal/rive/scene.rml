@@ -1,0 +1,184 @@
+<Rive version="1" kind="fragment">
+    <!-- Vikram and Vetal: the night scene. The World node draws the whole 3D
+         scene (see World.luau): the moonlit cremation ground from the GLB,
+         with wind, mist and fireflies. It sits at the artboard's centre. -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:520" width="1280" height="720" styleId="0:2" name="Night" id="0:1">
+        <LayoutComponentStyle name="Night Style" id="0:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="World" id="0:10">
+            <ScriptInputString propertyValue="world" name="asset" id="0:11"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:12"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="0:13"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="0:14"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="0:15"/>
+            <ScriptInputNumber propertyValue="1" name="drift" id="0:16"/>
+            <ScriptInputNumber propertyValue="-40" name="sunAzimuth" id="0:80"/>
+            <ScriptInputNumber propertyValue="26" name="sunElevation" id="0:81"/>
+            <ScriptInputNumber propertyValue="1" name="sunIntensity" id="0:82"/>
+            <ScriptInputNumber propertyValue="0.15" name="lightLeak" id="0:83"/>
+            <ScriptInputNumber propertyValue="0.6" name="shafts" id="0:96"/>
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="0:85"/>
+            <ScriptInputNumber name="navMode" id="0:86">
+                <DataBindContext sourcePathIds="0:500-0:516" propertyKey="243" id="0:87"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="0:88">
+                <DataBindContext sourcePathIds="0:500-0:517" propertyKey="243" id="0:89"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="0:90">
+                <DataBindContext sourcePathIds="0:500-0:518" propertyKey="243" id="0:91"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="0:92">
+                <DataBindContext sourcePathIds="0:500-0:560" propertyKey="243" id="0:93"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="0:94">
+                <DataBindContext sourcePathIds="0:500-0:561" propertyKey="243" id="0:95"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="0:17"/>
+            <ScriptInputNumber propertyValue="1" name="flutter" id="0:18"/>
+            <ScriptInputNumber propertyValue="0.35" name="clouds" id="0:19"/>
+            <ScriptInputNumber propertyValue="0.9" name="bloom" id="0:20"/>
+            <ScriptInputNumber propertyValue="0.22" name="glow" id="0:21"/>
+            <ScriptInputNumber propertyValue="0.5" name="depthOfField" id="0:22"/>
+            <ScriptInputNumber propertyValue="1.3" name="exposure" id="0:23"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="0:129"/>
+            <ScriptInputNumber propertyValue="0.03" name="fireflySize" id="0:24"/>
+            <ScriptInputNumber propertyValue="0.6" name="fireflySpeed" id="0:25"/>
+            <ScriptInputNumber propertyValue="-7.33" name="cameraX" id="0:27">
+                <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:28"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1.69" name="cameraY" id="0:29">
+                <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:30"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="8.92" name="cameraZ" id="0:31">
+                <DataBindContext sourcePathIds="0:500-0:503" propertyKey="243" id="0:32"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="9.5" name="rotationX" id="0:33">
+                <DataBindContext sourcePathIds="0:500-0:504" propertyKey="243" id="0:34"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="-33.5" name="rotationY" id="0:35">
+                <DataBindContext sourcePathIds="0:500-0:505" propertyKey="243" id="0:36"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="rotationZ" id="0:37">
+                <DataBindContext sourcePathIds="0:500-0:506" propertyKey="243" id="0:38"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="56" name="fov" id="0:39">
+                <DataBindContext sourcePathIds="0:500-0:507" propertyKey="243" id="0:40"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="0:41">
+                <DataBindContext sourcePathIds="0:500-0:508" propertyKey="243" id="0:42"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="0:43">
+                <DataBindContext sourcePathIds="0:500-0:509" propertyKey="243" id="0:44"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="30" name="windDirection" id="0:45">
+                <DataBindContext sourcePathIds="0:500-0:510" propertyKey="243" id="0:46"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2.2" name="haze" id="0:47">
+                <DataBindContext sourcePathIds="0:500-0:511" propertyKey="243" id="0:48"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="750" name="fireflies" id="0:49">
+                <DataBindContext sourcePathIds="0:500-0:512" propertyKey="243" id="0:50"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="14" name="focusDistance" id="0:51">
+                <DataBindContext sourcePathIds="0:500-0:513" propertyKey="243" id="0:52"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="0:53"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="sunColor" id="0:55"/>
+            <ScriptInputColor propertyValue="FF242C5C" name="shadowColor" id="0:56"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="0:57"/>
+            <ScriptInputColor propertyValue="FF0E1230" name="skyMidColor" id="0:97"/>
+            <ScriptInputNumber propertyValue="1" name="mountains" id="0:98"/>
+            <ScriptInputColor propertyValue="FF080B18" name="mountainColor" id="0:99"/>
+            <!-- The moonlight (0-1, keep it low); 0 is amavas, the new-moon night. -->
+            <ScriptInputNumber propertyValue="0.3" name="moon" id="0:120">
+                <DataBindContext sourcePathIds="0:500-0:571" propertyKey="243" id="0:128"/>
+            </ScriptInputNumber>
+            <!-- The hero tree (the peepal), and what gathers round it. -->
+            <ScriptInputNumber propertyValue="1.95" name="heroX" id="0:121"/>
+            <ScriptInputNumber propertyValue="-0.16" name="heroY" id="0:122"/>
+            <ScriptInputNumber propertyValue="-4.93" name="heroZ" id="0:123"/>
+            <ScriptInputNumber propertyValue="0.5" name="heroFireflies" id="0:124"/>
+            <ScriptInputNumber propertyValue="8" name="ghostLights" id="0:125">
+                <DataBindContext sourcePathIds="0:500-0:570" propertyKey="243" id="0:126"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FF96DCFF" name="ghostColor" id="0:127"/>
+            <ScriptInputColor propertyValue="FF18283C" name="horizonColor" id="0:58"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="0:59"/>
+        </ScriptedDrawable>
+        <Fill name="Night" id="0:3">
+            <SolidColor colorValue="FF060A1E" name="Color" id="0:4"/>
+        </Fill>
+        <StateMachine name="Scene" id="0:100">
+            <StateMachineLayer name="Night" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- The scene animates itself; this loop keeps the state machine
+             (and the view model binds) running. -->
+        <LinearAnimation duration="60" loopValue="1" name="Night" id="0:110"/>
+    </Artboard>
+
+    <!-- The camera, the weather and navigation, for a page or the game to drive. -->
+    <ViewModel name="Scene" id="0:500">
+        <ViewModelPropertyNumber name="cameraX" id="0:501"/>
+        <ViewModelPropertyNumber name="cameraY" id="0:502"/>
+        <ViewModelPropertyNumber name="cameraZ" id="0:503"/>
+        <ViewModelPropertyNumber name="rotationX" id="0:504"/>
+        <ViewModelPropertyNumber name="rotationY" id="0:505"/>
+        <ViewModelPropertyNumber name="rotationZ" id="0:506"/>
+        <ViewModelPropertyNumber name="fov" id="0:507"/>
+        <ViewModelPropertyNumber name="windStrength" id="0:508"/>
+        <ViewModelPropertyNumber name="windSpeed" id="0:509"/>
+        <ViewModelPropertyNumber name="windDirection" id="0:510"/>
+        <ViewModelPropertyNumber name="haze" id="0:511"/>
+        <ViewModelPropertyNumber name="fireflies" id="0:512"/>
+        <ViewModelPropertyNumber name="focusDistance" id="0:513"/>
+        <ViewModelPropertyNumber name="navMode" id="0:516"/>
+        <ViewModelPropertyNumber name="zoom" id="0:517"/>
+        <ViewModelPropertyNumber name="resetView" id="0:518"/>
+        <ViewModelPropertyNumber name="dragX" id="0:560"/>
+        <ViewModelPropertyNumber name="dragY" id="0:561"/>
+        <!-- Ghost lights circling the hero tree (0-16). -->
+        <ViewModelPropertyNumber name="ghostLights" id="0:570"/>
+        <!-- The moonlight (0-1). -->
+        <ViewModelPropertyNumber name="moon" id="0:571"/>
+        <ViewModelInstance exports="true" name="Default" id="0:520">
+            <ViewModelInstanceNumber propertyValue="-7.33" viewModelPropertyId="0:501" id="0:1501"/>
+            <ViewModelInstanceNumber propertyValue="1.69" viewModelPropertyId="0:502" id="0:1502"/>
+            <ViewModelInstanceNumber propertyValue="8.92" viewModelPropertyId="0:503" id="0:1503"/>
+            <ViewModelInstanceNumber propertyValue="9.5" viewModelPropertyId="0:504" id="0:1504"/>
+            <ViewModelInstanceNumber propertyValue="-33.5" viewModelPropertyId="0:505" id="0:1505"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:506" id="0:1506"/>
+            <ViewModelInstanceNumber propertyValue="56" viewModelPropertyId="0:507" id="0:1507"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:508" id="0:1508"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:509" id="0:1509"/>
+            <ViewModelInstanceNumber propertyValue="30" viewModelPropertyId="0:510" id="0:1510"/>
+            <ViewModelInstanceNumber propertyValue="2.2" viewModelPropertyId="0:511" id="0:1511"/>
+            <ViewModelInstanceNumber propertyValue="750" viewModelPropertyId="0:512" id="0:1512"/>
+            <ViewModelInstanceNumber propertyValue="14" viewModelPropertyId="0:513" id="0:1513"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:516" id="0:1516"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:517" id="0:1517"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:518" id="0:1518"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:560" id="0:1560"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:561" id="0:1561"/>
+            <ViewModelInstanceNumber propertyValue="8" viewModelPropertyId="0:570" id="0:1570"/>
+            <ViewModelInstanceNumber propertyValue="0.3" viewModelPropertyId="0:571" id="0:1571"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <!-- King Vikram (shared with ../king; tools/sync_hero.sh copies these). -->
+    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
+    <ScriptAsset file="World.luau" scriptProtocolValue="1" name="World" id="0:902"/>
+    <ShaderAsset file="world.wgsl" name="world" id="0:903"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <!-- Written by ../tools/export_world.py from VikramVetal_Scene.glb. -->
+    <BlobAsset file="../world.bin" name="world" id="0:905"/>
+    <ShaderAsset file="king.wgsl" name="king" id="0:907"/>
+    <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
+    <BlobAsset file="../king.bin" name="vikram" id="0:908"/>
+</Rive>

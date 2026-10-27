@@ -1,0 +1,264 @@
+<Rive version="1" kind="fragment">
+    <!-- King Vikram, on his own: the rigged GLB drawn in the night scene's
+         painted 2D-3D look by the King node (see King.luau). A component
+         of its own, to be placed in the scene later. -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:520" width="1280" height="720" styleId="0:2" name="King" id="0:1">
+        <LayoutComponentStyle name="King Style" id="0:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="King" id="0:10">
+            <ScriptInputString propertyValue="king" name="asset" id="0:11"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:20"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="0:21"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="0:22"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="0:23"/>
+            <ScriptInputNumber propertyValue="1" name="rim" id="0:24"/>
+            <ScriptInputNumber propertyValue="0.025" name="fireflySize" id="0:25"/>
+            <ScriptInputNumber propertyValue="0.8" name="bloom" id="0:26"/>
+            <ScriptInputNumber propertyValue="0.2" name="glow" id="0:27"/>
+            <ScriptInputNumber propertyValue="0.4" name="depthOfField" id="0:28"/>
+            <ScriptInputNumber propertyValue="1.25" name="exposure" id="0:29"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="0:30"/>
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="0:31"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="moonColor" id="0:32"/>
+            <ScriptInputColor propertyValue="FFFFAA5F" name="fireColor" id="0:33"/>
+            <ScriptInputColor propertyValue="FF100A18" name="inkColor" id="0:34"/>
+            <ScriptInputColor propertyValue="FF463C82" name="shadowColor" id="0:35"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="0:36"/>
+            <ScriptInputColor propertyValue="FF18223E" name="horizonColor" id="0:37"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="0:38"/>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="0:39"/>
+            <ScriptInputNumber name="pose" id="0:200">
+                <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:201"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="speed" id="0:202">
+                <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:203"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="18" name="turn" id="0:204">
+                <DataBindContext sourcePathIds="0:500-0:503" propertyKey="243" id="0:205"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="autoTurn" id="0:206">
+                <DataBindContext sourcePathIds="0:500-0:504" propertyKey="243" id="0:207"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="6" name="tilt" id="0:208">
+                <DataBindContext sourcePathIds="0:500-0:505" propertyKey="243" id="0:209"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="0:210">
+                <DataBindContext sourcePathIds="0:500-0:506" propertyKey="243" id="0:211"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.45" name="moon" id="0:212">
+                <DataBindContext sourcePathIds="0:500-0:507" propertyKey="243" id="0:213"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="fire" id="0:214">
+                <DataBindContext sourcePathIds="0:500-0:508" propertyKey="243" id="0:215"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.75" name="paint" id="0:216">
+                <DataBindContext sourcePathIds="0:500-0:509" propertyKey="243" id="0:217"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="3" name="bands" id="0:218">
+                <DataBindContext sourcePathIds="0:500-0:510" propertyKey="243" id="0:219"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2.2" name="outline" id="0:220">
+                <DataBindContext sourcePathIds="0:500-0:511" propertyKey="243" id="0:221"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="inkDetail" id="0:222">
+                <DataBindContext sourcePathIds="0:500-0:512" propertyKey="243" id="0:223"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.5" name="hatching" id="0:224">
+                <DataBindContext sourcePathIds="0:500-0:513" propertyKey="243" id="0:225"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="40" name="fireflies" id="0:226">
+                <DataBindContext sourcePathIds="0:500-0:514" propertyKey="243" id="0:227"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="mist" id="0:228">
+                <DataBindContext sourcePathIds="0:500-0:515" propertyKey="243" id="0:229"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="0:230">
+                <DataBindContext sourcePathIds="0:500-0:516" propertyKey="243" id="0:231"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="0:232">
+                <DataBindContext sourcePathIds="0:500-0:517" propertyKey="243" id="0:233"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="0:234">
+                <DataBindContext sourcePathIds="0:500-0:518" propertyKey="243" id="0:235"/>
+            </ScriptInputNumber>
+            <!-- His eyes, brought out of the brow's shadow (0-1), and his
+                 earrings' glow. -->
+            <ScriptInputNumber propertyValue="1" name="eyes" id="0:300">
+                <DataBindContext sourcePathIds="0:500-0:530" propertyKey="243" id="0:301"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="earringGlow" id="0:302">
+                <DataBindContext sourcePathIds="0:500-0:531" propertyKey="243" id="0:303"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFFFB046" name="earringColor" id="0:304"/>
+            <!-- His bow's aura as he draws it (0-2), and its colour. -->
+            <ScriptInputNumber propertyValue="1" name="aura" id="0:308">
+                <DataBindContext sourcePathIds="0:500-0:532" propertyKey="243" id="0:309"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFFFBE5A" name="auraColor" id="0:310">
+                <DataBindContext sourcePathIds="0:500-0:534" propertyKey="836" id="0:313"/>
+            </ScriptInputColor>
+            <!-- Loosing the string (0-1 over about 3 s): it snaps home and
+                 rings of gold ripple out. -->
+            <ScriptInputNumber name="release" id="0:311">
+                <DataBindContext sourcePathIds="0:500-0:533" propertyKey="243" id="0:312"/>
+            </ScriptInputNumber>
+            <!-- His eyelids (0 open, 1 shut): keyed by the Blink layer. -->
+            <ScriptInputNumber name="blink" id="0:306"/>
+        </ScriptedDrawable>
+        <Fill name="Night" id="0:3">
+            <SolidColor colorValue="FF060A1E" name="Color" id="0:4"/>
+        </Fill>
+        <StateMachine name="King" id="0:100">
+            <StateMachineLayer name="Night" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105"/>
+            </StateMachineLayer>
+            <!-- Blinks, at random: after a short or a long look, a blink, a
+                 double blink or a slow one. Retime them in the timelines. -->
+            <StateMachineLayer name="Blink" id="0:700">
+                <AnyState x="-300" y="80" id="0:701"/>
+                <ExitState x="600" y="80" id="0:702"/>
+                <EntryState x="-300" y="200" id="0:703">
+                    <StateTransition stateToId="0:710" id="0:704"/>
+                </EntryState>
+                <AnimationState x="0" y="200" random="true" animationId="0:720" id="0:710">
+                    <StateTransition stateToId="0:712" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="6" id="0:740"/>
+                    <StateTransition stateToId="0:713" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="0:741"/>
+                    <StateTransition stateToId="0:714" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:742"/>
+                </AnimationState>
+                <AnimationState x="0" y="320" random="true" animationId="0:721" id="0:711">
+                    <StateTransition stateToId="0:712" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="6" id="0:743"/>
+                    <StateTransition stateToId="0:713" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="0:744"/>
+                    <StateTransition stateToId="0:714" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:745"/>
+                </AnimationState>
+                <AnimationState x="300" y="140" random="true" animationId="0:722" id="0:712">
+                    <StateTransition stateToId="0:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="0:746"/>
+                    <StateTransition stateToId="0:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:747"/>
+                </AnimationState>
+                <AnimationState x="300" y="260" random="true" animationId="0:723" id="0:713">
+                    <StateTransition stateToId="0:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="0:748"/>
+                    <StateTransition stateToId="0:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:749"/>
+                </AnimationState>
+                <AnimationState x="300" y="380" random="true" animationId="0:724" id="0:714">
+                    <StateTransition stateToId="0:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="0:750"/>
+                    <StateTransition stateToId="0:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:751"/>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- He animates himself; this loop keeps the state machine (and the
+             view model binds) running. -->
+        <LinearAnimation duration="60" loopValue="1" name="Night" id="0:110"/>
+        <LinearAnimation duration="132" name="Eyes Open" id="0:720">
+            <KeyedObject objectId="0:306" id="0:1532">
+                <KeyedProperty propertyKey="243" id="0:1533">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1534"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="234" name="Eyes Open Long" id="0:721">
+            <KeyedObject objectId="0:306" id="0:1535">
+                <KeyedProperty propertyKey="243" id="0:1536">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1537"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="13" name="Blink" id="0:722">
+            <KeyedObject objectId="0:306" id="0:1538">
+                <KeyedProperty propertyKey="243" id="0:1539">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1540"/>
+                    <KeyFrameDouble value="1" frame="4" interpolationType="cubic" id="0:1541"/>
+                    <KeyFrameDouble value="1" frame="6" interpolationType="cubic" id="0:1542"/>
+                    <KeyFrameDouble frame="13" interpolationType="cubic" id="0:1543"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="32" name="Double Blink" id="0:723">
+            <KeyedObject objectId="0:306" id="0:1544">
+                <KeyedProperty propertyKey="243" id="0:1545">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1546"/>
+                    <KeyFrameDouble value="1" frame="4" interpolationType="cubic" id="0:1547"/>
+                    <KeyFrameDouble value="1" frame="6" interpolationType="cubic" id="0:1548"/>
+                    <KeyFrameDouble frame="12" interpolationType="cubic" id="0:1549"/>
+                    <KeyFrameDouble frame="16" interpolationType="cubic" id="0:1550"/>
+                    <KeyFrameDouble value="1" frame="20" interpolationType="cubic" id="0:1551"/>
+                    <KeyFrameDouble value="1" frame="22" interpolationType="cubic" id="0:1552"/>
+                    <KeyFrameDouble frame="32" interpolationType="cubic" id="0:1553"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="34" name="Slow Blink" id="0:724">
+            <KeyedObject objectId="0:306" id="0:1554">
+                <KeyedProperty propertyKey="243" id="0:1555">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1556"/>
+                    <KeyFrameDouble value="1" frame="10" interpolationType="cubic" id="0:1557"/>
+                    <KeyFrameDouble value="1" frame="17" interpolationType="cubic" id="0:1558"/>
+                    <KeyFrameDouble frame="34" interpolationType="cubic" id="0:1559"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+
+    <!-- His pose, the view, the light and the style, for a page or the game
+         to drive. pose: 0 idle, 1 walking, 2 drawing the bow. paint: the 2D-3D mix. -->
+    <ViewModel name="King" id="0:500">
+        <ViewModelPropertyNumber name="pose" id="0:501"/>
+        <ViewModelPropertyNumber name="speed" id="0:502"/>
+        <ViewModelPropertyNumber name="turn" id="0:503"/>
+        <ViewModelPropertyNumber name="autoTurn" id="0:504"/>
+        <ViewModelPropertyNumber name="tilt" id="0:505"/>
+        <ViewModelPropertyNumber name="zoom" id="0:506"/>
+        <ViewModelPropertyNumber name="moon" id="0:507"/>
+        <ViewModelPropertyNumber name="fire" id="0:508"/>
+        <ViewModelPropertyNumber name="paint" id="0:509"/>
+        <ViewModelPropertyNumber name="bands" id="0:510"/>
+        <ViewModelPropertyNumber name="outline" id="0:511"/>
+        <ViewModelPropertyNumber name="inkDetail" id="0:512"/>
+        <ViewModelPropertyNumber name="hatching" id="0:513"/>
+        <ViewModelPropertyNumber name="fireflies" id="0:514"/>
+        <ViewModelPropertyNumber name="mist" id="0:515"/>
+        <ViewModelPropertyNumber name="resetView" id="0:516"/>
+        <ViewModelPropertyNumber name="dragX" id="0:517"/>
+        <ViewModelPropertyNumber name="dragY" id="0:518"/>
+        <ViewModelPropertyNumber name="eyes" id="0:530"/>
+        <ViewModelPropertyNumber name="earringGlow" id="0:531"/>
+        <ViewModelPropertyNumber name="aura" id="0:532"/>
+        <ViewModelPropertyNumber name="release" id="0:533"/>
+        <ViewModelPropertyColor name="auraColor" id="0:534"/>
+        <ViewModelInstance exports="true" name="Default" id="0:520">
+            <ViewModelInstanceNumber viewModelPropertyId="0:501" id="0:1501"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:502" id="0:1502"/>
+            <ViewModelInstanceNumber propertyValue="18" viewModelPropertyId="0:503" id="0:1503"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:504" id="0:1504"/>
+            <ViewModelInstanceNumber propertyValue="6" viewModelPropertyId="0:505" id="0:1505"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:506" id="0:1506"/>
+            <ViewModelInstanceNumber propertyValue="0.45" viewModelPropertyId="0:507" id="0:1507"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:508" id="0:1508"/>
+            <ViewModelInstanceNumber propertyValue="0.75" viewModelPropertyId="0:509" id="0:1509"/>
+            <ViewModelInstanceNumber propertyValue="3" viewModelPropertyId="0:510" id="0:1510"/>
+            <ViewModelInstanceNumber propertyValue="2.2" viewModelPropertyId="0:511" id="0:1511"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:512" id="0:1512"/>
+            <ViewModelInstanceNumber propertyValue="0.5" viewModelPropertyId="0:513" id="0:1513"/>
+            <ViewModelInstanceNumber propertyValue="40" viewModelPropertyId="0:514" id="0:1514"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:515" id="0:1515"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:516" id="0:1516"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:517" id="0:1517"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:518" id="0:1518"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:530" id="0:1530"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:531" id="0:1531"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:532" id="0:1590"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:533" id="0:1591"/>
+            <ViewModelInstanceColor propertyValue="FFFFBE5A" viewModelPropertyId="0:534" id="0:1592"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
+    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:902"/>
+    <ShaderAsset file="king.wgsl" name="king" id="0:903"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
+    <BlobAsset file="../king.bin" name="king" id="0:905"/>
+</Rive>
