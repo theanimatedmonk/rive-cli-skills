@@ -45,7 +45,8 @@ struct Uniforms {
     model: mat4x4<f32>,     // static meshes: identity, or a fragment's pose
     glory: vec4<f32>,       // x ruins (0) to full glory (1)
     lightViewProj: mat4x4<f32>, // world to the sun's shadow map
-    skyMid: vec4<f32>,      // the sky between horizon and top (lavender)
+    skyMid: vec4<f32>,      // the sky between horizon and top (lavender), mountain height
+    mountain: vec4<f32>,    // the nearest range's colour
 };
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
@@ -755,6 +756,8 @@ fn vs_sky(@builtin(vertex_index) idx: u32) -> SkyOut {
 fn fs_sky(in: SkyOut) -> FragOut {
     var out: FragOut;
     let dir = normalize(u.camFwd.xyz + u.camRight.xyz * in.ndc.x * u.camRight.w + u.camUp.xyz * in.ndc.y * u.camUp.w);
+    // A pixel's height in elevation, to soften the ridgelines by.
+    let aa = max(fwidth(dir.y) * 1.5, 0.0008);
     var c = skyColor(dir);
     // Clouds: soft fbm on a high plane, drifting with the wind.
     if (dir.y > 0.0) {
@@ -773,8 +776,57 @@ fn fs_sky(in: SkyOut) -> FragOut {
         let cloud = shade + u.sunColor.rgb * (pow(sd, 5.0) * 0.7 + rim * pow(sd, 2.0) * 0.5);
         c = mix(c, cloud, cover * fade * 0.85);
     }
+    c = mountains(dir, c, aa);
     out.color = vec4<f32>(sqrt(c / (1.0 + c)), 0.85);
     return out;
+}
+
+// Distant hills, painted into the sky: three ranges of soft, rounded
+// silhouettes, the nearest darkest and tallest, the farthest pale and lost
+// in the haze. They wrap all the way round (noise sampled on a circle), sit
+// in front of the clouds, and fade into the haze at their feet.
+fn ridge(az: f32, layer: f32, scale: f32) -> f32 {
+    let ring = vec2<f32>(cos(az), sin(az));
+    let a = noise3(vec3<f32>(ring * scale, layer * 7.3));
+    let b = noise3(vec3<f32>(ring * scale * 2.7, layer * 7.3 + 3.1));
+    // Rounded: broad swells with a gentle wobble, no sharp peaks.
+    let swell = smoothstep(0.0, 1.0, a);
+    return swell * 0.75 + b * 0.25;
+}
+
+fn mountains(dir: vec3<f32>, sky: vec3<f32>, edge: f32) -> vec3<f32> {
+    let height = u.skyMid.w;
+    if (height <= 0.0 || dir.y > 0.2 * height + 0.02) {
+        return sky;
+    }
+    let az = atan2(dir.z, dir.x);
+    let elev = dir.y;
+    let horizonHaze = mix(u.hazeColor.rgb, u.skyHorizon.rgb, 0.5);
+    let toSun = max(dot(normalize(vec3<f32>(dir.x, 0.0, dir.z)), normalize(vec3<f32>(u.sunDir.x, 0.0, u.sunDir.z))), 0.0);
+    var c = sky;
+    // Far to near: (base elevation, peak height, noise scale, haze).
+    for (var i = 0; i < 3; i++) {
+        let fi = f32(i);
+        let base = -0.004 + fi * 0.004;
+        let peak = (0.03 + fi * 0.015) * height;
+        let top = base + peak * ridge(az, fi, 1.4 + fi * 0.9);
+        let inside = 1.0 - smoothstep(top - edge, top + edge, elev);
+        if (inside <= 0.0) {
+            continue;
+        }
+        // Each range is the near colour, lost into the haze with distance,
+        // lighter toward its feet, warmed on the side toward the sun.
+        let haze = 0.84 - fi * 0.22;
+        var col = mix(u.mountain.rgb, horizonHaze, haze);
+        let depth = clamp((top - elev) / max(peak, 1e-3), 0.0, 1.0);
+        col = mix(col, horizonHaze, smoothstep(0.35, 1.0, depth) * 0.35);
+        col += u.sunColor.rgb * pow(toSun, 3.0) * 0.12 * (1.0 - haze);
+        c = mix(c, col, inside);
+    }
+    // The sun's glow still hangs over them.
+    let sd = max(dot(dir, u.sunDir.xyz), 0.0);
+    c += u.sunColor.rgb * pow(sd, 10.0) * 0.25;
+    return c;
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>King Vikram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <canvas id="scene" width="1280" height="720"></canvas>
+      <p class="status" id="status">Loading…</p>
+    </main>
+
+    <!-- His pose, the light and the style: each control sets the King view model. -->
+    <aside class="panel" id="panel">
+      <header class="brand">
+        <p class="brand__eyebrow">Vikram &amp; Vetal · the hero</p>
+        <h1 class="brand__name">King Vikram</h1>
+        <p class="hint"><a class="link" href="index.html">The story</a> · <a class="link" href="scene.html">The scene</a> · <a class="link" href="vetal.html">The Vetal</a></p>
+      </header>
+      <div class="poses" role="group" aria-label="Pose">
+        <button type="button" class="pose is-active" data-pose="0" aria-pressed="true">Idle</button>
+        <button type="button" class="pose" data-pose="1" aria-pressed="false">Walk</button>
+        <button type="button" class="pose" data-pose="2" aria-pressed="false">Draw bow</button>
+        <button type="button" class="pose" data-pose="3" aria-pressed="false">Shoot</button>
+      </div>
+      <button type="button" class="panel__toggle" id="toggle" aria-expanded="true" aria-controls="controls">Hide controls</button>
+      <div class="controls" id="controls">
+        <section>
+          <h2>View</h2>
+          <p class="hint">Drag to turn him · scroll or pinch to zoom · double-click to reset</p>
+          <div data-slider="autoTurn" data-label="Turntable (°/s)" data-min="-60" data-max="60" data-step="1"></div>
+          <div data-slider="tilt" data-label="Camera tilt" data-min="-10" data-max="40" data-step="0.5"></div>
+          <div data-slider="speed" data-label="Animation speed" data-min="0" data-max="2" data-step="0.05"></div>
+          <button type="button" class="reset" id="reset-view">Reset view</button>
+        </section>
+        <section>
+          <h2>Bow</h2>
+          <p class="hint">Draw bow raises it and holds at full draw; loose snaps the string and rings of gold ripple out</p>
+          <div data-slider="aura" data-label="Aura (at full draw)" data-min="0" data-max="2" data-step="0.05"></div>
+          <label class="slider">
+            <span>Aura colour</span>
+            <input type="color" id="aura-color" value="#ffbe5a" />
+          </label>
+          <button type="button" class="reset" id="loose">Draw &amp; loose</button>
+        </section>
+        <section>
+          <h2>Wind</h2>
+          <div data-slider="windStrength" data-label="Strength" data-min="0" data-max="3" data-step="0.05"></div>
+          <div data-slider="windSpeed" data-label="Speed" data-min="0" data-max="3" data-step="0.05"></div>
+          <div data-slider="windDirection" data-label="Direction" data-min="-180" data-max="180" data-step="1"></div>
+          <div data-slider="gustiness" data-label="Gusts" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="hairWind" data-label="Hair" data-min="0" data-max="3" data-step="0.05"></div>
+          <div data-slider="clothWind" data-label="Cloth" data-min="0" data-max="3" data-step="0.05"></div>
+        </section>
+        <section>
+          <h2>Light</h2>
+          <div data-slider="moon" data-label="Moonlight" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="fire" data-label="Pyre glow" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="mist" data-label="Mist" data-min="0" data-max="4" data-step="0.05"></div>
+          <div data-slider="fireflies" data-label="Fireflies" data-min="0" data-max="200" data-step="1"></div>
+          <div data-slider="earringGlow" data-label="Earring glow" data-min="0" data-max="3" data-step="0.05"></div>
+        </section>
+        <section>
+          <h2>Style</h2>
+          <div data-slider="paint" data-label="3D ↔ painted" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="bands" data-label="Tones" data-min="2" data-max="6" data-step="1"></div>
+          <div data-slider="outline" data-label="Ink outline (px)" data-min="0" data-max="6" data-step="0.1"></div>
+          <div data-slider="inkDetail" data-label="Ink detail" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="hatching" data-label="Hatching" data-min="0" data-max="1" data-step="0.05"></div>
+          <div data-slider="eyes" data-label="Eyes" data-min="0" data-max="1" data-step="0.05"></div>
+        </section>
+        <button type="button" class="reset" id="reset">Reset</button>
+      </div>
+    </aside>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
+    <script src="king.js"></script>
+    <script src="../../site-nav.js"></script>
+  </body>
+</html>

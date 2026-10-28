@@ -1,0 +1,585 @@
+<Rive version="1" kind="fragment">
+    <!-- King Vikram as a component (../king's artboard, drawn by King.luau with the
+         scene's Hero module, his blob 'vikram' and the bow sounds): place him
+         anywhere, set his pose, his bow and the wind through his view model. -->
+    <Artboard isComponent="true" x="1500" y="0" defaultStateMachineId="3:100" viewModelId="3:500" viewModelInstanceId="3:520" width="1280" height="720" styleId="3:2" name="King" id="3:1">
+        <LayoutComponentStyle name="King Style" id="3:2"/>
+        <ScriptedDrawable scriptAssetId="0:915" x="640" y="360" name="King" id="3:10">
+            <ScriptInputString propertyValue="vikram" name="asset" id="3:11"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="3:20"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="3:21"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="3:22"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="3:23"/>
+            <ScriptInputNumber propertyValue="1" name="rim" id="3:24"/>
+            <ScriptInputNumber propertyValue="0.025" name="fireflySize" id="3:25"/>
+            <ScriptInputNumber propertyValue="0.8" name="bloom" id="3:26"/>
+            <ScriptInputNumber propertyValue="0.2" name="glow" id="3:27"/>
+            <ScriptInputNumber propertyValue="0.4" name="depthOfField" id="3:28"/>
+            <ScriptInputNumber propertyValue="1.25" name="exposure" id="3:29"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="3:30"/>
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="3:31"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="moonColor" id="3:32"/>
+            <ScriptInputColor propertyValue="FFFFAA5F" name="fireColor" id="3:33"/>
+            <ScriptInputColor propertyValue="FF100A18" name="inkColor" id="3:34"/>
+            <ScriptInputColor propertyValue="FF463C82" name="shadowColor" id="3:35"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="3:36"/>
+            <ScriptInputColor propertyValue="FF18223E" name="horizonColor" id="3:37"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="3:38"/>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="3:39"/>
+            <ScriptInputNumber name="pose" id="3:200">
+                <DataBindContext sourcePathIds="3:500-3:501" propertyKey="243" id="3:201"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="speed" id="3:202">
+                <DataBindContext sourcePathIds="3:500-3:502" propertyKey="243" id="3:203"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="18" name="turn" id="3:204">
+                <DataBindContext sourcePathIds="3:500-3:503" propertyKey="243" id="3:205"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="autoTurn" id="3:206">
+                <DataBindContext sourcePathIds="3:500-3:504" propertyKey="243" id="3:207"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="6" name="tilt" id="3:208">
+                <DataBindContext sourcePathIds="3:500-3:505" propertyKey="243" id="3:209"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="3:210">
+                <DataBindContext sourcePathIds="3:500-3:506" propertyKey="243" id="3:211"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.45" name="moon" id="3:212">
+                <DataBindContext sourcePathIds="3:500-3:507" propertyKey="243" id="3:213"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="fire" id="3:214">
+                <DataBindContext sourcePathIds="3:500-3:508" propertyKey="243" id="3:215"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.75" name="paint" id="3:216">
+                <DataBindContext sourcePathIds="3:500-3:509" propertyKey="243" id="3:217"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="3" name="bands" id="3:218">
+                <DataBindContext sourcePathIds="3:500-3:510" propertyKey="243" id="3:219"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2.2" name="outline" id="3:220">
+                <DataBindContext sourcePathIds="3:500-3:511" propertyKey="243" id="3:221"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="inkDetail" id="3:222">
+                <DataBindContext sourcePathIds="3:500-3:512" propertyKey="243" id="3:223"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.5" name="hatching" id="3:224">
+                <DataBindContext sourcePathIds="3:500-3:513" propertyKey="243" id="3:225"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="40" name="fireflies" id="3:226">
+                <DataBindContext sourcePathIds="3:500-3:514" propertyKey="243" id="3:227"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="mist" id="3:228">
+                <DataBindContext sourcePathIds="3:500-3:515" propertyKey="243" id="3:229"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="3:230">
+                <DataBindContext sourcePathIds="3:500-3:516" propertyKey="243" id="3:231"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="3:232">
+                <DataBindContext sourcePathIds="3:500-3:517" propertyKey="243" id="3:233"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="3:234">
+                <DataBindContext sourcePathIds="3:500-3:518" propertyKey="243" id="3:235"/>
+            </ScriptInputNumber>
+            <!-- His eyes, brought out of the brow's shadow (0-1), and his
+                 earrings' glow. -->
+            <ScriptInputNumber propertyValue="1" name="eyes" id="3:300">
+                <DataBindContext sourcePathIds="3:500-3:530" propertyKey="243" id="3:301"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="earringGlow" id="3:302">
+                <DataBindContext sourcePathIds="3:500-3:531" propertyKey="243" id="3:303"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFFFB046" name="earringColor" id="3:304"/>
+            <!-- His bow's aura as he draws it (0-2), and its colour. -->
+            <ScriptInputNumber propertyValue="1" name="aura" id="3:308">
+                <DataBindContext sourcePathIds="3:500-3:532" propertyKey="243" id="3:309"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFFFBE5A" name="auraColor" id="3:310">
+                <DataBindContext sourcePathIds="3:500-3:534" propertyKey="836" id="3:313"/>
+            </ScriptInputColor>
+            <!-- Loosing the string (0-1 over about 3 s): it snaps home and
+                 rings of gold ripple out. -->
+            <ScriptInputNumber name="release" id="3:311">
+                <DataBindContext sourcePathIds="3:500-3:533" propertyKey="243" id="3:312"/>
+            </ScriptInputNumber>
+            <!-- His eyelids (0 open, 1 shut): keyed by the Blink layer. -->
+            <ScriptInputNumber name="blink" id="3:306"/>
+            <!-- The wind in his hair and cloth (as painted in Blender). -->
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="3:320">
+                <DataBindContext sourcePathIds="3:500-3:540" propertyKey="243" id="3:321"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="3:322">
+                <DataBindContext sourcePathIds="3:500-3:541" propertyKey="243" id="3:323"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="160" name="windDirection" id="3:324">
+                <DataBindContext sourcePathIds="3:500-3:542" propertyKey="243" id="3:325"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="3:326">
+                <DataBindContext sourcePathIds="3:500-3:543" propertyKey="243" id="3:327"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="hairWind" id="3:328">
+                <DataBindContext sourcePathIds="3:500-3:544" propertyKey="243" id="3:329"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="clothWind" id="3:330">
+                <DataBindContext sourcePathIds="3:500-3:545" propertyKey="243" id="3:331"/>
+            </ScriptInputNumber>
+        </ScriptedDrawable>
+        <!-- The bow's sounds (from ../pinaka-bow). -->
+        <AudioEvent assetId="0:910" name="draw" id="3:800"/>
+        <AudioEvent assetId="0:909" name="twang" id="3:801"/>
+        <Fill name="Night" id="3:3">
+            <SolidColor colorValue="FF060A1E" name="Color" id="3:4"/>
+        </Fill>
+        <StateMachine name="King" id="3:100">
+            <StateMachineLayer name="Night" id="3:101">
+                <AnyState x="200" y="-120" id="3:102"/>
+                <ExitState x="400" y="-120" id="3:103"/>
+                <EntryState id="3:104">
+                    <StateTransition stateToId="3:105" id="3:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="3:110" id="3:105"/>
+            </StateMachineLayer>
+            <!-- Blinks, at random: after a short or a long look, a blink, a
+                 double blink or a slow one. Retime them in the timelines. -->
+            <StateMachineLayer name="Blink" id="3:700">
+                <AnyState x="-300" y="80" id="3:701"/>
+                <ExitState x="600" y="80" id="3:702"/>
+                <EntryState x="-300" y="200" id="3:703">
+                    <StateTransition stateToId="3:710" id="3:704"/>
+                </EntryState>
+                <AnimationState x="0" y="200" random="true" animationId="3:720" id="3:710">
+                    <StateTransition stateToId="3:712" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="6" id="3:740"/>
+                    <StateTransition stateToId="3:713" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="3:741"/>
+                    <StateTransition stateToId="3:714" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="3:742"/>
+                </AnimationState>
+                <AnimationState x="0" y="320" random="true" animationId="3:721" id="3:711">
+                    <StateTransition stateToId="3:712" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="6" id="3:743"/>
+                    <StateTransition stateToId="3:713" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="3:744"/>
+                    <StateTransition stateToId="3:714" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="3:745"/>
+                </AnimationState>
+                <AnimationState x="300" y="140" random="true" animationId="3:722" id="3:712">
+                    <StateTransition stateToId="3:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="3:746"/>
+                    <StateTransition stateToId="3:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="3:747"/>
+                </AnimationState>
+                <AnimationState x="300" y="260" random="true" animationId="3:723" id="3:713">
+                    <StateTransition stateToId="3:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="3:748"/>
+                    <StateTransition stateToId="3:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="3:749"/>
+                </AnimationState>
+                <AnimationState x="300" y="380" random="true" animationId="3:724" id="3:714">
+                    <StateTransition stateToId="3:710" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="2" id="3:750"/>
+                    <StateTransition stateToId="3:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="3:751"/>
+                </AnimationState>
+            </StateMachineLayer>
+            <!-- The bow's sounds, following the pose and the release: the string
+                 drawn as he draws (1.1 s into the draw), the shoot's pull and
+                 twang where its clip pulls and lets go (1.0 s, 2.71 s), and a
+                 twang when the drawn string is loosed. -->
+            <StateMachineLayer name="Bow sounds" id="3:812">
+                <AnyState x="-300" y="-120" id="3:810"/>
+                <EntryState x="-300" y="0" id="3:811">
+                    <StateTransition stateToId="3:806" id="3:813"/>
+                </EntryState>
+                <AnimationState x="0" y="0" animationId="3:802" id="3:806">
+                    <StateTransition stateToId="3:807" id="3:817">
+                        <TransitionViewModelCondition opValue="equal" id="3:814">
+                            <TransitionPropertyViewModelComparator id="3:815">
+                                <BindablePropertyNumber id="3:190107">
+                                    <DataBindContext sourcePathIds="3:500-3:501" propertyKey="636" id="3:190108"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2" id="3:816"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="3:808" id="3:821">
+                        <TransitionViewModelCondition opValue="equal" id="3:818">
+                            <TransitionPropertyViewModelComparator id="3:819">
+                                <BindablePropertyNumber id="3:190109">
+                                    <DataBindContext sourcePathIds="3:500-3:501" propertyKey="636" id="3:190110"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3" id="3:820"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="300" y="-120" animationId="3:803" id="3:807">
+                    <StateTransition stateToId="3:809" id="3:825">
+                        <TransitionViewModelCondition opValue="greaterThan" id="3:822">
+                            <TransitionPropertyViewModelComparator id="3:823">
+                                <BindablePropertyNumber id="3:190111">
+                                    <DataBindContext sourcePathIds="3:500-3:533" propertyKey="636" id="3:190112"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="3:824"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="3:806" id="3:829">
+                        <TransitionViewModelCondition opValue="notEqual" id="3:826">
+                            <TransitionPropertyViewModelComparator id="3:827">
+                                <BindablePropertyNumber id="3:190113">
+                                    <DataBindContext sourcePathIds="3:500-3:501" propertyKey="636" id="3:190114"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2" id="3:828"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="300" y="120" animationId="3:804" id="3:808">
+                    <StateTransition stateToId="3:806" id="3:833">
+                        <TransitionViewModelCondition opValue="notEqual" id="3:830">
+                            <TransitionPropertyViewModelComparator id="3:831">
+                                <BindablePropertyNumber id="3:190115">
+                                    <DataBindContext sourcePathIds="3:500-3:501" propertyKey="636" id="3:190116"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3" id="3:832"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="600" y="-120" animationId="3:805" id="3:809">
+                    <StateMachineFireEvent eventId="3:801" occursValue="0" id="3:190117"/>
+                    <StateTransition stateToId="3:806" id="3:837">
+                        <TransitionViewModelCondition opValue="equal" id="3:834">
+                            <TransitionPropertyViewModelComparator id="3:835">
+                                <BindablePropertyNumber id="3:190118">
+                                    <DataBindContext sourcePathIds="3:500-3:533" propertyKey="636" id="3:190119"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="3:836"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+        <!-- The bow's sound timelines (60 fps). -->
+        <LinearAnimation duration="60" loopValue="1" name="Bow Rest" id="3:802"/>
+        <LinearAnimation duration="120" name="Bow Draw" id="3:803">
+            <KeyedObject objectId="3:800" id="3:838">
+                <KeyedProperty propertyKey="395" id="3:839">
+                    <KeyFrameCallback frame="66" id="3:840"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="300" name="Bow Shoot" id="3:804">
+            <KeyedObject objectId="3:800" id="3:841">
+                <KeyedProperty propertyKey="395" id="3:842">
+                    <KeyFrameCallback frame="60" id="3:843"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="3:801" id="3:844">
+                <KeyedProperty propertyKey="395" id="3:845">
+                    <KeyFrameCallback frame="162" id="3:846"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="30" name="Bow Loose" id="3:805"/>
+        <!-- He animates himself; this loop keeps the state machine (and the
+             view model binds) running. -->
+        <LinearAnimation duration="60" loopValue="1" name="Night" id="3:110"/>
+        <LinearAnimation duration="132" name="Eyes Open" id="3:720">
+            <KeyedObject objectId="3:306" id="3:1532">
+                <KeyedProperty propertyKey="243" id="3:1533">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="3:1534"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="234" name="Eyes Open Long" id="3:721">
+            <KeyedObject objectId="3:306" id="3:1535">
+                <KeyedProperty propertyKey="243" id="3:1536">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="3:1537"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="13" name="Blink" id="3:722">
+            <KeyedObject objectId="3:306" id="3:1538">
+                <KeyedProperty propertyKey="243" id="3:1539">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="3:1540"/>
+                    <KeyFrameDouble value="1" frame="4" interpolationType="cubic" id="3:1541"/>
+                    <KeyFrameDouble value="1" frame="6" interpolationType="cubic" id="3:1542"/>
+                    <KeyFrameDouble frame="13" interpolationType="cubic" id="3:1543"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="32" name="Double Blink" id="3:723">
+            <KeyedObject objectId="3:306" id="3:1544">
+                <KeyedProperty propertyKey="243" id="3:1545">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="3:1546"/>
+                    <KeyFrameDouble value="1" frame="4" interpolationType="cubic" id="3:1547"/>
+                    <KeyFrameDouble value="1" frame="6" interpolationType="cubic" id="3:1548"/>
+                    <KeyFrameDouble frame="12" interpolationType="cubic" id="3:1549"/>
+                    <KeyFrameDouble frame="16" interpolationType="cubic" id="3:1550"/>
+                    <KeyFrameDouble value="1" frame="20" interpolationType="cubic" id="3:1551"/>
+                    <KeyFrameDouble value="1" frame="22" interpolationType="cubic" id="3:1552"/>
+                    <KeyFrameDouble frame="32" interpolationType="cubic" id="3:1553"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="34" name="Slow Blink" id="3:724">
+            <KeyedObject objectId="3:306" id="3:1554">
+                <KeyedProperty propertyKey="243" id="3:1555">
+                    <KeyFrameDouble frame="0" interpolationType="cubic" id="3:1556"/>
+                    <KeyFrameDouble value="1" frame="10" interpolationType="cubic" id="3:1557"/>
+                    <KeyFrameDouble value="1" frame="17" interpolationType="cubic" id="3:1558"/>
+                    <KeyFrameDouble frame="34" interpolationType="cubic" id="3:1559"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+
+    <!-- His pose, the view, the light and the style, for a page or the game
+         to drive. pose: 0 idle, 1 walking, 2 drawing the bow. paint: the 2D-3D mix. -->
+    <ViewModel name="King" id="3:500">
+        <ViewModelPropertyNumber componentProps="1" name="pose" id="3:501"/>
+        <ViewModelPropertyNumber componentProps="1" name="speed" id="3:502"/>
+        <ViewModelPropertyNumber componentProps="1" name="turn" id="3:503"/>
+        <ViewModelPropertyNumber componentProps="1" name="autoTurn" id="3:504"/>
+        <ViewModelPropertyNumber componentProps="1" name="tilt" id="3:505"/>
+        <ViewModelPropertyNumber componentProps="1" name="zoom" id="3:506"/>
+        <ViewModelPropertyNumber componentProps="1" name="moon" id="3:507"/>
+        <ViewModelPropertyNumber componentProps="1" name="fire" id="3:508"/>
+        <ViewModelPropertyNumber componentProps="1" name="paint" id="3:509"/>
+        <ViewModelPropertyNumber componentProps="1" name="bands" id="3:510"/>
+        <ViewModelPropertyNumber componentProps="1" name="outline" id="3:511"/>
+        <ViewModelPropertyNumber componentProps="1" name="inkDetail" id="3:512"/>
+        <ViewModelPropertyNumber componentProps="1" name="hatching" id="3:513"/>
+        <ViewModelPropertyNumber componentProps="1" name="fireflies" id="3:514"/>
+        <ViewModelPropertyNumber componentProps="1" name="mist" id="3:515"/>
+        <ViewModelPropertyNumber componentProps="1" name="resetView" id="3:516"/>
+        <ViewModelPropertyNumber componentProps="1" name="dragX" id="3:517"/>
+        <ViewModelPropertyNumber componentProps="1" name="dragY" id="3:518"/>
+        <ViewModelPropertyNumber componentProps="1" name="eyes" id="3:530"/>
+        <ViewModelPropertyNumber componentProps="1" name="earringGlow" id="3:531"/>
+        <ViewModelPropertyNumber componentProps="1" name="aura" id="3:532"/>
+        <ViewModelPropertyNumber componentProps="1" name="release" id="3:533"/>
+        <ViewModelPropertyColor componentProps="1" name="auraColor" id="3:534"/>
+        <!-- The wind in his hair and cloth. -->
+        <ViewModelPropertyNumber componentProps="1" name="windStrength" id="3:540"/>
+        <ViewModelPropertyNumber componentProps="1" name="windSpeed" id="3:541"/>
+        <ViewModelPropertyNumber componentProps="1" name="windDirection" id="3:542"/>
+        <ViewModelPropertyNumber componentProps="1" name="gustiness" id="3:543"/>
+        <ViewModelPropertyNumber componentProps="1" name="hairWind" id="3:544"/>
+        <ViewModelPropertyNumber componentProps="1" name="clothWind" id="3:545"/>
+        <ViewModelInstance exports="true" name="Default" id="3:520">
+            <ViewModelInstanceNumber viewModelPropertyId="3:501" id="3:1501"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:502" id="3:1502"/>
+            <ViewModelInstanceNumber propertyValue="18" viewModelPropertyId="3:503" id="3:1503"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:504" id="3:1504"/>
+            <ViewModelInstanceNumber propertyValue="6" viewModelPropertyId="3:505" id="3:1505"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:506" id="3:1506"/>
+            <ViewModelInstanceNumber propertyValue="0.45" viewModelPropertyId="3:507" id="3:1507"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="3:508" id="3:1508"/>
+            <ViewModelInstanceNumber propertyValue="0.75" viewModelPropertyId="3:509" id="3:1509"/>
+            <ViewModelInstanceNumber propertyValue="3" viewModelPropertyId="3:510" id="3:1510"/>
+            <ViewModelInstanceNumber propertyValue="2.2" viewModelPropertyId="3:511" id="3:1511"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="3:512" id="3:1512"/>
+            <ViewModelInstanceNumber propertyValue="0.5" viewModelPropertyId="3:513" id="3:1513"/>
+            <ViewModelInstanceNumber propertyValue="40" viewModelPropertyId="3:514" id="3:1514"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:515" id="3:1515"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:516" id="3:1516"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:517" id="3:1517"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:518" id="3:1518"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:530" id="3:1530"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:531" id="3:1531"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:532" id="3:1590"/>
+            <ViewModelInstanceNumber viewModelPropertyId="3:533" id="3:1591"/>
+            <ViewModelInstanceColor propertyValue="FFFFBE5A" viewModelPropertyId="3:534" id="3:1592"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:540" id="3:190101"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:541" id="3:190102"/>
+            <ViewModelInstanceNumber propertyValue="160" viewModelPropertyId="3:542" id="3:190103"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="3:543" id="3:190104"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:544" id="3:190105"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="3:545" id="3:190106"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <!-- The Vetal as a component (../vetal's artboard, drawn by Vetal.luau with
+         the scene's Spirit module and his blob 'vetal'): place him anywhere, set
+         his eyes, his spirit light and the wind through his view model. -->
+    <Artboard isComponent="true" x="1500" y="900" defaultStateMachineId="4:100" viewModelId="4:500" viewModelInstanceId="4:520" width="1280" height="720" styleId="4:2" name="Vetal" id="4:1">
+        <LayoutComponentStyle name="Vetal Style" id="4:2"/>
+        <ScriptedDrawable scriptAssetId="0:916" x="640" y="360" name="Vetal" id="4:10">
+            <ScriptInputString propertyValue="vetal" name="asset" id="4:201"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="4:202"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="4:203"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="4:204"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="4:205"/>
+            <ScriptInputNumber propertyValue="1" name="rim" id="4:206"/>
+            <ScriptInputNumber propertyValue="0.025" name="fireflySize" id="4:207"/>
+            <ScriptInputNumber propertyValue="0.8" name="bloom" id="4:208"/>
+            <ScriptInputNumber propertyValue="0.25" name="glow" id="4:209"/>
+            <ScriptInputNumber propertyValue="0.4" name="depthOfField" id="4:210"/>
+            <ScriptInputNumber propertyValue="1.25" name="exposure" id="4:211"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="4:212"/>
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="4:213"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="moonColor" id="4:214"/>
+            <ScriptInputColor propertyValue="FFFFAA5F" name="fireColor" id="4:215"/>
+            <ScriptInputColor propertyValue="FF100A18" name="inkColor" id="4:216"/>
+            <ScriptInputColor propertyValue="FF463C82" name="shadowColor" id="4:217"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="4:218"/>
+            <ScriptInputColor propertyValue="FF18223E" name="horizonColor" id="4:219"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="4:220"/>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="4:221"/>
+            <ScriptInputColor propertyValue="FFFF3C19" name="eyeColor" id="4:222"/>
+            <ScriptInputNumber name="pose" id="4:223"/>
+            <ScriptInputNumber propertyValue="1" name="speed" id="4:224">
+                <DataBindContext sourcePathIds="4:500-4:601" propertyKey="243" id="4:225"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="20" name="turn" id="4:226">
+                <DataBindContext sourcePathIds="4:500-4:602" propertyKey="243" id="4:227"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="autoTurn" id="4:228">
+                <DataBindContext sourcePathIds="4:500-4:603" propertyKey="243" id="4:229"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="4" name="tilt" id="4:230">
+                <DataBindContext sourcePathIds="4:500-4:604" propertyKey="243" id="4:231"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="4:232">
+                <DataBindContext sourcePathIds="4:500-4:605" propertyKey="243" id="4:233"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.45" name="moon" id="4:234">
+                <DataBindContext sourcePathIds="4:500-4:606" propertyKey="243" id="4:235"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="fire" id="4:236">
+                <DataBindContext sourcePathIds="4:500-4:607" propertyKey="243" id="4:237"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.75" name="paint" id="4:238">
+                <DataBindContext sourcePathIds="4:500-4:608" propertyKey="243" id="4:239"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="3" name="bands" id="4:240">
+                <DataBindContext sourcePathIds="4:500-4:609" propertyKey="243" id="4:241"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2.2" name="outline" id="4:242">
+                <DataBindContext sourcePathIds="4:500-4:610" propertyKey="243" id="4:243"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="inkDetail" id="4:244">
+                <DataBindContext sourcePathIds="4:500-4:611" propertyKey="243" id="4:245"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.5" name="hatching" id="4:246">
+                <DataBindContext sourcePathIds="4:500-4:612" propertyKey="243" id="4:247"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="40" name="fireflies" id="4:248">
+                <DataBindContext sourcePathIds="4:500-4:613" propertyKey="243" id="4:249"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="mist" id="4:250">
+                <DataBindContext sourcePathIds="4:500-4:614" propertyKey="243" id="4:251"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="4:252">
+                <DataBindContext sourcePathIds="4:500-4:615" propertyKey="243" id="4:253"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="4:254">
+                <DataBindContext sourcePathIds="4:500-4:616" propertyKey="243" id="4:255"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="4:256">
+                <DataBindContext sourcePathIds="4:500-4:617" propertyKey="243" id="4:257"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1.5" name="hang" id="4:258">
+                <DataBindContext sourcePathIds="4:500-4:618" propertyKey="243" id="4:259"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1.5" name="eyeGlow" id="4:260">
+                <DataBindContext sourcePathIds="4:500-4:619" propertyKey="243" id="4:261"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="spirit" id="4:262">
+                <DataBindContext sourcePathIds="4:500-4:620" propertyKey="243" id="4:263"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="4:264">
+                <DataBindContext sourcePathIds="4:500-4:621" propertyKey="243" id="4:265"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="4:266">
+                <DataBindContext sourcePathIds="4:500-4:622" propertyKey="243" id="4:267"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="160" name="windDirection" id="4:268">
+                <DataBindContext sourcePathIds="4:500-4:623" propertyKey="243" id="4:269"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="4:270">
+                <DataBindContext sourcePathIds="4:500-4:624" propertyKey="243" id="4:271"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="hairWind" id="4:272">
+                <DataBindContext sourcePathIds="4:500-4:625" propertyKey="243" id="4:273"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="clothWind" id="4:274">
+                <DataBindContext sourcePathIds="4:500-4:626" propertyKey="243" id="4:275"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFF2F6FF" name="spiritColor" id="4:276">
+                <DataBindContext sourcePathIds="4:500-4:627" propertyKey="836" id="4:277"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <Fill name="Night" id="4:3">
+            <SolidColor colorValue="FF060A1E" name="Color" id="4:4"/>
+        </Fill>
+        <StateMachine name="Vetal" id="4:100">
+            <StateMachineLayer name="Night" id="4:101">
+                <AnyState x="200" y="-120" id="4:102"/>
+                <ExitState x="400" y="-120" id="4:103"/>
+                <EntryState id="4:104">
+                    <StateTransition stateToId="4:105" id="4:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="4:110" id="4:105"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation duration="60" loopValue="1" name="Night" id="4:110"/>
+    </Artboard>
+
+    <!-- What the page sets: the view, the light, the style, the spirit and
+         the wind. -->
+    <ViewModel name="Vetal" id="4:500">
+        <ViewModelPropertyNumber componentProps="1" name="speed" id="4:601"/>
+        <ViewModelPropertyNumber componentProps="1" name="turn" id="4:602"/>
+        <ViewModelPropertyNumber componentProps="1" name="autoTurn" id="4:603"/>
+        <ViewModelPropertyNumber componentProps="1" name="tilt" id="4:604"/>
+        <ViewModelPropertyNumber componentProps="1" name="zoom" id="4:605"/>
+        <ViewModelPropertyNumber componentProps="1" name="moon" id="4:606"/>
+        <ViewModelPropertyNumber componentProps="1" name="fire" id="4:607"/>
+        <ViewModelPropertyNumber componentProps="1" name="paint" id="4:608"/>
+        <ViewModelPropertyNumber componentProps="1" name="bands" id="4:609"/>
+        <ViewModelPropertyNumber componentProps="1" name="outline" id="4:610"/>
+        <ViewModelPropertyNumber componentProps="1" name="inkDetail" id="4:611"/>
+        <ViewModelPropertyNumber componentProps="1" name="hatching" id="4:612"/>
+        <ViewModelPropertyNumber componentProps="1" name="fireflies" id="4:613"/>
+        <ViewModelPropertyNumber componentProps="1" name="mist" id="4:614"/>
+        <ViewModelPropertyNumber componentProps="1" name="resetView" id="4:615"/>
+        <ViewModelPropertyNumber componentProps="1" name="dragX" id="4:616"/>
+        <ViewModelPropertyNumber componentProps="1" name="dragY" id="4:617"/>
+        <ViewModelPropertyNumber componentProps="1" name="hang" id="4:618"/>
+        <ViewModelPropertyNumber componentProps="1" name="eyeGlow" id="4:619"/>
+        <ViewModelPropertyNumber componentProps="1" name="spirit" id="4:620"/>
+        <ViewModelPropertyNumber componentProps="1" name="windStrength" id="4:621"/>
+        <ViewModelPropertyNumber componentProps="1" name="windSpeed" id="4:622"/>
+        <ViewModelPropertyNumber componentProps="1" name="windDirection" id="4:623"/>
+        <ViewModelPropertyNumber componentProps="1" name="gustiness" id="4:624"/>
+        <ViewModelPropertyNumber componentProps="1" name="hairWind" id="4:625"/>
+        <ViewModelPropertyNumber componentProps="1" name="clothWind" id="4:626"/>
+        <ViewModelPropertyColor componentProps="1" name="spiritColor" id="4:627"/>
+        <ViewModelInstance exports="true" name="Default" id="4:520">
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:601" id="4:1501"/>
+            <ViewModelInstanceNumber propertyValue="20" viewModelPropertyId="4:602" id="4:1502"/>
+            <ViewModelInstanceNumber viewModelPropertyId="4:603" id="4:1503"/>
+            <ViewModelInstanceNumber propertyValue="4" viewModelPropertyId="4:604" id="4:1504"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:605" id="4:1505"/>
+            <ViewModelInstanceNumber propertyValue="0.45" viewModelPropertyId="4:606" id="4:1506"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="4:607" id="4:1507"/>
+            <ViewModelInstanceNumber propertyValue="0.75" viewModelPropertyId="4:608" id="4:1508"/>
+            <ViewModelInstanceNumber propertyValue="3" viewModelPropertyId="4:609" id="4:1509"/>
+            <ViewModelInstanceNumber propertyValue="2.2" viewModelPropertyId="4:610" id="4:1510"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="4:611" id="4:1511"/>
+            <ViewModelInstanceNumber propertyValue="0.5" viewModelPropertyId="4:612" id="4:1512"/>
+            <ViewModelInstanceNumber propertyValue="40" viewModelPropertyId="4:613" id="4:1513"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:614" id="4:1514"/>
+            <ViewModelInstanceNumber viewModelPropertyId="4:615" id="4:1515"/>
+            <ViewModelInstanceNumber viewModelPropertyId="4:616" id="4:1516"/>
+            <ViewModelInstanceNumber viewModelPropertyId="4:617" id="4:1517"/>
+            <ViewModelInstanceNumber propertyValue="1.5" viewModelPropertyId="4:618" id="4:1518"/>
+            <ViewModelInstanceNumber propertyValue="1.5" viewModelPropertyId="4:619" id="4:1519"/>
+            <ViewModelInstanceNumber viewModelPropertyId="4:620" id="4:1520"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:621" id="4:1521"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:622" id="4:1522"/>
+            <ViewModelInstanceNumber propertyValue="160" viewModelPropertyId="4:623" id="4:1523"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="4:624" id="4:1524"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:625" id="4:1525"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="4:626" id="4:1526"/>
+            <ViewModelInstanceColor propertyValue="FFF2F6FF" viewModelPropertyId="4:627" id="4:1527"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <!-- Their entries in the assets panel, so the editor offers them as
+         components. -->
+    <ComponentAsset artboardId="3:1" name="King Vikram" id="0:917"/>
+    <ComponentAsset artboardId="4:1" name="Vetal" id="0:918"/>
+</Rive>

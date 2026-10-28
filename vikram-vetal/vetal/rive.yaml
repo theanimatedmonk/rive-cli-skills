@@ -1,0 +1,8 @@
+name: vikram-vetal-spirit
+main: "Vetal"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
+push:
+  fileId: 2689195
+  projectId: 91535

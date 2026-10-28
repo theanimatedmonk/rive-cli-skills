@@ -1,0 +1,8 @@
+name: vikram-king
+main: "King"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
+push:
+  projectId: 91535
+  fileId: 2686907

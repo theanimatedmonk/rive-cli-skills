@@ -1,0 +1,8 @@
+name: vikram-vetal
+main: "Night"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
+push:
+  projectId: 91535
+  fileId: 2686325

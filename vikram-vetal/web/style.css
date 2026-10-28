@@ -1,0 +1,316 @@
+:root {
+  --bg: #070a1c;
+  --panel: rgba(12, 16, 40, 0.72);
+  --line: rgba(160, 180, 255, 0.16);
+  --text: #e6ebff;
+  --muted: #8e98c4;
+  --accent: #c9e86a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  color: var(--muted);
+}
+
+.status[hidden] {
+  display: none;
+}
+
+.panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 280px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 40px rgba(90, 50, 60, 0.15);
+}
+
+.brand__eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.brand__name {
+  margin: 2px 0 10px;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.action {
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.action + .action {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.action:hover {
+  filter: brightness(1.05);
+}
+
+.panel__toggle,
+.reset {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.panel__toggle:hover,
+.reset:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.panel.is-collapsed .controls {
+  display: none;
+}
+
+.controls section {
+  margin-top: 14px;
+}
+
+.controls h2 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.slider output {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.slider input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.reset {
+  margin-top: 6px;
+}
+
+.hint {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .panel {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 50vh;
+  }
+}
+
+/* King Vikram: idle, walking or drawing his bow. */
+.poses {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.pose {
+  padding: 9px 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pose:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pose.is-active {
+  border-color: transparent;
+  background: #e0a04a;
+  color: #1a0f06;
+}
+
+.link {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.link:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* The story: a folded menu at the bottom right, its chapters and links. */
+.story-menu {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 10;
+}
+
+.story-menu__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(10, 12, 30, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.story-menu__caret {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.story-menu.is-open .story-menu__caret {
+  transform: rotate(180deg);
+}
+
+.story-menu__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 190px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(10, 12, 30, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.story-menu__panel[hidden] {
+  display: none;
+}
+
+.story-menu__label {
+  margin: 6px 4px 2px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.story-menu__label:first-child {
+  margin-top: 0;
+}
+
+.chapter,
+.story-menu__link {
+  display: block;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chapter:hover,
+.story-menu__link:hover {
+  background: rgba(160, 180, 255, 0.1);
+}
+
+.chapter.is-active {
+  background: #e0a04a;
+  color: #1a0f06;
+}
