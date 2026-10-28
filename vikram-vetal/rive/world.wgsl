@@ -780,10 +780,10 @@ fn fs_main(in: VertexOut, @builtin(front_facing) front: bool) -> FragOut {
     let p = in.world;
     let view = normalize(u.camPos.xyz - p);
     // A cinematic camera clears what stands right in front of it (trunks,
-    // leaves, grass; never the ground), dissolving at the edge.
+    // leaves, grass; never the ground), cut clean at that distance.
     if (u.glory.y > 0.0 && kind != GROUND && kind != GROUND_FAR && kind != ASH && kind != GRASS_MESH) {
         let near = distance(p, u.camPos.xyz) / u.glory.y;
-        if (near < 0.75 + 0.25 * hash3(vec3<f32>(floor(in.clip.xy), 3.0))) {
+        if (near < 1.0) {
             discard;
         }
     }
