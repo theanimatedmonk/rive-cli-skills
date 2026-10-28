@@ -44,7 +44,8 @@
 -- string) and `kingBlink` as on his own page; `kingFill` is a soft warm
 -- light from the camera's side, so he reads on the darkest night, and
 -- `kingGlow` the warm pool of light his earrings cast round him (his bow's
--- aura adds to it when he draws).
+-- aura adds to it when he draws). The scene's wind blows his hair and
+-- cloth; `kingHairWind` and `kingClothWind` say how much each takes it.
 --
 -- The golden wave: `blast` (0-1) sends a ring of gold out from his bow's
 -- grip (where it is when the blast starts) across `blastRange` metres,
@@ -132,6 +133,8 @@ export type World = {
 	kingAura: Input<number>,
 	kingAuraColor: Input<Color>,
 	kingRelease: Input<number>,
+	kingHairWind: Input<number>,
+	kingClothWind: Input<number>,
 	kingBlink: Input<number>,
 	kingFill: Input<number>,
 	kingGlow: Input<number>,
@@ -1178,6 +1181,10 @@ local function kingUniforms(self: World, hero: Hero.Hero)
 	s.turn = self.kingFacing + self.kingTurn
 	s.blink = self.kingBlink
 	s.aura, s.auraColor, s.release = self.kingAura, self.kingAuraColor, self.kingRelease
+	local wa = math.rad(self.windDirection)
+	s.windX, s.windZ = math.cos(wa), math.sin(wa)
+	s.windStrength, s.windPhase, s.gustiness = self.windStrength, self.windPhase, self.gustiness
+	s.hairWind, s.clothWind = self.kingHairWind, self.kingClothWind
 	s.outline = 1.8 * clamp(self.resolution, 0.25, 3)
 	s.time = self.time
 	Hero.write(hero, u, s)
@@ -1749,6 +1756,8 @@ return function(): Node<World>
 		kingAura = 1,
 		kingAuraColor = Color.rgb(255, 190, 90),
 		kingRelease = 0,
+		kingHairWind = 1,
+		kingClothWind = 1,
 		kingBlink = 0,
 		kingFill = 0.3,
 		kingGlow = 0.25,
@@ -1783,6 +1792,13 @@ return function(): Node<World>
 			aura = 1,
 			auraColor = Color.rgb(255, 190, 90),
 			release = 0,
+			windX = 1,
+			windZ = 0,
+			windStrength = 0,
+			windPhase = 0,
+			gustiness = 0.6,
+			hairWind = 1,
+			clothWind = 1,
 			paint = 0.75,
 			bands = 3,
 			outline = 1.8,

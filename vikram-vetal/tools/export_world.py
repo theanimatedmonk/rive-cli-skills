@@ -44,7 +44,9 @@ MATERIALS = {
     'Ground_Earth': GROUND, 'Tile_Side': STONE,
 }
 # Swaying in the wind, by height above the object's own base (metres per
-# full sway) and how much.
+# full sway) and how much. Where the GLB has the wind painted (a _WIND
+# attribute: x how much each vertex sways, y a phase, z what it is), the
+# painted weight replaces the height.
 WIND = {FOLIAGE: (5.0, 0.16), MOSS: (3.0, 0.22), GRASS_MESH: (0.5, 0.18), BARK: (6.0, 0.05), VINE: (4.0, 0.1)}
 
 # ---------------------------------------------------------------------------
@@ -234,11 +236,36 @@ for name, mi, M in placed:
                 # The painted greens are very dark; lift them, keeping the hue.
                 lum = sc[:, :3] @ np.array([0.3, 0.59, 0.11])
                 sc[:, :3] *= np.clip(0.06 / np.maximum(lum, 1e-4), 1, 12)[:, None]
+            if name.startswith('Peepal') and sc[:, 3].any():
+                # The hero tree: dark brown wood, dark green leaves and moss,
+                # keeping the painted light and dark.
+                lum = sc[:, :3] @ np.array([0.3, 0.59, 0.11])
+                rel = np.clip(lum / max(lum.mean(), 1e-4), 0.6, 1.5)[:, None]
+                if mat == BARK:
+                    sc[:, :3] = rel * np.array([0.08, 0.045, 0.025])
+                elif mat == MOSS:
+                    sc[:, :3] = rel * np.array([0.035, 0.065, 0.022])
+                elif mat == FOLIAGE:
+                    sc[:, :3] = rel * np.array([0.022, 0.055, 0.025])
+            if name.startswith('Terrain') and mat == ASH and sc[:, 3].any():
+                # The path (painted ash-grey): a light, brownish green,
+                # keeping the painted light and dark.
+                lum = sc[:, :3] @ np.array([0.3, 0.59, 0.11])
+                rel = np.clip(lum / max(lum.mean(), 1e-4), 0.7, 1.4)[:, None]
+                sc[:, :3] = rel * np.array([0.15, 0.14, 0.075])
+            if name.startswith('Terrain') and mat == GRASS_MESH and sc[:, 3].any():
+                # The ground's green is painted for day; at night it is a
+                # deep, cool green: half its saturation, a quarter as bright.
+                lum = sc[:, :3] @ np.array([0.3, 0.59, 0.11])
+                sc[:, :3] = (sc[:, :3] * 0.5 + lum[:, None] * 0.5) * np.array([0.2, 0.25, 0.3])
             wind = np.zeros(len(sp))
             if mat in WIND:
                 span, amount = WIND[mat]
-                base = sp[:, 1].min() if mat == GRASS_MESH else (M[1, 3] if abs(M[1, 3]) > 1e-6 else -0.2)
-                wind = np.clip((sp[:, 1] - base) / span, 0, 1) * amount / 0.25
+                if '_WIND' in a:
+                    wind = accessor(a['_WIND'])[used, 0] * amount / 0.25
+                else:
+                    base = sp[:, 1].min() if mat == GRASS_MESH else (M[1, 3] if abs(M[1, 3]) > 1e-6 else -0.2)
+                    wind = np.clip((sp[:, 1] - base) / span, 0, 1) * amount / 0.25
             surfaces.setdefault(int(mat), []).append((sp, sn, sidx))
             chunks = merged.setdefault(int(mat), [])
             for lo in range(0, len(sidx), 20000):

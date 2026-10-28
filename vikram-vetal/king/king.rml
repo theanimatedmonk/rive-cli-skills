@@ -103,6 +103,25 @@
             </ScriptInputNumber>
             <!-- His eyelids (0 open, 1 shut): keyed by the Blink layer. -->
             <ScriptInputNumber name="blink" id="0:306"/>
+            <!-- The wind in his hair and cloth (as painted in Blender). -->
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="0:320">
+                <DataBindContext sourcePathIds="0:500-0:540" propertyKey="243" id="0:321"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="0:322">
+                <DataBindContext sourcePathIds="0:500-0:541" propertyKey="243" id="0:323"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="160" name="windDirection" id="0:324">
+                <DataBindContext sourcePathIds="0:500-0:542" propertyKey="243" id="0:325"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="0:326">
+                <DataBindContext sourcePathIds="0:500-0:543" propertyKey="243" id="0:327"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="hairWind" id="0:328">
+                <DataBindContext sourcePathIds="0:500-0:544" propertyKey="243" id="0:329"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="clothWind" id="0:330">
+                <DataBindContext sourcePathIds="0:500-0:545" propertyKey="243" id="0:331"/>
+            </ScriptInputNumber>
         </ScriptedDrawable>
         <Fill name="Night" id="0:3">
             <SolidColor colorValue="FF060A1E" name="Color" id="0:4"/>
@@ -227,6 +246,13 @@
         <ViewModelPropertyNumber name="aura" id="0:532"/>
         <ViewModelPropertyNumber name="release" id="0:533"/>
         <ViewModelPropertyColor name="auraColor" id="0:534"/>
+        <!-- The wind in his hair and cloth. -->
+        <ViewModelPropertyNumber name="windStrength" id="0:540"/>
+        <ViewModelPropertyNumber name="windSpeed" id="0:541"/>
+        <ViewModelPropertyNumber name="windDirection" id="0:542"/>
+        <ViewModelPropertyNumber name="gustiness" id="0:543"/>
+        <ViewModelPropertyNumber name="hairWind" id="0:544"/>
+        <ViewModelPropertyNumber name="clothWind" id="0:545"/>
         <ViewModelInstance exports="true" name="Default" id="0:520">
             <ViewModelInstanceNumber viewModelPropertyId="0:501" id="0:1501"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:502" id="0:1502"/>
@@ -251,6 +277,12 @@
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:532" id="0:1590"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:533" id="0:1591"/>
             <ViewModelInstanceColor propertyValue="FFFFBE5A" viewModelPropertyId="0:534" id="0:1592"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:540" id="0:190101"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:541" id="0:190102"/>
+            <ViewModelInstanceNumber propertyValue="160" viewModelPropertyId="0:542" id="0:190103"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:543" id="0:190104"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:544" id="0:190105"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:545" id="0:190106"/>
         </ViewModelInstance>
     </ViewModel>
 

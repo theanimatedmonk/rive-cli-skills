@@ -2,7 +2,7 @@
 // artboard's state machine, one keyed timeline per chapter); this page
 // shows each chapter's caption as it begins and lets the viewer jump to a
 // chapter by firing the Story view model's triggers.
-const SRC = "vikram-vetal.riv?v=25";
+const SRC = "vikram-vetal.riv?v=33";
 
 // The chapters, by their state's (timeline's) name in the state machine.
 const CHAPTERS = {

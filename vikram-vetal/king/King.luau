@@ -22,6 +22,10 @@
 -- glints on the string, and gold light on him. `aura` (0-2) scales it,
 -- `auraColor` colours it. `release` (0-1, over about 3 s) looses the
 -- string: it snaps home and shivers, and rings of gold ripple out.
+-- Wind: his hair and cloth blow in it, as painted in Blender:
+-- `windStrength`, `windSpeed`, `windDirection` (degrees; 0 blows along +X,
+-- 90 toward the camera), `gustiness`; `hairWind` and `clothWind` how much
+-- each takes it.
 -- View: `turn` (degrees, he turns on the spot), `autoTurn` (degrees a
 -- second), `tilt` (the camera's, degrees), `zoom`. Drag to turn him and
 -- tilt the view, pinch to zoom, double-tap to reset; a host maps `dragX` /
@@ -56,6 +60,12 @@ export type King = {
 	auraColor: Input<Color>,
 	release: Input<number>,
 	speed: Input<number>,
+	windStrength: Input<number>,
+	windSpeed: Input<number>,
+	windDirection: Input<number>,
+	gustiness: Input<number>,
+	hairWind: Input<number>,
+	clothWind: Input<number>,
 	moon: Input<number>,
 	moonColor: Input<Color>,
 	fire: Input<number>,
@@ -95,6 +105,7 @@ export type King = {
 	blurShader: Shader?,
 	failed: boolean,
 	time: number,
+	windPhase: number,
 	hero: Hero.Hero?,
 	settings: Hero.Settings,
 	-- Where the ground has scrolled to (metres), and his turn so far.
@@ -276,6 +287,8 @@ function advance(self: King, seconds: number): boolean
 		end
 	end
 	self.time += dt
+	-- The wind's phase runs at its speed, so changing the speed never jumps.
+	self.windPhase += dt * math.max(self.windSpeed, 0)
 	local hero = self.hero
 	if hero then
 		Hero.advance(hero, dt, self.pose, self.speed)
@@ -458,6 +471,10 @@ local function frameUniforms(self: King, hero: Hero.Hero)
 	s.eyes, s.blink = self.eyes, self.blink
 	s.earringGlow, s.earringColor = self.earringGlow, self.earringColor
 	s.aura, s.auraColor, s.release = self.aura, self.auraColor, self.release
+	local wa = math.rad(self.windDirection)
+	s.windX, s.windZ = math.cos(wa), math.sin(wa)
+	s.windStrength, s.windPhase, s.gustiness = self.windStrength, self.windPhase, self.gustiness
+	s.hairWind, s.clothWind = self.hairWind, self.clothWind
 	s.paint, s.bands, s.inkDetail, s.hatching = self.paint, self.bands, self.inkDetail, self.hatching
 	s.outline = clamp(self.outline, 0, 8) * clamp(self.resolution, 0.25, 3) / math.max(zoom, 0.5)
 	s.inkColor = self.inkColor
@@ -737,6 +754,12 @@ return function(): Node<King>
 		auraColor = Color.rgb(255, 190, 90),
 		release = 0,
 		speed = 1,
+		windStrength = 1,
+		windSpeed = 1,
+		windDirection = 160,
+		gustiness = 0.6,
+		hairWind = 1,
+		clothWind = 1,
 		moon = 0.45,
 		moonColor = Color.rgb(150, 175, 245),
 		fire = 0.6,
@@ -784,6 +807,13 @@ return function(): Node<King>
 			aura = 1,
 			auraColor = Color.rgb(255, 190, 90),
 			release = 0,
+			windX = 1,
+			windZ = 0,
+			windStrength = 0,
+			windPhase = 0,
+			gustiness = 0.6,
+			hairWind = 1,
+			clothWind = 1,
 			paint = 0.75,
 			bands = 3,
 			outline = 2.2,
@@ -797,6 +827,7 @@ return function(): Node<King>
 		blurShader = nil,
 		failed = false,
 		time = 0,
+		windPhase = 0,
 		scrollX = 0,
 		scrollZ = 0,
 		spin = 0,

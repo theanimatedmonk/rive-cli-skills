@@ -22,8 +22,11 @@
 #     3  a loop        a = frames, b = loop index (0 idle, 1 walk, 2 draw, 3 shoot),
 #                      c = keys per second; per frame, per joint, the skin
 #                      matrix's top three rows (12 f32)
-#     5  shape key     per vertex, 16 bytes: position delta f32x3, normal
-#                      delta / 2 snorm8x4 (zero but for the bow)
+#     5  shape key     per vertex, 20 bytes: position delta f32x3, normal
+#                      delta / 2 snorm8x4 (zero but for the bow); then the
+#                      wind painted on the body (its _WIND attribute) as
+#                      unorm8x4: how much it sways, its phase, what it is
+#                      / 2 (0 skin, 1 hair, 2 cloth), 0
 #     6  a loop's key  a = frames, b = loop index; per frame the bow's shape
 #                      key weight (f32): how far the string is drawn
 #     7  the bow       a = samples; per sample 14 f32 (bind position, shape
@@ -315,7 +318,15 @@ def weights8(w):
 
 
 # The bow: its parts after the earrings, with the drawn string's shape key.
-morph = np.zeros(len(vb), dtype=[('d', '<f4', 3), ('n', 'i1', 4)])
+morph = np.zeros(len(vb), dtype=[('d', '<f4', 3), ('n', 'i1', 4), ('wind', 'u1', 4)])
+if '_WIND' in at:
+    wind = accessor(at['_WIND']).astype(float)
+    morph['wind'][:nv, 0] = np.round(np.clip(wind[:, 0], 0, 1) * 255)
+    morph['wind'][:nv, 1] = np.round(np.clip(wind[:, 1], 0, 1) * 255)
+    morph['wind'][:nv, 2] = np.round(np.clip(wind[:, 2] / 2, 0, 1) * 255)
+    for rid, what in ((1, 'hair'), (2, 'cloth')):
+        m = np.isclose(wind[:, 2], rid, atol=0.3)
+        print(f'wind: {what} {m.sum()} vertices, sway up to {wind[m, 0].max():.2f}')
 bow_vb, bow_ib, bow_morph = [], [], []
 limb_pts, limb_delta, limb_j, limb_w = [], [], [], []
 string_pts = None

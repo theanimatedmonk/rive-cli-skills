@@ -71,6 +71,8 @@ struct Uniforms {
     bowOrigin: vec4<f32>,    // the limbs' axis (bind pose): its start, length
     bowAxis: vec4<f32>,      // ..., its direction, 0
     spine: array<vec4<f32>, 14>,   // along the bow (world), tip to tip, then the nock
+    windA: vec4<f32>,        // the wind: its direction (x, z), strength, phase
+    windB: vec4<f32>,        // how much the hair and the cloth take it, gustiness
     bones: array<vec4<f32>, 240>,  // per joint, the skin matrix's rows
 };
 
@@ -142,6 +144,9 @@ struct SkinIn {
     // normal delta / 2.
     @location(5) morphPosition: vec3<f32>,
     @location(6) morphNormal: vec4<f32>,
+    // The wind painted on him: how much it sways, its phase, what it is / 2
+    // (0 skin, 1 hair, 2 cloth).
+    @location(7) wind: vec4<f32>,
 };
 
 struct Skinned {
@@ -165,9 +170,30 @@ fn skin(v: SkinIn) -> Skinned {
     let n = vec4<f32>(v.normal.xyz + v.morphNormal.xyz * 2.0 * u.aura.y, 0.0);
     let ln = vec3<f32>(dot(r0, n), dot(r1, n), dot(r2, n));
     var s: Skinned;
-    s.world = (u.model * vec4<f32>(local, 1.0)).xyz;
+    s.world = (u.model * vec4<f32>(local, 1.0)).xyz + windSway(v.wind);
     s.normal = normalize((u.model * vec4<f32>(ln, 0.0)).xyz);
     return s;
+}
+
+// His hair and cloth in the wind (world metres): blown along it, swaying
+// as it gusts, the cloth fluttering faster; each vertex in its own phase,
+// as painted.
+fn windSway(w: vec4<f32>) -> vec3<f32> {
+    if (w.x <= 0.0 || u.windA.z <= 0.0) {
+        return vec3<f32>(0.0);
+    }
+    let what = round(w.z * 2.0);
+    let take = select(select(0.0, u.windB.y, what > 1.5), u.windB.x, what > 0.5 && what < 1.5);
+    let t = u.windA.w;
+    let ph = w.y * 6.283;
+    let gust = 1.0 - u.windB.z * 0.5 * (1.0 + sin(t * 0.43 + 1.3) * sin(t * 0.17));
+    let sway = 0.6 + 0.4 * sin(t * 1.7 + ph);
+    let flutter = sin(t * select(4.0, 9.0, what > 1.5) + ph * 3.0);
+    let dir = vec3<f32>(u.windA.x, 0.0, u.windA.y);
+    let side = vec3<f32>(-u.windA.y, 0.0, u.windA.x);
+    let strength = pow(u.windA.z, 0.7);
+    return (dir * sway * gust + side * flutter * 0.35 + vec3<f32>(0.0, flutter * 0.12, 0.0))
+        * w.x * take * strength * 0.06;
 }
 
 struct KingOut {

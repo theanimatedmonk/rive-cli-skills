@@ -1,7 +1,7 @@
 // King Vikram preview: the hero on his own, full-bleed, with his pose (idle,
 // walking or drawing his bow), the light and the 2D-3D style as controls. Each control sets
 // a number on the King view model, bound to the King node's inputs.
-const SRC = "vikram-king.riv?v=15";
+const SRC = "vikram-king.riv?v=16";
 
 // The file's defaults (the King view model's Default instance).
 const DEFAULTS = {
@@ -20,6 +20,12 @@ const DEFAULTS = {
   eyes: 1,
   earringGlow: 1,
   aura: 1,
+  windStrength: 1,
+  windSpeed: 1,
+  windDirection: 160,
+  gustiness: 0.6,
+  hairWind: 1,
+  clothWind: 1,
 };
 
 const canvas = document.getElementById("scene");

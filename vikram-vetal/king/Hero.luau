@@ -21,11 +21,16 @@
 -- stays slack; set it back to 0 to draw again. The shoot (pose 3) draws,
 -- looses and follows through by itself, and its release starts at the key
 -- where the string lets go.
+--
+-- The wind (`settings.windX/Z` its direction, `windStrength`, `windPhase`
+-- its accumulated phase, `gustiness`) blows his hair and cloth as painted
+-- in Blender (the body's _WIND attribute), `hairWind` and `clothWind` how
+-- much each takes it.
 
 local Hero = {}
 
 -- king.wgsl's uniforms: the host's part, then his, then the bones.
-Hero.BONES = 896
+Hero.BONES = 928
 Hero.MAX_JOINTS = 80
 Hero.UNIFORM_SIZE = Hero.BONES + Hero.MAX_JOINTS * 48
 local BONES = Hero.BONES
@@ -61,6 +66,13 @@ export type Settings = {
 	aura: number,
 	auraColor: Color,
 	release: number,
+	windX: number,
+	windZ: number,
+	windStrength: number,
+	windPhase: number,
+	gustiness: number,
+	hairWind: number,
+	clothWind: number,
 	paint: number,
 	bands: number,
 	-- Ink outline width, in pixels of the target.
@@ -519,6 +531,11 @@ function Hero.write(hero: Hero, u: buffer, s: Settings)
 		write4(u, 640, axis[1], axis[2], axis[3], axis[7])
 		write4(u, 656, axis[4], axis[5], axis[6], 0)
 	end
+	-- The wind in his hair and cloth.
+	local wl = math.sqrt(s.windX * s.windX + s.windZ * s.windZ)
+	local blowX, blowZ = if wl > 1e-6 then s.windX / wl else 1, if wl > 1e-6 then s.windZ / wl else 0
+	write4(u, 896, blowX, blowZ, clamp(s.windStrength, 0, 4), s.windPhase)
+	write4(u, 912, clamp(s.hairWind, 0, 3), clamp(s.clothWind, 0, 3), clamp(s.gustiness, 0, 1), 0)
 	-- Points along the bow, where they are now: each skinned by its bones
 	-- (as the GPU skins the bow) and placed with him.
 	local bs = hero.bowSamples
@@ -580,10 +597,11 @@ function Hero.pipelines(hero: Hero, shader: Shader, format: any, samples: number
 			},
 		},
 		{
-			stride = 16,
+			stride = 20,
 			attributes = {
 				{ format = 'float32x3', slot = 5, offset = 0 },
 				{ format = 'snorm8x4', slot = 6, offset = 12 },
+				{ format = 'unorm8x4', slot = 7, offset = 16 },
 			},
 		},
 	}
