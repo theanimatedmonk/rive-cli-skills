@@ -1,7 +1,7 @@
 // Vikram and Vetal preview: the night scene full-bleed, with sliders for the
 // camera (position and axes), the wind and the air. Each slider sets a
 // number on the Scene view model, which is bound to the Ruins node's inputs.
-const SRC = "vikram-vetal.riv?v=33";
+const SRC = "vikram-vetal.riv?v=34";
 
 // The file's defaults (the Scene view model's Default instance).
 const DEFAULTS = {

@@ -436,7 +436,8 @@
             </KeyedObject>
             <KeyedObject objectId="2:137" id="0:1758">
                 <KeyedProperty propertyKey="243" id="0:1759">
-                    <KeyFrameDouble value="2.2" frame="0" interpolationType="hold" id="0:1760"/>
+                    <KeyFrameDouble value="2.2" frame="0" interpolationType="linear" id="0:187715"/>
+                    <KeyFrameDouble value="3.2" frame="600" interpolationType="hold" id="0:187716"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:134" id="0:1761">
@@ -646,7 +647,9 @@
             </KeyedObject>
             <KeyedObject objectId="2:137" id="0:1855">
                 <KeyedProperty propertyKey="243" id="0:1856">
-                    <KeyFrameDouble value="2.2" frame="0" interpolationType="hold" id="0:1857"/>
+                    <KeyFrameDouble value="3.2" frame="0" interpolationType="hold" id="0:187717"/>
+                    <KeyFrameDouble value="3.2" frame="240" interpolationType="linear" id="0:187718"/>
+                    <KeyFrameDouble value="0" frame="300" interpolationType="hold" id="0:187719"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:134" id="0:1858">

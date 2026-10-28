@@ -826,6 +826,20 @@ fn fs_main(in: VertexOut, @builtin(front_facing) front: bool) -> FragOut {
         let grain = select(0.82 + 0.36 * noise3(p * 4.0), 0.7 + 0.6 * noise3(p * 3.0), foliage);
         albedo = in.paint.rgb * grain;
     }
+    // The path's edge: the green and the path's olive earth blend over a
+    // soft band (params.y, from the exporter), broken up by noise so it
+    // frays into the grass like worn ground.
+    if ((kind == GRASS_MESH || kind == ASH) && in.params.y > 0.0) {
+        let fray = (fbm3(p * vec3<f32>(0.9, 0.0, 0.9)) - 0.5) * 0.55 + (noise3(p * 5.0) - 0.5) * 0.2;
+        let earth = smoothstep(0.32, 0.68, in.params.y + fray);
+        let pathCol = vec3<f32>(0.15, 0.14, 0.075) * (0.8 + 0.4 * noise3(p * 3.0));
+        let greenCol = vec3<f32>(0.05, 0.072, 0.066) * (0.75 + 0.5 * noise3(p * 3.0));
+        if (kind == ASH) {
+            albedo = mix(greenCol, albedo, earth);
+        } else {
+            albedo = mix(albedo, pathCol, earth);
+        }
+    }
     if (kind == MOSS && noise3(p * vec3<f32>(14.0, 1.5, 14.0)) < 0.35) {
         // Gaps between the hanging strands.
         discard;

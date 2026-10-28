@@ -19,7 +19,9 @@
 #            rest pose (10 f32) | glows | 0...
 # Static vertices, 24 bytes:
 #   position f32x3 | normal snorm8x4 | extra unorm8x4 (wind weight, random,
-#   0, 0) | colour unorm8x4 (rgb, a = 1 when painted)
+#   path, 0; path on the terrain: 1 on the path, 0 off it, blending over a
+#   metre and a half either side of its edge) | colour unorm8x4 (rgb, a = 1
+#   when painted)
 # Templates (kinds 20-24) and instances (30-38) as in sheesupalgarh.
 # Kind 50 is the ground's height: count = N, an N x N grid of f32 heights
 # (row-major, z then x) over lo..hi (x, z), for whatever walks on it.
@@ -133,14 +135,36 @@ def unorm(x):
     return np.clip(np.round(np.asarray(x) * 255), 0, 255).astype(np.uint8)
 
 
-def static_bytes(pos, nrm, wind, seed, col):
+def static_bytes(pos, nrm, wind, seed, col, path=None):
     v = np.zeros(len(pos), dtype=[('p', '<f4', 3), ('n', 'i1', 4), ('e', 'u1', 4), ('c', 'u1', 4)])
     v['p'] = pos
     v['n'][:, :3] = snorm(nrm)
     v['e'][:, 0] = unorm(wind)
     v['e'][:, 1] = unorm(seed)
+    if path is not None:
+        v['e'][:, 2] = unorm(path)
     v['c'] = unorm(col)
     return v.tobytes()
+
+
+def path_weight(wp, on_path, reach=1.5):
+    """How much of the path each terrain vertex is: 1 a reach inside it, 0
+    a reach outside, 0.5 at its edge (distances across the ground), so the
+    path and the green blend over a soft band."""
+    w = np.zeros(len(wp))
+    xz = wp[:, [0, 2]]
+    inside, outside = xz[on_path], xz[~on_path]
+    if not len(inside) or not len(outside):
+        return on_path.astype(float)
+
+    def nearest(a, b):
+        d = np.full(len(a), np.inf)
+        for lo in range(0, len(b), 2048):
+            d = np.minimum(d, np.linalg.norm(a[:, None, :] - b[None, lo:lo + 2048, :], axis=2).min(1))
+        return d
+    w[~on_path] = 0.5 * np.clip(1 - nearest(outside, inside) / reach, 0, 1)
+    w[on_path] = 0.5 + 0.5 * np.clip(nearest(inside, outside) / reach, 0, 1)
+    return w
 
 
 sections = []
@@ -220,6 +244,14 @@ for name, mi, M in placed:
             tri_mat = np.full(len(idx), MATERIALS[mname])
         else:
             tri_mat = classify(name, col[idx, :3].mean(1), wp, idx)
+        path = None
+        if name.startswith('Terrain'):
+            # The path is the ash; its edge blends into the green.
+            on_path = np.zeros(len(wp), bool)
+            on_path[np.unique(idx[tri_mat == ASH])] = True
+            # (A vertex on both sides of the edge counts as off it.)
+            on_path[np.unique(idx[tri_mat != ASH])] = False
+            path = path_weight(wp, on_path)
         if name.startswith('Terrain'):
             tri = wp[idx]
             cr = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
@@ -277,7 +309,7 @@ for name, mi, M in placed:
                 if cur is None:
                     cur = [[], [], 0, 0]
                     chunks.append(cur)
-                cur[0].append(static_bytes(sp[pu], sn[pu], np.clip(wind[pu], 0, 1), seed, sc[pu]))
+                cur[0].append(static_bytes(sp[pu], sn[pu], np.clip(wind[pu], 0, 1), seed, sc[pu], None if path is None else path[used][pu]))
                 cur[1].append((pr[part] + cur[2]).astype('<u2').tobytes())
                 cur[2] += len(pu)
                 cur[3] += len(part)
