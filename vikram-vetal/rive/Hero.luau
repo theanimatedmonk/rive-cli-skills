@@ -3,7 +3,7 @@
 --
 --   local Hero = require('Hero')
 --   local hero = Hero.load(context, 'king')         -- king.bin
---   Hero.advance(hero, dt, pose, speed)              -- 0 idle, 1 walk, 2 draw
+--   Hero.advance(hero, dt, pose, speed)              -- 0 idle, 1 walk, 2 draw, 3 shoot
 --   Hero.write(hero, u, settings)                    -- his part of the uniforms
 --   Hero.pipelines(hero, shader, format, samples)    -- king.wgsl
 --   Hero.drawShadow(hero, pass, ubo, shadowView, shadowSampler)
@@ -18,7 +18,9 @@
 -- The release (`settings.release`, 0-1 over about 3 s): the string snaps
 -- home from full draw and shivers still, a flash at the grip, and rings of
 -- gold ripple out from the bow in three planes. Hold it at 1 and the string
--- stays slack; set it back to 0 to draw again.
+-- stays slack; set it back to 0 to draw again. The shoot (pose 3) draws,
+-- looses and follows through by itself, and its release starts at the key
+-- where the string lets go.
 
 local Hero = {}
 
@@ -39,9 +41,11 @@ type Loop = {
 	frames: number,
 	fps: number,
 	-- The bow's shape key weight at each key, and (for the draw) the first
-	-- key at full draw, where the hold begins.
+	-- key at full draw, where the hold begins; (for the shoot) the first key
+	-- after it where the string has let go, or -1.
 	weights: { number },
 	holdFrom: number,
+	letGo: number,
 }
 
 export type Settings = {
@@ -183,7 +187,7 @@ function Hero.load(context: Context, asset: string): (Hero?, string?)
 	local function loopAt(index: number): Loop
 		local loop = loops[index]
 		if loop == nil then
-			loop = { data = data, offset = 0, frames = 0, fps = 24, weights = {}, holdFrom = 0 }
+			loop = { data = data, offset = 0, frames = 0, fps = 24, weights = {}, holdFrom = 0, letGo = -1 }
 			loops[index] = loop
 		end
 		return loop
@@ -216,6 +220,12 @@ function Hero.load(context: Context, asset: string): (Hero?, string?)
 			for k = 1, a do
 				if loop.weights[k] >= most * 0.98 then
 					loop.holdFrom = k - 1
+					break
+				end
+			end
+			for k = loop.holdFrom + 1, a do
+				if most > 0 and loop.weights[k] < most * 0.5 then
+					loop.letGo = k - 1
 					break
 				end
 			end
@@ -259,8 +269,8 @@ function Hero.load(context: Context, asset: string): (Hero?, string?)
 	end
 	local hero: Hero = {
 		loops = loops,
-		loopTimes = { 0, 0, 0 },
-		mixes = { 1, 0, 0 },
+		loopTimes = { 0, 0, 0, 0 },
+		mixes = { 1, 0, 0, 0 },
 		lastPose = 0,
 		pull = 0,
 		jointCount = math.min(buffer.readu32(data, 12), Hero.MAX_JOINTS),
@@ -342,18 +352,19 @@ end
 -- Time
 
 -- From one pose into the next over about half a second (0 idle, 1 walk, 2
--- draw); the draw starts from its beginning each time.
+-- draw, 3 shoot); the draw and the shoot start from the beginning each time.
 function Hero.advance(hero: Hero, dt: number, pose: number, speed: number)
-	local p = clamp(math.floor(pose + 0.5), 0, 2)
+	local count = #hero.loops
+	local p = clamp(math.floor(pose + 0.5), 0, count - 1)
 	if p ~= hero.lastPose then
-		if p == 2 then
-			hero.loopTimes[3] = 0
+		if p >= 2 then
+			hero.loopTimes[p + 1] = 0
 		end
 		hero.lastPose = p
 	end
 	local k = 1 - math.exp(-dt * 5)
 	local s = clamp(speed, 0, 3)
-	for i = 1, 3 do
+	for i = 1, count do
 		hero.loopTimes[i] += dt * s
 		local target = if i == p + 1 then 1 else 0
 		hero.mixes[i] += (target - hero.mixes[i]) * k
@@ -363,7 +374,7 @@ function Hero.advance(hero: Hero, dt: number, pose: number, speed: number)
 	end
 end
 
--- How much of each pose he is in now: idle, walk, draw.
+-- How much of each pose he is in now: idle, walk, draw, shoot.
 function Hero.mix(hero: Hero, pose: number): number
 	return hero.mixes[pose + 1] or 0
 end
@@ -373,12 +384,13 @@ end
 
 -- Where a loop is at `time`: its two nearest keys and the blend between
 -- them. Idle and walk loop; the draw plays once, then rocks back and forth
--- over its held part (full draw), so the hold never jumps.
-local function keysAt(loop: Loop, time: number, once: boolean): (number, number, number)
+-- over its held part (full draw), so the hold never jumps; the shoot plays
+-- once and holds its last key.
+local function keysAt(loop: Loop, time: number, once: boolean, rock: boolean): (number, number, number)
 	local span = loop.frames - 1
 	local f = time * loop.fps
 	if once then
-		if f > span then
+		if rock and f > span then
 			local hold = math.max(span - loop.holdFrom, 1)
 			local q = (f - span) % (2 * hold)
 			f = if q < hold then span - q else loop.holdFrom + (q - hold)
@@ -402,7 +414,7 @@ local function writeBones(hero: Hero, u: buffer)
 	for li, loop in hero.loops do
 		local w = hero.mixes[li]
 		if w > 0.0005 then
-			local i0, i1, k = keysAt(loop, hero.loopTimes[li], li == 3)
+			local i0, i1, k = keysAt(loop, hero.loopTimes[li], li >= 3, li == 3)
 			local wa, wb = loop.weights[i0 + 1] or 0, loop.weights[i1 + 1] or 0
 			pull += (wa + (wb - wa) * k) * w
 			local data = loop.data
@@ -439,8 +451,16 @@ function Hero.write(hero: Hero, u: buffer, s: Settings)
 	end
 	writeBones(hero, u)
 
-	-- The release: the string snaps home and shivers still.
+	-- The release: the string snaps home and shivers still. In the shoot it
+	-- comes when the clip lets go of the string.
 	local release = clamp(s.release, 0, 1)
+	local shoot = hero.loops[4]
+	if shoot and shoot.letGo >= 0 and hero.mixes[4] > 0.5 then
+		local since = hero.loopTimes[4] - shoot.letGo / shoot.fps
+		if since >= 0 then
+			release = math.max(release, math.min(since / 3, 1))
+		end
+	end
 	local snap = if release > 0 then math.min(release / 0.02, 1) else 0
 	local secs = release * 3
 	local shiver = math.sin(secs * 2 * math.pi * 7) * math.exp(-secs * 4.5) * 0.35
@@ -486,7 +506,7 @@ function Hero.write(hero: Hero, u: buffer, s: Settings)
 	-- The aura: it kindles as he raises the bow and burns at full draw; at
 	-- the release it flares, then fades over the release.
 	local amount = clamp(s.aura, 0, 2)
-	local kindled = 0.15 * hero.mixes[3] + 0.85 * pull
+	local kindled = 0.15 * (hero.mixes[3] + (hero.mixes[4] or 0)) + 0.85 * pull
 	if release > 0 then
 		kindled = math.max(kindled * (1 - snap), (1 - release) ^ 1.5 * math.max(pull, 0.6))
 	end

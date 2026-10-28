@@ -12,10 +12,11 @@
 -- three loops baked to skin matrices. This script draws his stage: the sky,
 -- the ground, fireflies, the camera and the light.
 --
--- Pose: `pose` (0 idle, 1 walking, 2 drawing his bow; he eases from one to
--- the next), `speed`. Walking is in place: the ground scrolls under him.
--- Drawing plays once (he raises the bow and draws the string) and then
--- holds at full draw, trembling, until the pose changes.
+-- Pose: `pose` (0 idle, 1 walking, 2 drawing his bow, 3 shooting; he eases
+-- from one to the next), `speed`. Walking is in place: the ground scrolls
+-- under him. Drawing plays once (he raises the bow and draws the string)
+-- and then holds at full draw, trembling, until the pose changes. Shooting
+-- plays once: he draws, looses and follows through.
 -- Bow: as the string draws, the bow's aura kindles, as the Pinaka's: a
 -- breathing radiance, god rays, a halo along the arc, divine fire, sparks,
 -- glints on the string, and gold light on him. `aura` (0-2) scales it,
@@ -156,7 +157,7 @@ local DEPTH_FORMAT: 'depth32float' = 'depth32float'
 local MAX_FIREFLIES = 200
 -- His walk covers this much ground a second (at speed 1), so his planted
 -- foot holds still on the scrolling earth.
-local WALK_PACE = 0.85
+local WALK_PACE = 0.9
 -- The camera looks at his middle from this far (times the zoom); zoomed
 -- in, it rises to his face.
 local TARGET_Y = 1.02
@@ -280,7 +281,7 @@ function advance(self: King, seconds: number): boolean
 		Hero.advance(hero, dt, self.pose, self.speed)
 		self.spin += dt * self.autoTurn
 		-- The ground scrolls the way he faces, at his pace.
-		local facing = math.rad(self.turn + self.navTurn + self.spin + DRAW_TURN * Hero.mix(hero, 2))
+		local facing = math.rad(self.turn + self.navTurn + self.spin + DRAW_TURN * (Hero.mix(hero, 2) + Hero.mix(hero, 3)))
 		local pace = WALK_PACE * clamp(self.speed, 0, 3) * Hero.mix(hero, 1) * dt
 		self.scrollX += math.sin(facing) * pace
 		self.scrollZ += math.cos(facing) * pace
@@ -403,7 +404,7 @@ local function frameUniforms(self: King, hero: Hero.Hero)
 	-- The camera: in front of him (+Z), looking at his chest, tilted.
 	-- Drawing, the view swings round to see the bow broadside and steps
 	-- back to fit it.
-	local drawing = Hero.mix(hero, 2)
+	local drawing = Hero.mix(hero, 2) + Hero.mix(hero, 3)
 	local zoom = clamp(self.zoom, 0.2, 4) * self.navZoom * (1 + 0.18 * drawing)
 	local dist = DISTANCE * zoom
 	local pitch = math.rad(clamp(self.tilt + self.navTilt, -30, 60))

@@ -1,7 +1,7 @@
 // King Vikram preview: the hero on his own, full-bleed, with his pose (idle,
 // walking or drawing his bow), the light and the 2D-3D style as controls. Each control sets
 // a number on the King view model, bound to the King node's inputs.
-const SRC = "vikram-king.riv?v=14";
+const SRC = "vikram-king.riv?v=15";
 
 // The file's defaults (the King view model's Default instance).
 const DEFAULTS = {
@@ -57,7 +57,8 @@ function setNumber(name, value) {
   }
 }
 
-// Idle, walking or drawing his bow: he eases from one to the next.
+// Idle, walking, drawing his bow or shooting: he eases from one to the next.
+// The shoot plays once; pressed again, it starts over.
 const poses = document.querySelectorAll(".pose");
 let pose = 0;
 function setPose(value) {
@@ -72,7 +73,13 @@ function setPose(value) {
 for (const button of poses) {
   button.addEventListener("click", () => {
     setNumber("release", 0);
-    setPose(Number(button.dataset.pose));
+    const value = Number(button.dataset.pose);
+    if (value === 3 && pose === 3) {
+      setNumber("pose", 0);
+      setTimeout(() => setPose(3), 60);
+      return;
+    }
+    setPose(value);
   });
 }
 

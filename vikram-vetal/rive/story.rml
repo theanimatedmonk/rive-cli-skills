@@ -284,12 +284,12 @@
             </KeyedObject>
             <KeyedObject objectId="2:165" id="0:1669">
                 <KeyedProperty propertyKey="243" id="0:1670">
-                    <KeyFrameDouble value="-9.5" frame="0" interpolationType="hold" id="0:1671"/>
+                    <KeyFrameDouble value="-14.71" frame="0" interpolationType="hold" id="0:187674"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:166" id="0:1672">
                 <KeyedProperty propertyKey="243" id="0:1673">
-                    <KeyFrameDouble value="9" frame="0" interpolationType="hold" id="0:1674"/>
+                    <KeyFrameDouble value="13.35" frame="0" interpolationType="hold" id="0:187706"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:167" id="0:1675">
@@ -336,10 +336,10 @@
             </KeyedObject>
             <KeyedObject objectId="2:158" id="0:1699">
                 <KeyedProperty propertyKey="243" id="0:1700">
-                    <KeyFrameDouble value="-3.775" frame="0" interpolationType="cubic" id="0:1701">
+                    <KeyFrameDouble value="-6.38" frame="0" interpolationType="cubic" id="0:1701">
                         <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1702"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="-9.5" frame="200" interpolationType="cubic" id="0:1703">
+                    <KeyFrameDouble value="-14.71" frame="200" interpolationType="cubic" id="0:1703">
                         <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1704"/>
                     </KeyFrameDouble>
                 </KeyedProperty>
@@ -356,10 +356,10 @@
             </KeyedObject>
             <KeyedObject objectId="2:160" id="0:1711">
                 <KeyedProperty propertyKey="243" id="0:1712">
-                    <KeyFrameDouble value="2.035" frame="0" interpolationType="cubic" id="0:1713">
+                    <KeyFrameDouble value="4.21" frame="0" interpolationType="cubic" id="0:1713">
                         <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1714"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="9" frame="200" interpolationType="cubic" id="0:1715">
+                    <KeyFrameDouble value="13.35" frame="200" interpolationType="cubic" id="0:1715">
                         <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1716"/>
                     </KeyFrameDouble>
                 </KeyedProperty>
@@ -379,27 +379,28 @@
             </KeyedObject>
             <KeyedObject objectId="2:162" id="0:1725">
                 <KeyedProperty propertyKey="243" id="0:1726">
-                    <KeyFrameDouble value="12" frame="0" interpolationType="cubic" id="0:1727">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1728"/>
+                    <KeyFrameDouble value="2" interpolationType="2" id="0:1727">
+                        <CubicEaseInterpolator id="0:1728"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="6" frame="220" interpolationType="cubic" id="0:1729">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1730"/>
+                    <KeyFrameDouble value="2" interpolationType="2" frame="220" id="0:1729">
+                        <CubicEaseInterpolator id="0:1730"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="5.2" frame="840" interpolationType="cubic" id="0:1731">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1732"/>
+                    <KeyFrameDouble value="2" interpolationType="2" frame="840" id="0:1731">
+                        <CubicEaseInterpolator id="0:1732"/>
                     </KeyFrameDouble>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:163" id="0:1733">
                 <KeyedProperty propertyKey="243" id="0:1734">
-                    <KeyFrameDouble value="2.2" frame="0" interpolationType="cubic" id="0:1735">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1736"/>
+                    <KeyFrameDouble value="1" interpolationType="2" id="0:1735">
+                        <CubicEaseInterpolator id="0:1736"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="0.7" frame="220" interpolationType="cubic" id="0:1737">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1738"/>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="220" id="0:1737">
+                        <CubicEaseInterpolator id="0:1738"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="0.5" frame="840" interpolationType="cubic" id="0:1739">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1740"/>
+                    <KeyFrameDouble value="-0.5" interpolationType="1" frame="343" id="0:187570"/>
+                    <KeyFrameDouble value="1" interpolationType="2" frame="840" id="0:1739">
+                        <CubicEaseInterpolator id="0:1740"/>
                     </KeyFrameDouble>
                 </KeyedProperty>
             </KeyedObject>
@@ -453,16 +454,70 @@
             </KeyedObject>
             <KeyedObject objectId="2:165" id="0:1770">
                 <KeyedProperty propertyKey="243" id="0:1771">
-                    <KeyFrameDouble value="-9.5" frame="0" interpolationType="hold" id="0:1772"/>
-                    <KeyFrameDouble value="-9.5" frame="60" interpolationType="linear" id="0:1773"/>
-                    <KeyFrameDouble value="-3.35" frame="742" interpolationType="hold" id="0:1774"/>
+                    <KeyFrameDouble value="-14.71" frame="0" interpolationType="hold" id="0:187644"/>
+                    <KeyFrameDouble value="-14.71" frame="60" interpolationType="linear" id="0:187645"/>
+                    <KeyFrameDouble value="-14.503" frame="80" interpolationType="linear" id="0:187646"/>
+                    <KeyFrameDouble value="-14.324" frame="100" interpolationType="linear" id="0:187647"/>
+                    <KeyFrameDouble value="-14.156" frame="120" interpolationType="linear" id="0:187648"/>
+                    <KeyFrameDouble value="-13.972" frame="140" interpolationType="linear" id="0:187649"/>
+                    <KeyFrameDouble value="-13.747" frame="160" interpolationType="linear" id="0:187650"/>
+                    <KeyFrameDouble value="-13.485" frame="180" interpolationType="linear" id="0:187651"/>
+                    <KeyFrameDouble value="-13.202" frame="200" interpolationType="linear" id="0:187652"/>
+                    <KeyFrameDouble value="-12.91" frame="220" interpolationType="linear" id="0:187653"/>
+                    <KeyFrameDouble value="-12.615" frame="240" interpolationType="linear" id="0:187654"/>
+                    <KeyFrameDouble value="-12.318" frame="260" interpolationType="linear" id="0:187655"/>
+                    <KeyFrameDouble value="-12.021" frame="280" interpolationType="linear" id="0:187656"/>
+                    <KeyFrameDouble value="-11.723" frame="300" interpolationType="linear" id="0:187657"/>
+                    <KeyFrameDouble value="-11.427" frame="320" interpolationType="linear" id="0:187658"/>
+                    <KeyFrameDouble value="-11.133" frame="340" interpolationType="linear" id="0:187659"/>
+                    <KeyFrameDouble value="-10.844" frame="360" interpolationType="linear" id="0:187660"/>
+                    <KeyFrameDouble value="-10.559" frame="380" interpolationType="linear" id="0:187661"/>
+                    <KeyFrameDouble value="-10.281" frame="400" interpolationType="linear" id="0:187662"/>
+                    <KeyFrameDouble value="-10.008" frame="420" interpolationType="linear" id="0:187663"/>
+                    <KeyFrameDouble value="-9.739" frame="440" interpolationType="linear" id="0:187664"/>
+                    <KeyFrameDouble value="-9.469" frame="460" interpolationType="linear" id="0:187665"/>
+                    <KeyFrameDouble value="-9.193" frame="480" interpolationType="linear" id="0:187666"/>
+                    <KeyFrameDouble value="-8.912" frame="500" interpolationType="linear" id="0:187667"/>
+                    <KeyFrameDouble value="-8.632" frame="520" interpolationType="linear" id="0:187668"/>
+                    <KeyFrameDouble value="-8.356" frame="540" interpolationType="linear" id="0:187669"/>
+                    <KeyFrameDouble value="-8.089" frame="560" interpolationType="linear" id="0:187670"/>
+                    <KeyFrameDouble value="-7.835" frame="580" interpolationType="linear" id="0:187671"/>
+                    <KeyFrameDouble value="-7.597" frame="600" interpolationType="linear" id="0:187672"/>
+                    <KeyFrameDouble value="-7.43" frame="615" interpolationType="hold" id="0:187673"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:166" id="0:1775">
                 <KeyedProperty propertyKey="243" id="0:1776">
-                    <KeyFrameDouble value="9" frame="0" interpolationType="hold" id="0:1777"/>
-                    <KeyFrameDouble value="9" frame="60" interpolationType="linear" id="0:1778"/>
-                    <KeyFrameDouble value="1.55" frame="742" interpolationType="hold" id="0:1779"/>
+                    <KeyFrameDouble value="13.35" frame="0" interpolationType="hold" id="0:187676"/>
+                    <KeyFrameDouble value="13.35" frame="60" interpolationType="linear" id="0:187677"/>
+                    <KeyFrameDouble value="13.133" frame="80" interpolationType="linear" id="0:187678"/>
+                    <KeyFrameDouble value="12.893" frame="100" interpolationType="linear" id="0:187679"/>
+                    <KeyFrameDouble value="12.644" frame="120" interpolationType="linear" id="0:187680"/>
+                    <KeyFrameDouble value="12.408" frame="140" interpolationType="linear" id="0:187681"/>
+                    <KeyFrameDouble value="12.21" frame="160" interpolationType="linear" id="0:187682"/>
+                    <KeyFrameDouble value="12.065" frame="180" interpolationType="linear" id="0:187683"/>
+                    <KeyFrameDouble value="11.968" frame="200" interpolationType="linear" id="0:187684"/>
+                    <KeyFrameDouble value="11.9" frame="220" interpolationType="linear" id="0:187685"/>
+                    <KeyFrameDouble value="11.847" frame="240" interpolationType="linear" id="0:187686"/>
+                    <KeyFrameDouble value="11.803" frame="260" interpolationType="linear" id="0:187687"/>
+                    <KeyFrameDouble value="11.763" frame="280" interpolationType="linear" id="0:187688"/>
+                    <KeyFrameDouble value="11.723" frame="300" interpolationType="linear" id="0:187689"/>
+                    <KeyFrameDouble value="11.677" frame="320" interpolationType="linear" id="0:187690"/>
+                    <KeyFrameDouble value="11.619" frame="340" interpolationType="linear" id="0:187691"/>
+                    <KeyFrameDouble value="11.539" frame="360" interpolationType="linear" id="0:187692"/>
+                    <KeyFrameDouble value="11.444" frame="380" interpolationType="linear" id="0:187693"/>
+                    <KeyFrameDouble value="11.333" frame="400" interpolationType="linear" id="0:187694"/>
+                    <KeyFrameDouble value="11.208" frame="420" interpolationType="linear" id="0:187695"/>
+                    <KeyFrameDouble value="11.076" frame="440" interpolationType="linear" id="0:187696"/>
+                    <KeyFrameDouble value="10.945" frame="460" interpolationType="linear" id="0:187697"/>
+                    <KeyFrameDouble value="10.829" frame="480" interpolationType="linear" id="0:187698"/>
+                    <KeyFrameDouble value="10.724" frame="500" interpolationType="linear" id="0:187699"/>
+                    <KeyFrameDouble value="10.617" frame="520" interpolationType="linear" id="0:187700"/>
+                    <KeyFrameDouble value="10.499" frame="540" interpolationType="linear" id="0:187701"/>
+                    <KeyFrameDouble value="10.362" frame="560" interpolationType="linear" id="0:187702"/>
+                    <KeyFrameDouble value="10.202" frame="580" interpolationType="linear" id="0:187703"/>
+                    <KeyFrameDouble value="10.021" frame="600" interpolationType="linear" id="0:187704"/>
+                    <KeyFrameDouble value="9.87" frame="615" interpolationType="hold" id="0:187705"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:167" id="0:1780">
@@ -472,9 +527,9 @@
             </KeyedObject>
             <KeyedObject objectId="2:168" id="0:1783">
                 <KeyedProperty propertyKey="243" id="0:1784">
-                    <KeyFrameDouble frame="0" interpolationType="hold" id="0:1785"/>
-                    <KeyFrameDouble value="1" frame="40" interpolationType="hold" id="0:1786"/>
-                    <KeyFrameDouble frame="742" interpolationType="hold" id="0:1787"/>
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:187708"/>
+                    <KeyFrameDouble value="1" frame="40" interpolationType="hold" id="0:187709"/>
+                    <KeyFrameDouble value="0" frame="615" interpolationType="hold" id="0:187710"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:169" id="0:1788">
@@ -525,16 +580,16 @@
             </KeyedObject>
             <KeyedObject objectId="2:161" id="0:1815">
                 <KeyedProperty propertyKey="243" id="0:1816">
-                    <KeyFrameDouble value="400" frame="0" interpolationType="cubic" id="0:1817">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1818"/>
+                    <KeyFrameDouble value="229" interpolationType="2" id="0:1817">
+                        <CubicEaseInterpolator id="0:1818"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="430" frame="200" interpolationType="cubic" id="0:1819">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1820"/>
+                    <KeyFrameDouble value="259" interpolationType="2" frame="200" id="0:1819">
+                        <CubicEaseInterpolator id="0:1820"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="432" frame="250" interpolationType="cubic" id="0:1821">
-                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1822"/>
+                    <KeyFrameDouble value="331" interpolationType="2" frame="250" id="0:1821">
+                        <CubicEaseInterpolator id="0:1822"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="330" frame="620" interpolationType="hold" id="0:1823"/>
+                    <KeyFrameDouble value="159" frame="620" id="0:1823"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:162" id="0:1824">
@@ -629,12 +684,12 @@
             </KeyedObject>
             <KeyedObject objectId="2:165" id="0:1881">
                 <KeyedProperty propertyKey="243" id="0:1882">
-                    <KeyFrameDouble value="-3.35" frame="0" interpolationType="hold" id="0:1883"/>
+                    <KeyFrameDouble value="-7.43" frame="0" interpolationType="hold" id="0:187675"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:166" id="0:1884">
                 <KeyedProperty propertyKey="243" id="0:1885">
-                    <KeyFrameDouble value="1.55" frame="0" interpolationType="hold" id="0:1886"/>
+                    <KeyFrameDouble value="9.87" frame="0" interpolationType="hold" id="0:187707"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:167" id="0:1887">
@@ -642,21 +697,19 @@
                     <KeyFrameDouble frame="0" interpolationType="cubic" id="0:1889">
                         <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" id="0:1890"/>
                     </KeyFrameDouble>
-                    <KeyFrameDouble value="19" frame="90" interpolationType="hold" id="0:1891"/>
+                    <KeyFrameDouble value="38" frame="90" interpolationType="hold" id="0:1891"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:168" id="0:1892">
                 <KeyedProperty propertyKey="243" id="0:1893">
-                    <KeyFrameDouble value="2" frame="0" interpolationType="hold" id="0:1894"/>
-                    <KeyFrameDouble frame="480" interpolationType="hold" id="0:1895"/>
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:187711"/>
+                    <KeyFrameDouble value="3" frame="78" interpolationType="hold" id="0:187712"/>
+                    <KeyFrameDouble value="0" frame="420" interpolationType="hold" id="0:187713"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:169" id="0:1896">
                 <KeyedProperty propertyKey="243" id="0:1897">
-                    <KeyFrameDouble frame="0" interpolationType="hold" id="0:1898"/>
-                    <KeyFrameDouble frame="240" interpolationType="linear" id="0:1899"/>
-                    <KeyFrameDouble value="1" frame="420" interpolationType="hold" id="0:1900"/>
-                    <KeyFrameDouble frame="560" interpolationType="hold" id="0:1901"/>
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:187714"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="2:170" id="0:1902">

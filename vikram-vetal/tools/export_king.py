@@ -6,7 +6,8 @@
 # The GLB is his skinned body (VKK_Body_LP) with a painted texture set (base
 # colour, normal, roughness/metal), his bow (VKK_Bow: limbs, gold fittings
 # and the string, on bow bones of the same rig, with a shape key for the
-# drawn string) and three in-place loops, VKK_Idle, VKK_Walk and VKK_Draw.
+# drawn string) and four in-place clips, VKK_Idle, VKK_Walk, VKK_Draw and
+# VKK_Shoot (the draw, the loose and the follow-through, played once).
 # The skinning is baked here: for every key of each loop, each bone's skin
 # matrix (its posed world matrix times its inverse bind), so the script only
 # blends matrices and the GPU skins. The rig may be placed anywhere in the
@@ -18,7 +19,7 @@
 #            c f32, d f32, e u32
 #     1  vertices      a = count
 #     2  indices u16   a = count
-#     3  a loop        a = frames, b = loop index (0 idle, 1 walk, 2 draw),
+#     3  a loop        a = frames, b = loop index (0 idle, 1 walk, 2 draw, 3 shoot),
 #                      c = keys per second; per frame, per joint, the skin
 #                      matrix's top three rows (12 f32)
 #     5  shape key     per vertex, 16 bytes: position delta f32x3, normal
@@ -50,7 +51,7 @@ from PIL import Image
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else 'Vikram_King.glb'
 OUT = sys.argv[2] if len(sys.argv) > 2 else 'king.bin'
-LOOPS = ['VKK_Idle', 'VKK_Walk', 'VKK_Draw']
+LOOPS = ['VKK_Idle', 'VKK_Walk', 'VKK_Draw', 'VKK_Shoot']
 BOW_PARTS = {'VKK_BowLimb': 0, 'VKK_BowGold': 1, 'VKK_BowString': 2}
 BOW_SAMPLES = 13
 # Where his face is, in bind pose (metres; measured off the textured head).
