@@ -1,0 +1,198 @@
+<Rive version="1" kind="fragment">
+    <!-- The Vetal, on his own: the rigged, vertex-painted GLB drawn in the
+         night scene's painted 2D-3D look by the Vetal node (see Vetal.luau),
+         hanging upside down from the branch. A component of its own, to be
+         placed in the scene later. -->
+    <Artboard defaultStateMachineId="0:100" viewModelId="0:500" viewModelInstanceId="0:520" width="1280" height="720" styleId="0:2" name="Vetal" id="0:1">
+        <LayoutComponentStyle name="Vetal Style" id="0:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="Vetal" id="0:10">
+            <ScriptInputString propertyValue="vetal" name="asset" id="0:201"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="0:202"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="0:203"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="0:204"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="0:205"/>
+            <ScriptInputNumber propertyValue="1" name="rim" id="0:206"/>
+            <ScriptInputNumber propertyValue="0.025" name="fireflySize" id="0:207"/>
+            <ScriptInputNumber propertyValue="0.8" name="bloom" id="0:208"/>
+            <ScriptInputNumber propertyValue="0.25" name="glow" id="0:209"/>
+            <ScriptInputNumber propertyValue="0.4" name="depthOfField" id="0:210"/>
+            <ScriptInputNumber propertyValue="1.25" name="exposure" id="0:211"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="0:212"/>
+            <ScriptInputBoolean propertyValue="true" name="navigation" id="0:213"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="moonColor" id="0:214"/>
+            <ScriptInputColor propertyValue="FFFFAA5F" name="fireColor" id="0:215"/>
+            <ScriptInputColor propertyValue="FF100A18" name="inkColor" id="0:216"/>
+            <ScriptInputColor propertyValue="FF463C82" name="shadowColor" id="0:217"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="0:218"/>
+            <ScriptInputColor propertyValue="FF18223E" name="horizonColor" id="0:219"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="0:220"/>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="0:221"/>
+            <ScriptInputColor propertyValue="FFFF3C19" name="eyeColor" id="0:222"/>
+            <ScriptInputNumber name="pose" id="0:223"/>
+            <ScriptInputNumber propertyValue="1" name="speed" id="0:224">
+                <DataBindContext sourcePathIds="0:500-0:601" propertyKey="243" id="0:225"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="20" name="turn" id="0:226">
+                <DataBindContext sourcePathIds="0:500-0:602" propertyKey="243" id="0:227"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="autoTurn" id="0:228">
+                <DataBindContext sourcePathIds="0:500-0:603" propertyKey="243" id="0:229"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="4" name="tilt" id="0:230">
+                <DataBindContext sourcePathIds="0:500-0:604" propertyKey="243" id="0:231"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="0:232">
+                <DataBindContext sourcePathIds="0:500-0:605" propertyKey="243" id="0:233"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.45" name="moon" id="0:234">
+                <DataBindContext sourcePathIds="0:500-0:606" propertyKey="243" id="0:235"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="fire" id="0:236">
+                <DataBindContext sourcePathIds="0:500-0:607" propertyKey="243" id="0:237"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.75" name="paint" id="0:238">
+                <DataBindContext sourcePathIds="0:500-0:608" propertyKey="243" id="0:239"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="3" name="bands" id="0:240">
+                <DataBindContext sourcePathIds="0:500-0:609" propertyKey="243" id="0:241"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="2.2" name="outline" id="0:242">
+                <DataBindContext sourcePathIds="0:500-0:610" propertyKey="243" id="0:243"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="inkDetail" id="0:244">
+                <DataBindContext sourcePathIds="0:500-0:611" propertyKey="243" id="0:245"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.5" name="hatching" id="0:246">
+                <DataBindContext sourcePathIds="0:500-0:612" propertyKey="243" id="0:247"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="40" name="fireflies" id="0:248">
+                <DataBindContext sourcePathIds="0:500-0:613" propertyKey="243" id="0:249"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="mist" id="0:250">
+                <DataBindContext sourcePathIds="0:500-0:614" propertyKey="243" id="0:251"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="resetView" id="0:252">
+                <DataBindContext sourcePathIds="0:500-0:615" propertyKey="243" id="0:253"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragX" id="0:254">
+                <DataBindContext sourcePathIds="0:500-0:616" propertyKey="243" id="0:255"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="0:256">
+                <DataBindContext sourcePathIds="0:500-0:617" propertyKey="243" id="0:257"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1.5" name="hang" id="0:258">
+                <DataBindContext sourcePathIds="0:500-0:618" propertyKey="243" id="0:259"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1.5" name="eyeGlow" id="0:260">
+                <DataBindContext sourcePathIds="0:500-0:619" propertyKey="243" id="0:261"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="spirit" id="0:262">
+                <DataBindContext sourcePathIds="0:500-0:620" propertyKey="243" id="0:263"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="0:264">
+                <DataBindContext sourcePathIds="0:500-0:621" propertyKey="243" id="0:265"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="0:266">
+                <DataBindContext sourcePathIds="0:500-0:622" propertyKey="243" id="0:267"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="160" name="windDirection" id="0:268">
+                <DataBindContext sourcePathIds="0:500-0:623" propertyKey="243" id="0:269"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="0:270">
+                <DataBindContext sourcePathIds="0:500-0:624" propertyKey="243" id="0:271"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="hairWind" id="0:272">
+                <DataBindContext sourcePathIds="0:500-0:625" propertyKey="243" id="0:273"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="clothWind" id="0:274">
+                <DataBindContext sourcePathIds="0:500-0:626" propertyKey="243" id="0:275"/>
+            </ScriptInputNumber>
+            <ScriptInputColor propertyValue="FFF2F6FF" name="spiritColor" id="0:276">
+                <DataBindContext sourcePathIds="0:500-0:627" propertyKey="836" id="0:277"/>
+            </ScriptInputColor>
+        </ScriptedDrawable>
+        <Fill name="Night" id="0:3">
+            <SolidColor colorValue="FF060A1E" name="Color" id="0:4"/>
+        </Fill>
+        <StateMachine name="Vetal" id="0:100">
+            <StateMachineLayer name="Night" id="0:101">
+                <AnyState x="200" y="-120" id="0:102"/>
+                <ExitState x="400" y="-120" id="0:103"/>
+                <EntryState id="0:104">
+                    <StateTransition stateToId="0:105" id="0:106"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:110" id="0:105"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation duration="60" loopValue="1" name="Night" id="0:110"/>
+    </Artboard>
+
+    <!-- What the page sets: the view, the light, the style, the spirit and
+         the wind. -->
+    <ViewModel name="Vetal" id="0:500">
+        <ViewModelPropertyNumber name="speed" id="0:601"/>
+        <ViewModelPropertyNumber name="turn" id="0:602"/>
+        <ViewModelPropertyNumber name="autoTurn" id="0:603"/>
+        <ViewModelPropertyNumber name="tilt" id="0:604"/>
+        <ViewModelPropertyNumber name="zoom" id="0:605"/>
+        <ViewModelPropertyNumber name="moon" id="0:606"/>
+        <ViewModelPropertyNumber name="fire" id="0:607"/>
+        <ViewModelPropertyNumber name="paint" id="0:608"/>
+        <ViewModelPropertyNumber name="bands" id="0:609"/>
+        <ViewModelPropertyNumber name="outline" id="0:610"/>
+        <ViewModelPropertyNumber name="inkDetail" id="0:611"/>
+        <ViewModelPropertyNumber name="hatching" id="0:612"/>
+        <ViewModelPropertyNumber name="fireflies" id="0:613"/>
+        <ViewModelPropertyNumber name="mist" id="0:614"/>
+        <ViewModelPropertyNumber name="resetView" id="0:615"/>
+        <ViewModelPropertyNumber name="dragX" id="0:616"/>
+        <ViewModelPropertyNumber name="dragY" id="0:617"/>
+        <ViewModelPropertyNumber name="hang" id="0:618"/>
+        <ViewModelPropertyNumber name="eyeGlow" id="0:619"/>
+        <ViewModelPropertyNumber name="spirit" id="0:620"/>
+        <ViewModelPropertyNumber name="windStrength" id="0:621"/>
+        <ViewModelPropertyNumber name="windSpeed" id="0:622"/>
+        <ViewModelPropertyNumber name="windDirection" id="0:623"/>
+        <ViewModelPropertyNumber name="gustiness" id="0:624"/>
+        <ViewModelPropertyNumber name="hairWind" id="0:625"/>
+        <ViewModelPropertyNumber name="clothWind" id="0:626"/>
+        <ViewModelPropertyColor name="spiritColor" id="0:627"/>
+        <ViewModelInstance exports="true" name="Default" id="0:520">
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:601" id="0:1501"/>
+            <ViewModelInstanceNumber propertyValue="20" viewModelPropertyId="0:602" id="0:1502"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:603" id="0:1503"/>
+            <ViewModelInstanceNumber propertyValue="4" viewModelPropertyId="0:604" id="0:1504"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:605" id="0:1505"/>
+            <ViewModelInstanceNumber propertyValue="0.45" viewModelPropertyId="0:606" id="0:1506"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:607" id="0:1507"/>
+            <ViewModelInstanceNumber propertyValue="0.75" viewModelPropertyId="0:608" id="0:1508"/>
+            <ViewModelInstanceNumber propertyValue="3" viewModelPropertyId="0:609" id="0:1509"/>
+            <ViewModelInstanceNumber propertyValue="2.2" viewModelPropertyId="0:610" id="0:1510"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:611" id="0:1511"/>
+            <ViewModelInstanceNumber propertyValue="0.5" viewModelPropertyId="0:612" id="0:1512"/>
+            <ViewModelInstanceNumber propertyValue="40" viewModelPropertyId="0:613" id="0:1513"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:614" id="0:1514"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:615" id="0:1515"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:616" id="0:1516"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:617" id="0:1517"/>
+            <ViewModelInstanceNumber propertyValue="1.5" viewModelPropertyId="0:618" id="0:1518"/>
+            <ViewModelInstanceNumber propertyValue="1.5" viewModelPropertyId="0:619" id="0:1519"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:620" id="0:1520"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:621" id="0:1521"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:622" id="0:1522"/>
+            <ViewModelInstanceNumber propertyValue="160" viewModelPropertyId="0:623" id="0:1523"/>
+            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:624" id="0:1524"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:625" id="0:1525"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:626" id="0:1526"/>
+            <ViewModelInstanceColor propertyValue="FFF2F6FF" viewModelPropertyId="0:627" id="0:1527"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <ScriptAsset file="Spirit.luau" isModule="true" name="Spirit" id="0:901"/>
+    <ScriptAsset file="Vetal.luau" scriptProtocolValue="1" name="Vetal" id="0:902"/>
+    <ShaderAsset file="vetal.wgsl" name="vetal" id="0:903"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <!-- Written by ../tools/export_vetal.py from Vetal.glb. -->
+    <BlobAsset file="../vetal.bin" name="vetal" id="0:905"/>
+</Rive>

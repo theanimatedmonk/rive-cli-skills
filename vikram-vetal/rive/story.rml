@@ -96,7 +96,13 @@
             <ScriptInputColor propertyValue="FFFFBE5A" name="kingAuraColor" id="2:177"/>
             <ScriptInputColor propertyValue="FFFFB450" name="blastColor" id="2:178"/>
             <ScriptInputString propertyValue="vikram" name="king" id="2:179"/>
+            <ScriptInputString propertyValue="vetal" name="vetal" id="2:199"/>
         </ScriptedDrawable>
+        <!-- The bow's sounds, keyed on the Astra timeline: the string drawn
+             (as the shoot pulls it, frame 138) and its twang (as it lets go,
+             frame 240). -->
+        <AudioEvent assetId="0:910" name="draw" id="2:91"/>
+        <AudioEvent assetId="0:909" name="twang" id="2:92"/>
         <Fill name="Night" id="2:3">
             <SolidColor colorValue="FF060A1E" name="Color" id="2:4"/>
         </Fill>
@@ -552,6 +558,16 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="840" name="Astra" id="2:182">
+            <KeyedObject objectId="2:91" id="2:93">
+                <KeyedProperty propertyKey="395" id="2:94">
+                    <KeyFrameCallback frame="138" id="2:95"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="2:92" id="2:96">
+                <KeyedProperty propertyKey="395" id="2:97">
+                    <KeyFrameCallback frame="240" id="2:98"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="2:156" id="0:1797">
                 <KeyedProperty propertyKey="243" id="0:1798">
                     <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:1799"/>

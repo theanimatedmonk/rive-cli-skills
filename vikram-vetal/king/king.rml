@@ -123,6 +123,9 @@
                 <DataBindContext sourcePathIds="0:500-0:545" propertyKey="243" id="0:331"/>
             </ScriptInputNumber>
         </ScriptedDrawable>
+        <!-- The bow's sounds (from ../pinaka-bow). -->
+        <AudioEvent assetId="0:910" name="draw" id="0:800"/>
+        <AudioEvent assetId="0:909" name="twang" id="0:801"/>
         <Fill name="Night" id="0:3">
             <SolidColor colorValue="FF060A1E" name="Color" id="0:4"/>
         </Fill>
@@ -166,7 +169,108 @@
                     <StateTransition stateToId="0:711" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" randomWeight="1" id="0:751"/>
                 </AnimationState>
             </StateMachineLayer>
+            <!-- The bow's sounds, following the pose and the release: the string
+                 drawn as he draws (1.1 s into the draw), the shoot's pull and
+                 twang where its clip pulls and lets go (1.0 s, 2.71 s), and a
+                 twang when the drawn string is loosed. -->
+            <StateMachineLayer name="Bow sounds" id="0:812">
+                <AnyState x="-300" y="-120" id="0:810"/>
+                <EntryState x="-300" y="0" id="0:811">
+                    <StateTransition stateToId="0:806" id="0:813"/>
+                </EntryState>
+                <AnimationState x="0" y="0" animationId="0:802" id="0:806">
+                    <StateTransition stateToId="0:807" id="0:817">
+                        <TransitionViewModelCondition opValue="equal" id="0:814">
+                            <TransitionPropertyViewModelComparator id="0:815">
+                                <BindablePropertyNumber id="0:190107">
+                                    <DataBindContext sourcePathIds="0:500-0:501" propertyKey="636" id="0:190108"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2" id="0:816"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:808" id="0:821">
+                        <TransitionViewModelCondition opValue="equal" id="0:818">
+                            <TransitionPropertyViewModelComparator id="0:819">
+                                <BindablePropertyNumber id="0:190109">
+                                    <DataBindContext sourcePathIds="0:500-0:501" propertyKey="636" id="0:190110"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3" id="0:820"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="300" y="-120" animationId="0:803" id="0:807">
+                    <StateTransition stateToId="0:809" id="0:825">
+                        <TransitionViewModelCondition opValue="greaterThan" id="0:822">
+                            <TransitionPropertyViewModelComparator id="0:823">
+                                <BindablePropertyNumber id="0:190111">
+                                    <DataBindContext sourcePathIds="0:500-0:533" propertyKey="636" id="0:190112"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="0:824"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:806" id="0:829">
+                        <TransitionViewModelCondition opValue="notEqual" id="0:826">
+                            <TransitionPropertyViewModelComparator id="0:827">
+                                <BindablePropertyNumber id="0:190113">
+                                    <DataBindContext sourcePathIds="0:500-0:501" propertyKey="636" id="0:190114"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2" id="0:828"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="300" y="120" animationId="0:804" id="0:808">
+                    <StateTransition stateToId="0:806" id="0:833">
+                        <TransitionViewModelCondition opValue="notEqual" id="0:830">
+                            <TransitionPropertyViewModelComparator id="0:831">
+                                <BindablePropertyNumber id="0:190115">
+                                    <DataBindContext sourcePathIds="0:500-0:501" propertyKey="636" id="0:190116"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3" id="0:832"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="600" y="-120" animationId="0:805" id="0:809">
+                    <StateMachineFireEvent eventId="0:801" occursValue="0" id="0:190117"/>
+                    <StateTransition stateToId="0:806" id="0:837">
+                        <TransitionViewModelCondition opValue="equal" id="0:834">
+                            <TransitionPropertyViewModelComparator id="0:835">
+                                <BindablePropertyNumber id="0:190118">
+                                    <DataBindContext sourcePathIds="0:500-0:533" propertyKey="636" id="0:190119"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="0:836"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
         </StateMachine>
+        <!-- The bow's sound timelines (60 fps). -->
+        <LinearAnimation duration="60" loopValue="1" name="Bow Rest" id="0:802"/>
+        <LinearAnimation duration="120" name="Bow Draw" id="0:803">
+            <KeyedObject objectId="0:800" id="0:838">
+                <KeyedProperty propertyKey="395" id="0:839">
+                    <KeyFrameCallback frame="66" id="0:840"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="300" name="Bow Shoot" id="0:804">
+            <KeyedObject objectId="0:800" id="0:841">
+                <KeyedProperty propertyKey="395" id="0:842">
+                    <KeyFrameCallback frame="60" id="0:843"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:801" id="0:844">
+                <KeyedProperty propertyKey="395" id="0:845">
+                    <KeyFrameCallback frame="162" id="0:846"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="30" name="Bow Loose" id="0:805"/>
         <!-- He animates himself; this loop keeps the state machine (and the
              view model binds) running. -->
         <LinearAnimation duration="60" loopValue="1" name="Night" id="0:110"/>
@@ -293,4 +397,9 @@
     <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
     <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
     <BlobAsset file="../king.bin" name="king" id="0:905"/>
+    <!-- The bow (from ../pinaka-bow): bow-sound.mp3 with its 0.17 s lead-in
+         trimmed, so the twang lands on the release; and the string being
+         drawn. -->
+    <AudioAsset file="../bow-release.flac" name="bowRelease" id="0:909"/>
+    <AudioAsset file="../stretch.mp3" name="bowPull" id="0:910"/>
 </Rive>

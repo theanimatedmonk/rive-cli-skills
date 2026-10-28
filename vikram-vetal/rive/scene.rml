@@ -101,6 +101,8 @@
                 <DataBindContext sourcePathIds="0:500-0:570" propertyKey="243" id="0:126"/>
             </ScriptInputNumber>
             <ScriptInputColor propertyValue="FF96DCFF" name="ghostColor" id="0:127"/>
+            <!-- The Vetal, hanging from the peepal's branch. -->
+            <ScriptInputString propertyValue="vetal" name="vetal" id="0:914"/>
             <ScriptInputColor propertyValue="FF18283C" name="horizonColor" id="0:58"/>
             <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="0:59"/>
         </ScriptedDrawable>
@@ -172,6 +174,7 @@
 
     <!-- King Vikram (shared with ../king; tools/sync_hero.sh copies these). -->
     <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
+    <ScriptAsset file="Spirit.luau" isModule="true" name="Spirit" id="0:911"/>
     <ScriptAsset file="World.luau" scriptProtocolValue="1" name="World" id="0:902"/>
     <ShaderAsset file="world.wgsl" name="world" id="0:903"/>
     <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
@@ -181,4 +184,13 @@
     <ShaderAsset file="king.wgsl" name="king" id="0:907"/>
     <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
     <BlobAsset file="../king.bin" name="vikram" id="0:908"/>
+    <!-- The Vetal (shared with ../vetal; tools/sync_hero.sh copies these). -->
+    <ShaderAsset file="vetal.wgsl" name="vetal" id="0:912"/>
+    <!-- Written by ../tools/export_vetal.py from Vetal.glb. -->
+    <BlobAsset file="../vetal.bin" name="vetal" id="0:913"/>
+    <!-- The bow (from ../pinaka-bow): bow-sound.mp3 with its 0.17 s lead-in
+         trimmed, so the twang lands on the release; and the string being
+         drawn. -->
+    <AudioAsset file="../bow-release.flac" name="bowRelease" id="0:909"/>
+    <AudioAsset file="../stretch.mp3" name="bowPull" id="0:910"/>
 </Rive>

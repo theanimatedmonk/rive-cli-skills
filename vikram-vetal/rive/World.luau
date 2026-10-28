@@ -53,6 +53,13 @@
 -- and shoving the grass and leaves outward as it goes; `blastStrength`,
 -- `blastColor`.
 --
+-- The Vetal (`vetal`: his blob's name, vetal.bin; empty for none) hangs
+-- from the peepal's branch where he hangs in Blender, drawn by the Spirit
+-- module (Spirit.luau, vetal.wgsl) in the same passes; the scene's wind
+-- takes his hair and cloth. `vetalEyes` (0-4), his eyes' burning, and
+-- `vetalSpirit` (0-3) with `vetalSpiritColor`, the white spirit light on
+-- him and in the halo round him.
+--
 -- The cinematic camera: `cinematic` (0-1) blends from the free camera to
 -- one that orbits a target: `camTargetX/Y/Z`, `camAngle` (degrees round it;
 -- 0 looks from +Z), `camDistance`, `camHeight` (above the target);
@@ -64,6 +71,7 @@
 -- artboard's size.
 
 local Hero = require('Hero')
+local Spirit = require('Spirit')
 
 export type World = {
 	asset: Input<string>,
@@ -125,6 +133,10 @@ export type World = {
 	horizonColor: Input<Color>,
 	hazeColor: Input<Color>,
 	king: Input<string>,
+	vetal: Input<string>,
+	vetalEyes: Input<number>,
+	vetalSpirit: Input<number>,
+	vetalSpiritColor: Input<Color>,
 	kingX: Input<number>,
 	kingZ: Input<number>,
 	kingTurn: Input<number>,
@@ -160,6 +172,11 @@ export type World = {
 	kingUbo: GPUBuffer?,
 	kingFrame: buffer,
 	kingSettings: Hero.Settings,
+	spirit: Spirit.Spirit?,
+	vetalShader: Shader?,
+	vetalUbo: GPUBuffer?,
+	vetalFrame: buffer,
+	vetalSettings: Spirit.Settings,
 	kingFacing: number,
 	lastKingX: number,
 	lastKingZ: number,
@@ -605,6 +622,17 @@ function init(self: World, context: Context): boolean
 			self.lastKingX, self.lastKingZ = self.kingX, self.kingZ
 		end
 	end
+	-- The Vetal, when the scene has him.
+	if self.vetal ~= '' and not self.failed then
+		self.vetalShader = context:shader('vetal')
+		local spirit, verr = Spirit.load(context, self.vetal)
+		if spirit == nil or self.vetalShader == nil then
+			print('World: the Vetal is missing: ' .. tostring(verr or 'no "vetal" shader'))
+		else
+			self.spirit = spirit
+			self.vetalUbo = GPUBuffer.new({ size = Spirit.UNIFORM_SIZE, usage = 'uniform' })
+		end
+	end
 	return true
 end
 
@@ -669,6 +697,10 @@ function advance(self: World, seconds: number): boolean
 	self.windPhase += dt * math.max(self.windSpeed, 0)
 	-- King Vikram: his pose, and he turns to face the way he walks (a jump,
 	-- as when the story starts over, is not a step).
+	local spirit = self.spirit
+	if spirit then
+		Spirit.advance(spirit, dt, 0, 1)
+	end
 	local hero = self.hero
 	if hero then
 		Hero.advance(hero, dt, self.kingPose, self.kingSpeed)
@@ -912,6 +944,10 @@ local function ensureTargets(self: World): boolean
 		if hero and kingShader then
 			Hero.pipelines(hero, kingShader, scene.format, samples)
 		end
+		local spirit, vetalShader = self.spirit, self.vetalShader
+		if spirit and vetalShader then
+			Spirit.pipelines(spirit, vetalShader, scene.format, samples)
+		end
 	end
 	-- The post pass reads the scene canvas, which has just been remade.
 	self.postBindings = nil
@@ -1152,8 +1188,10 @@ end
 
 -- King Vikram's uniforms (king.wgsl's block): the scene's camera, moon and
 -- mist, then his own part from the Hero module.
-local function kingUniforms(self: World, hero: Hero.Hero)
-	local u, f = self.kingFrame, self.frame
+-- The host's part of king.wgsl's (and vetal.wgsl's) uniforms: the scene's
+-- camera, moon, mist and sky, and a soft warm fill.
+local function characterUniforms(self: World, u: buffer)
+	local f = self.frame
 	buffer.copy(u, 0, f, 0, 64)
 	buffer.copy(u, 64, f, 464, 64)
 	buffer.copy(u, 128, f, 64, 16)
@@ -1175,6 +1213,11 @@ local function kingUniforms(self: World, hero: Hero.Hero)
 	buffer.writef32(u, 316, math.max(self.haze, 0) * 1.1)
 	buffer.copy(u, 384, f, 304, 48)
 	write4(u, 432, 0, 0, 1, 0)
+end
+
+local function kingUniforms(self: World, hero: Hero.Hero)
+	local u = self.kingFrame
+	characterUniforms(self, u)
 	local s = self.kingSettings
 	s.x, s.z = self.kingX, self.kingZ
 	s.y = groundAt(self, self.kingX, self.kingZ)
@@ -1188,6 +1231,27 @@ local function kingUniforms(self: World, hero: Hero.Hero)
 	s.outline = 1.8 * clamp(self.resolution, 0.25, 3)
 	s.time = self.time
 	Hero.write(hero, u, s)
+end
+
+-- The Vetal's: where he hangs (vetal.bin's placement), his eyes, his
+-- spirit light and the wind.
+local function vetalUniforms(self: World, spirit: Spirit.Spirit)
+	local u = self.vetalFrame
+	characterUniforms(self, u)
+	local s = self.vetalSettings
+	local at = spirit.placement
+	s.x, s.y, s.z, s.turn = at[1] or 0, at[2] or 0, at[3] or 0, at[4] or 0
+	s.eyeGlow, s.eyeColor = self.vetalEyes, Color.rgb(255, 60, 25)
+	s.spirit, s.spiritColor = self.vetalSpirit, self.vetalSpiritColor
+	local wa = math.rad(self.windDirection)
+	s.windX, s.windZ = math.cos(wa), math.sin(wa)
+	s.windStrength, s.windPhase, s.gustiness = self.windStrength, self.windPhase, self.gustiness
+	s.outline = 1.8 * clamp(self.resolution, 0.25, 3)
+	s.time = self.time
+	-- Under the post pass's bloom threshold (0.8), or the moon's shafts
+	-- stream from him.
+	s.ceiling = 0.7
+	Spirit.write(spirit, u, s)
 end
 
 -- Where an object is at `time` seconds into the animation: its model matrix
@@ -1358,6 +1422,11 @@ local function render(self: World): Image?
 		kingUniforms(self, hero)
 		kingUbo:write(self.kingFrame)
 	end
+	local spirit, vetalUbo = self.spirit, self.vetalUbo
+	if spirit and vetalUbo then
+		vetalUniforms(self, spirit)
+		vetalUbo:write(self.vetalFrame)
+	end
 	local shadowView, shadowSampler, shadowTarget = self.shadowView, self.shadowSampler, self.shadowTarget
 	local staticShadow, instShadow = self.staticShadowPipeline, self.instShadowPipeline
 	if not (shadowView and shadowSampler and shadowTarget and staticShadow and instShadow) then
@@ -1432,6 +1501,9 @@ local function render(self: World): Image?
 	if hero and kingUbo then
 		Hero.drawShadow(hero, shadowPass, kingUbo, shadowView, shadowSampler)
 	end
+	if spirit and vetalUbo then
+		Spirit.drawShadow(spirit, shadowPass, vetalUbo, shadowView, shadowSampler)
+	end
 	shadowPass:finish()
 
 	local color: ColorAttachment = if self.targetSamples > 1
@@ -1472,6 +1544,9 @@ local function render(self: World): Image?
 	end
 	if hero and kingUbo then
 		Hero.draw(hero, pass, kingUbo, shadowView, shadowSampler, true)
+	end
+	if spirit and vetalUbo then
+		Spirit.draw(spirit, pass, vetalUbo, shadowView, shadowSampler, true)
 	end
 	local pollen = math.ceil(clamp(self.fireflies, 0, MAX_POLLEN))
 	local pollenBindings = self.pollenBindings
@@ -1748,6 +1823,10 @@ return function(): Node<World>
 		horizonColor = Color.rgb(24, 40, 60),
 		hazeColor = Color.rgb(34, 46, 76),
 		king = '',
+		vetal = '',
+		vetalEyes = 1.5,
+		vetalSpirit = 0,
+		vetalSpiritColor = Color.rgb(242, 246, 255),
 		kingX = -9.5,
 		kingZ = 9,
 		kingTurn = 0,
@@ -1780,6 +1859,34 @@ return function(): Node<World>
 		kingShader = nil,
 		kingUbo = nil,
 		kingFrame = buffer.create(Hero.UNIFORM_SIZE),
+		spirit = nil,
+		vetalShader = nil,
+		vetalUbo = nil,
+		vetalFrame = buffer.create(Spirit.UNIFORM_SIZE),
+		vetalSettings = {
+			x = 0,
+			y = 0,
+			z = 0,
+			turn = 0,
+			eyeGlow = 1.5,
+			eyeColor = Color.rgb(255, 60, 25),
+			spirit = 0.8,
+			spiritColor = Color.rgb(242, 246, 255),
+			windX = 1,
+			windZ = 0,
+			windStrength = 0,
+			windPhase = 0,
+			gustiness = 0.6,
+			hairWind = 1,
+			clothWind = 1,
+			paint = 0.75,
+			bands = 3,
+			outline = 1.8,
+			inkColor = Color.rgb(16, 10, 24),
+			inkDetail = 0.6,
+			hatching = 0.5,
+			time = 0,
+		},
 		kingSettings = {
 			x = 0,
 			y = 0,
