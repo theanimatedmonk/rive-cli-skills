@@ -97,6 +97,7 @@
             <ScriptInputColor propertyValue="FFFFB450" name="blastColor" id="2:178"/>
             <ScriptInputString propertyValue="vikram" name="king" id="2:179"/>
             <ScriptInputString propertyValue="vetal" name="vetal" id="2:199"/>
+            <ScriptInputNumber name="ghostsFlee" id="2:198"/>
         </ScriptedDrawable>
         <!-- The bow's sounds, keyed on the Astra timeline: the string drawn
              (as the shoot pulls it, frame 138) and its twang (as it lets go,
@@ -185,6 +186,11 @@
             </StateMachineLayer>
         </StateMachine>
         <LinearAnimation duration="720" name="Peepal" id="2:180">
+            <KeyedObject objectId="2:198" id="0:187721">
+                <KeyedProperty propertyKey="243" id="0:187722">
+                    <KeyFrameDouble frame="0" interpolationType="hold" id="0:187720"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="2:156" id="0:1606">
                 <KeyedProperty propertyKey="243" id="0:1607">
                     <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:1608"/>
@@ -327,6 +333,11 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="840" name="Vikram" id="2:181">
+            <KeyedObject objectId="2:198" id="0:187724">
+                <KeyedProperty propertyKey="243" id="0:187725">
+                    <KeyFrameDouble frame="0" interpolationType="hold" id="0:187723"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="2:156" id="0:1690">
                 <KeyedProperty propertyKey="243" id="0:1691">
                     <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:1692"/>
@@ -558,6 +569,12 @@
             </KeyedObject>
         </LinearAnimation>
         <LinearAnimation duration="840" name="Astra" id="2:182">
+            <KeyedObject objectId="2:198" id="0:187728">
+                <KeyedProperty propertyKey="243" id="0:187729">
+                    <KeyFrameDouble frame="0" interpolationType="hold" id="0:187726"/>
+                    <KeyFrameDouble value="1" frame="245" interpolationType="hold" id="0:187727"/>
+                </KeyedProperty>
+            </KeyedObject>
             <KeyedObject objectId="2:91" id="2:93">
                 <KeyedProperty propertyKey="395" id="2:94">
                     <KeyFrameCallback frame="138" id="2:95"/>

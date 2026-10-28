@@ -33,7 +33,10 @@
 --
 -- Ghost lights: `ghostLights` (0-16) pale will-o'-wisps circling the hero
 -- tree, each trailing a fading tail and lighting what it passes in
--- `ghostColor`.
+-- `ghostColor`. `ghostsFlee` (0 or 1): when it turns on (Vikram's astra),
+-- they break their orbits and flee the tree, out and up, faster and
+-- faster, flickering wildly and fading into the jungle in a few seconds;
+-- off, they circle again.
 --
 -- King Vikram (`king`: his blob's name, king.bin; empty for none) walks the
 -- scene, drawn by the Hero module (Hero.luau, king.wgsl) in the same passes:
@@ -130,6 +133,7 @@ export type World = {
 	heroFireflies: Input<number>,
 	ghostLights: Input<number>,
 	ghostColor: Input<Color>,
+	ghostsFlee: Input<number>,
 	horizonColor: Input<Color>,
 	hazeColor: Input<Color>,
 	king: Input<string>,
@@ -227,6 +231,8 @@ export type World = {
 	pollenBindings: GPUBindGroup?,
 	pollenIds: GPUBuffer?,
 	ghostIds: GPUBuffer?,
+	-- When the ghost lights took flight (the scene's time), or nil.
+	fleeStart: number?,
 	postUbo: GPUBuffer?,
 	postBindings: GPUBindGroup?,
 	nearBindings: GPUBindGroup?,
@@ -322,7 +328,7 @@ type Camera = {
 	tanX: number, tanY: number,
 }
 
-local UNIFORM_SIZE = 1552
+local UNIFORM_SIZE = 1568
 -- Ghost lights round the hero tree: at most, and how many instances each
 -- (a head and its trail; world.wgsl).
 local MAX_GHOSTS = 16
@@ -1110,6 +1116,15 @@ local function frameUniforms(self: World)
 		gseed = (gseed * 16807) % 2147483647
 		return gseed / 2147483647
 	end
+	-- Fleeing: from when `ghostsFlee` turned on.
+	if self.ghostsFlee > 0.5 then
+		self.fleeStart = self.fleeStart or self.time
+	else
+		self.fleeStart = nil
+	end
+	local fleeStart = self.fleeStart
+	write4(u, 1552, fleeStart or 0, if fleeStart then 1 else 0, 0, 0)
+	local fled = if fleeStart then math.max(self.time - fleeStart, 0) else 0
 	for i = 0, MAX_GHOSTS - 1 do
 		local radius = 2.8 + grnd() * 4.2
 		local height = 0.8 + grnd() * 5.5
@@ -1119,10 +1134,14 @@ local function frameUniforms(self: World)
 		-- And where it is now, with its flicker, as world.wgsl's ghostPos
 		-- and ghostFlicker would put it.
 		local now = self.time
-		local a = phase + now * speed
+		local f = fled
+		local a = phase + now * speed + f * f * speed * 1.5
+		local r = radius + f * (2.5 + f * 2.2)
 		local bob = math.sin(now * 0.9 + phase * 3) * 0.35 + math.sin(now * 2.3 + phase) * 0.08
-		local flicker = 0.8 + 0.12 * math.sin(now * 7.3 + i * 1.7) + 0.08 * math.sin(now * 13.1 + i * 4.1)
-		write4(u, 1232 + i * 16, self.heroX + math.cos(a) * radius, self.heroY + height + bob, self.heroZ + math.sin(a) * radius, flicker)
+		local calm = 0.8 + 0.12 * math.sin(now * 7.3 + i * 1.7) + 0.08 * math.sin(now * 13.1 + i * 4.1)
+		local wild = 0.75 + 0.25 * math.sin(now * 23 + i * 3.1)
+		local flicker = (calm + (calm * wild - calm) * math.min(f * 2, 1)) * math.exp(-f * 0.75)
+		write4(u, 1232 + i * 16, self.heroX + math.cos(a) * r, self.heroY + height + bob + f * (0.8 + f * 0.5), self.heroZ + math.sin(a) * r, flicker)
 	end
 	do
 		local hr, hg, hb = linear(self.horizonColor)
@@ -1819,6 +1838,7 @@ return function(): Node<World>
 		heroFireflies = 0.5,
 		ghostLights = 8,
 		ghostColor = Color.rgb(150, 220, 255),
+		ghostsFlee = 0,
 		mountainColor = Color.rgb(8, 11, 24),
 		horizonColor = Color.rgb(24, 40, 60),
 		hazeColor = Color.rgb(34, 46, 76),
@@ -1957,6 +1977,7 @@ return function(): Node<World>
 		pollenBindings = nil,
 		pollenIds = nil,
 		ghostIds = nil,
+		fleeStart = nil,
 		postUbo = nil,
 		postBindings = nil,
 		nearBindings = nil,

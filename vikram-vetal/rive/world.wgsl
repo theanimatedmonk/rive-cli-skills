@@ -66,6 +66,9 @@ struct Uniforms {
     // draws): where it is, how strong; and its colour (linear).
     kingLight: vec4<f32>,
     kingLightColor: vec4<f32>,
+    // The ghost lights fleeing the hero tree: x when they took flight (the
+    // scene's time), y 1 while they flee (0 circling).
+    ghostFlee: vec4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
@@ -82,15 +85,28 @@ const GHOST_TRAIL: u32 = 4u;
 // Where ghost light i is at time t: circling the hero tree, bobbing.
 fn ghostPos(i: u32, t: f32) -> vec3<f32> {
     let g = u.ghosts[i];
-    let a = g.z + t * g.w;
+    // Fleeing (ghostFlee): out from the tree, faster and faster, rising,
+    // their orbits whipping round.
+    let f = ghostFled(t);
+    let a = g.z + t * g.w + f * f * g.w * 1.5;
+    let r = g.x + f * (2.5 + f * 2.2);
     let bob = sin(t * 0.9 + g.z * 3.0) * 0.35 + sin(t * 2.3 + g.z) * 0.08;
-    return u.hero.xyz + vec3<f32>(cos(a) * g.x, g.y + bob, sin(a) * g.x);
+    return u.hero.xyz + vec3<f32>(cos(a) * r, g.y + bob + f * (0.8 + f * 0.5), sin(a) * r);
 }
 
-// A ghost light flickers like a candle in a draught.
+// How long (seconds) the ghost lights have been fleeing at time t.
+fn ghostFled(t: f32) -> f32 {
+    return select(0.0, max(t - u.ghostFlee.x, 0.0), u.ghostFlee.y > 0.5);
+}
+
+// A ghost light flickers like a candle in a draught; fleeing, it flickers
+// wildly and fades into the jungle.
 fn ghostFlicker(i: u32, t: f32) -> f32 {
     let fi = f32(i);
-    return 0.8 + 0.12 * sin(t * 7.3 + fi * 1.7) + 0.08 * sin(t * 13.1 + fi * 4.1);
+    let f = ghostFled(t);
+    let calm = 0.8 + 0.12 * sin(t * 7.3 + fi * 1.7) + 0.08 * sin(t * 13.1 + fi * 4.1);
+    let wild = 0.75 + 0.25 * sin(t * 23.0 + fi * 3.1);
+    return mix(calm, calm * wild, min(f * 2.0, 1.0)) * exp(-f * 0.75);
 }
 
 // The ghost lights' cool glow on what they pass.
