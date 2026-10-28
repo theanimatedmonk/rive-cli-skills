@@ -14,27 +14,23 @@
       <p class="status" id="status">Loading…</p>
     </main>
 
-    <!-- The teaser plays in Rive (the Story state machine); these captions
-         follow its chapters, and the chapter buttons jump to one. -->
-    <header class="title">
-      <p class="title__eyebrow">A tale of the night</p>
-      <h1 class="title__name">Vikram &amp; Vetal</h1>
-    </header>
-
-    <section class="caption" aria-live="polite">
-      <p class="caption__chapter" id="chapter"></p>
-      <p class="caption__line" id="line"></p>
-    </section>
-
-    <nav class="chapters" aria-label="Chapters">
-      <button type="button" class="chapter" data-trigger="toPeepal" data-state="Peepal">I · The peepal</button>
-      <button type="button" class="chapter" data-trigger="toKing" data-state="Vikram">II · The king</button>
-      <button type="button" class="chapter" data-trigger="toAstra" data-state="Astra">III · The astra</button>
+    <!-- The teaser plays in Rive (the Story state machine). The menu jumps
+         to a chapter and leads to the other pages; it stays folded away. -->
+    <nav class="story-menu" id="story-menu" aria-label="Story">
+      <div class="story-menu__panel" id="story-menu-panel" hidden>
+        <p class="story-menu__label">Chapters</p>
+        <button type="button" class="chapter" data-trigger="toPeepal" data-state="Peepal">I · The peepal</button>
+        <button type="button" class="chapter" data-trigger="toKing" data-state="Vikram">II · The king</button>
+        <button type="button" class="chapter" data-trigger="toAstra" data-state="Astra">III · The astra</button>
+        <p class="story-menu__label">Explore</p>
+        <a class="story-menu__link" href="scene.html">The scene</a>
+        <a class="story-menu__link" href="king.html">King Vikram</a>
+        <a class="story-menu__link" href="vetal.html">The Vetal</a>
+      </div>
+      <button type="button" class="story-menu__toggle" id="story-menu-toggle" aria-expanded="false" aria-controls="story-menu-panel">
+        Chapters <span class="story-menu__caret" aria-hidden="true">▴</span>
+      </button>
     </nav>
-
-    <p class="explore">
-      <a class="link" href="scene.html">Explore the scene</a> · <a class="link" href="king.html">Meet King Vikram</a> · <a class="link" href="vetal.html">Meet the Vetal</a>
-    </p>
 
     <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
     <script src="story.js"></script>

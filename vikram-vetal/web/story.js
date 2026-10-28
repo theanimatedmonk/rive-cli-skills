@@ -1,32 +1,17 @@
 // Vikram and Vetal: the story. The teaser is played by Rive (the Story
-// artboard's state machine, one keyed timeline per chapter); this page
-// shows each chapter's caption as it begins and lets the viewer jump to a
-// chapter by firing the Story view model's triggers.
-const SRC = "vikram-vetal.riv?v=49";
+// artboard's state machine, one keyed timeline per chapter); this page lets
+// the viewer jump to a chapter, from a folded menu, by firing the Story view
+// model's triggers, and marks the chapter playing.
+const SRC = "vikram-vetal.riv?v=50";
 
 // The chapters, by their state's (timeline's) name in the state machine.
-const CHAPTERS = {
-  Peepal: {
-    title: "I · The peepal",
-    line: "Amavas. No moon. In the cremation ground the old peepal stands, and lights that are not fireflies circle it.",
-  },
-  Vikram: {
-    title: "II · The king",
-    line: "King Vikram walks the path alone, to the tree where the Vetal hangs.",
-  },
-  Astra: {
-    title: "III · The astra",
-    line: "He draws his bow — and the night itself bends to the string.",
-  },
-};
+const CHAPTERS = ["Peepal", "Vikram", "Astra"];
 
-// The captions follow the state machine's chapters by its state changes.
+// The menu follows the state machine's chapters by its state changes.
 rive.Rive.suppressDeprecationWarnings = ["state-change-events"];
 
 const canvas = document.getElementById("scene");
 const statusEl = document.getElementById("status");
-const chapterEl = document.getElementById("chapter");
-const lineEl = document.getElementById("line");
 const buttons = document.querySelectorAll(".chapter");
 
 const riveInstance = new rive.Rive({
@@ -50,7 +35,7 @@ const riveInstance = new rive.Rive({
   },
   onStateChange: (event) => {
     for (const name of event.data || []) {
-      if (CHAPTERS[name]) {
+      if (CHAPTERS.includes(name)) {
         show(name);
       }
     }
@@ -63,15 +48,6 @@ function show(name) {
     return;
   }
   current = name;
-  const chapter = CHAPTERS[name];
-  chapterEl.textContent = chapter.title;
-  lineEl.textContent = chapter.line;
-  // Let the caption fade in again.
-  for (const el of [chapterEl, lineEl]) {
-    el.classList.remove("is-in");
-    void el.offsetWidth;
-    el.classList.add("is-in");
-  }
   for (const button of buttons) {
     button.classList.toggle("is-active", button.dataset.state === name);
   }
@@ -84,7 +60,30 @@ for (const button of buttons) {
     if (trigger) {
       trigger.trigger();
     }
+    setMenu(false);
   });
 }
+
+// The menu: folded by default; opens upward from its button, closes on
+// Escape or a click elsewhere.
+const menu = document.getElementById("story-menu");
+const menuPanel = document.getElementById("story-menu-panel");
+const menuToggle = document.getElementById("story-menu-toggle");
+function setMenu(open) {
+  menuPanel.hidden = !open;
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menu.classList.toggle("is-open", open);
+}
+menuToggle.addEventListener("click", () => setMenu(menuPanel.hidden));
+document.addEventListener("click", (event) => {
+  if (!menu.contains(event.target)) {
+    setMenu(false);
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    setMenu(false);
+  }
+});
 
 window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanvas());

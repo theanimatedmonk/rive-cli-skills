@@ -176,6 +176,10 @@
     <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
     <ScriptAsset file="Spirit.luau" isModule="true" name="Spirit" id="0:911"/>
     <ScriptAsset file="World.luau" scriptProtocolValue="1" name="World" id="0:902"/>
+    <!-- The components' scripts (components.rml): King Vikram's and the
+         Vetal's pages' (../king, ../vetal; tools/sync_hero.sh copies them). -->
+    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:915"/>
+    <ScriptAsset file="Vetal.luau" scriptProtocolValue="1" name="Vetal" id="0:916"/>
     <ShaderAsset file="world.wgsl" name="world" id="0:903"/>
     <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
     <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
