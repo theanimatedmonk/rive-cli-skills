@@ -546,7 +546,7 @@ local LOOSE_SPEED = 1.6
 local RELOAD = 0.45
 local ASTRA_COOLDOWN = 8
 -- A ghost light's burst lasts this long (seconds).
-local BURST_TIME = 0.8
+local BURST_TIME = 1
 -- At full draw his bow aims this far (degrees) from where he faces (the
 -- shoot and the arrow's hold both stand him side-on, the shoot more); he
 -- faces that far off the circle so the bow is on it.
@@ -2903,10 +2903,14 @@ local function pointerExit(self: World, event: PointerEvent)
 	pointerUp(self, event)
 end
 
--- The ghost lights' bursts, in 2D over the scene where each died: a soft
--- flash, a shockwave ring and a thinner one after it, sparks flung out and
--- falling, embers drifting; pale cyan for one shot down, violet for one
--- that struck him.
+-- The ghost lights' bursts, in 2D over the scene where each died: a
+-- mandala that blooms out, turning, and fades. Inside its frame (two
+-- circles, the outer in an accent), eight round lobes, each a double arc,
+-- stand behind eight pointed petals, each with a petal inside it; at the
+-- heart a ticked band round a disc. Lines glow in the burst's colour over a
+-- deep fill of the same, so the petals hide the lobes behind them. Round it a ring of
+-- many small beads, and a spray of tiny embers falling away. All gold for
+-- one shot down, all red for one that struck him.
 local function drawBursts(self: World, renderer: Renderer)
 	local cam = self.camera
 	local path, fill, stroke = self.burstPath, self.burstFill, self.burstStroke
@@ -2929,57 +2933,131 @@ local function drawBursts(self: World, renderer: Renderer)
 		if depth > 0.3 then
 			local sx = (vx * cam.rx + vy * cam.ry + vz * cam.rz) / depth / cam.tanX * halfW
 			local sy = -(vx * cam.ux + vy * cam.uy + vz * cam.uz) / depth / cam.tanY * halfH
-			-- A metre there, in pixels; the burst spans about one.
+			-- A metre there, in pixels; the mandala spans about one.
 			local R = clamp(halfH / cam.tanY / depth, 18, 260)
 			local age = b[4]
 			local u = clamp(age / BURST_TIME, 0, 1)
 			local out = 1 - (1 - u) ^ 3
+			-- Whole for a moment, then fading.
+			local fade = if u < 0.35 then 1 else (1 - (u - 0.35) / 0.65) ^ 1.5
 			local struck = b[5] == 2
-			local cr, cg, cb = if struck then 190 else 150, if struck then 140 else 225, 255
+			-- All gold, or all red: the lines, a lighter accent, and a deep
+			-- fill under them.
+			local cr, cg, cb = if struck then 255 else 255, if struck then 60 else 190, if struck then 50 else 80
+			local ar, ag, ab = if struck then 255 else 255, if struck then 120 else 228, if struck then 100 else 150
+			local fr, fg, fb = if struck then 70 else 72, if struck then 6 else 42, if struck then 8 else 6
 			local seed = b[6]
-			-- The flash.
-			path:reset()
-			circle(sx, sy, R * (0.25 + 0.35 * out))
-			fill.feather = R * 0.4
-			fill.color = rgba(255, 255, 255, (1 - u) ^ 3 * 0.95)
-			renderer:drawPath(path, fill)
-			fill.feather = 0
-			-- The shockwave, and a thinner one after it.
-			path:reset()
-			circle(sx, sy, R * (0.2 + 0.95 * out))
-			stroke.thickness = math.max(R * 0.07 * (1 - u), 0.6)
-			stroke.color = rgba(cr, cg, cb, (1 - u) ^ 1.5)
-			renderer:drawPath(path, stroke)
-			local u2 = clamp((age - 0.1) / (BURST_TIME - 0.1), 0, 1)
-			if u2 > 0 then
-				path:reset()
-				circle(sx, sy, R * (0.15 + 0.7 * (1 - (1 - u2) ^ 2)))
-				stroke.thickness = math.max(R * 0.025 * (1 - u2), 0.5)
-				stroke.color = rgba(255, 255, 255, (1 - u2) ^ 2 * 0.8)
+			local M = R * (0.3 + 0.75 * out)
+			local spin = (seed % 6.283) + age * 0.9
+			local line = math.max(M * 0.014, 0.7)
+			-- Local polar to the screen: angle a (radians), radius r (of M).
+			local function at(a: number, r: number): Vector
+				return Vector.xy(sx + math.cos(a) * r * M, sy + math.sin(a) * r * M)
+			end
+			-- A point a petal's length along its axis (angle a), off it by w.
+			local function along(a: number, d: number, w: number): Vector
+				local ca, sa = math.cos(a), math.sin(a)
+				return Vector.xy(sx + (ca * d - sa * w) * M, sy + (sa * d + ca * w) * M)
+			end
+			local function paintIt(fillAlpha: number, lineAlpha: number, lr: number, lg: number, lb: number, width: number)
+				if fillAlpha > 0 then
+					fill.color = rgba(fr, fg, fb, fillAlpha * fade)
+					renderer:drawPath(path, fill)
+				end
+				stroke.thickness = width
+				stroke.color = rgba(lr, lg, lb, lineAlpha * fade)
 				renderer:drawPath(path, stroke)
 			end
-			-- Sparks: flung out, shortening, falling a little.
+			-- A soft flash under it all.
 			path:reset()
-			for k = 0, 13 do
-				local a = (k / 14) * 2 * math.pi + math.sin(seed + k * 12.9898) * 0.35
-				local reach = 0.75 + 0.5 * (0.5 + 0.5 * math.sin(seed * 1.7 + k * 78.233))
-				local r0 = R * (0.12 + 0.95 * out * reach)
-				local r1 = r0 + R * 0.32 * (1 - u)
-				local fall = R * 0.35 * u * u
-				path:moveTo(Vector.xy(sx + math.cos(a) * r0, sy + math.sin(a) * r0 + fall))
-				path:lineTo(Vector.xy(sx + math.cos(a) * r1, sy + math.sin(a) * r1 + fall))
-			end
-			stroke.thickness = math.max(R * 0.035 * (1 - u * 0.7), 0.8)
-			stroke.color = rgba(255 * 0.5 + cr * 0.5, 255 * 0.5 + cg * 0.5, 255, (1 - u) ^ 1.2)
-			renderer:drawPath(path, stroke)
-			-- Embers, drifting out and up, flickering.
+			circle(sx, sy, M * 0.45)
+			fill.feather = M * 0.5
+			fill.color = if struck then rgba(255, 70, 50, (1 - u) ^ 2.5 * 0.8) else rgba(255, 210, 110, (1 - u) ^ 2.5 * 0.8)
+			renderer:drawPath(path, fill)
+			fill.feather = 0
+			-- The frame: the outer circle in the accent, then the inner.
 			path:reset()
-			for k = 0, 9 do
-				local a = math.sin(seed * 0.37 + k * 4.1) * math.pi
-				local r = R * (0.3 + 1.1 * out) * (0.6 + 0.4 * math.sin(seed + k * 2.3))
-				circle(sx + math.cos(a) * r, sy + math.sin(a) * r - R * 0.4 * u, R * 0.035 + 1)
+			circle(sx, sy, M * 1.0)
+			paintIt(0, 0.95, ar, ag, ab, line * 1.2)
+			path:reset()
+			circle(sx, sy, M * 0.91)
+			paintIt(0.45, 0.9, cr, cg, cb, line)
+			-- The lobes between the petals: a double arc each, facing out.
+			path:reset()
+			for k = 0, 7 do
+				local a = spin + (k + 0.5) * math.pi / 4
+				for _, rr in { 0.2, 0.12 } do
+					local cx, cy = sx + math.cos(a) * 0.62 * M, sy + math.sin(a) * 0.62 * M
+					local steps = 14
+					for j = 0, steps do
+						local t = a - math.pi / 2 + math.pi * j / steps
+						local p = Vector.xy(cx + math.cos(t) * rr * M, cy + math.sin(t) * rr * M)
+						if j == 0 then
+							path:moveTo(p)
+						else
+							path:lineTo(p)
+						end
+					end
+				end
 			end
-			fill.color = rgba(cr, cg, cb, (1 - u) * (0.6 + 0.4 * math.sin(age * 40 + seed)))
+			paintIt(0, 0.85, cr, cg, cb, line)
+			-- The pointed petals, each with a smaller one inside.
+			local function petal(a: number, d0: number, len: number, w: number)
+				local d1, tip = d0 + len * 0.42, d0 + len
+				path:moveTo(along(a, d0, -w * 0.55))
+				path:cubicTo(along(a, d0 + len * 0.05, -w * 1.05), along(a, d1 - len * 0.18, -w * 1.05), along(a, d1, -w))
+				path:cubicTo(along(a, d1 + len * 0.22, -w * 0.95), along(a, tip - len * 0.16, -w * 0.3), along(a, tip, 0))
+				path:cubicTo(along(a, tip - len * 0.16, w * 0.3), along(a, d1 + len * 0.22, w * 0.95), along(a, d1, w))
+				path:cubicTo(along(a, d1 - len * 0.18, w * 1.05), along(a, d0 + len * 0.05, w * 1.05), along(a, d0, w * 0.55))
+				path:close()
+			end
+			path:reset()
+			for k = 0, 7 do
+				petal(spin + k * math.pi / 4, 0.22, 0.6, 0.155)
+			end
+			paintIt(0.92, 0.95, cr, cg, cb, line * 1.1)
+			path:reset()
+			for k = 0, 7 do
+				local a = spin + k * math.pi / 4
+				path:moveTo(at(a, 0.35))
+				path:cubicTo(along(a, 0.43, -0.095), along(a, 0.56, -0.085), along(a, 0.72, 0))
+				path:cubicTo(along(a, 0.56, 0.085), along(a, 0.43, 0.095), at(a, 0.35))
+				path:close()
+			end
+			paintIt(0, 0.8, cr, cg, cb, line)
+			-- The heart: a band of ticks round a disc.
+			path:reset()
+			circle(sx, sy, M * 0.25)
+			paintIt(1, 0.95, cr, cg, cb, line * 1.1)
+			path:reset()
+			circle(sx, sy, M * 0.18)
+			for k = 0, 23 do
+				local a = -spin * 1.3 + k * math.pi / 12
+				path:moveTo(at(a, 0.18))
+				path:lineTo(at(a, 0.25))
+			end
+			paintIt(0, 0.9, cr, cg, cb, line)
+			path:reset()
+			circle(sx, sy, M * 0.1)
+			fill.color = rgba(ar, ag, ab, (1 - u) ^ 1.5 * 0.9)
+			renderer:drawPath(path, fill)
+			-- Beads: a ring of many small ones just past the frame.
+			path:reset()
+			local bead = math.max(M * 0.014, 0.8)
+			for k = 0, 47 do
+				local a = -spin * 0.4 + k * math.pi / 24
+				circle(sx + math.cos(a) * M * 1.09, sy + math.sin(a) * M * 1.09, bead)
+			end
+			fill.color = rgba(ar, ag, ab, fade * 0.9)
+			renderer:drawPath(path, fill)
+			-- Embers: a spray of tiny ones, flung out and falling, flickering.
+			path:reset()
+			for k = 0, 39 do
+				local a = k * 2.39996 + seed
+				local r = R * (0.3 + 1.4 * out * (0.45 + 0.55 * (0.5 + 0.5 * math.sin(seed * 0.7 + k * 1.37))))
+				circle(sx + math.cos(a) * r, sy + math.sin(a) * r + R * 0.5 * u * u, math.max(R * 0.011, 0.7))
+			end
+			fill.color = rgba(cr, cg, cb, (1 - u) * (0.65 + 0.35 * math.sin(age * 45 + seed)))
 			renderer:drawPath(path, fill)
 		end
 	end
@@ -3012,7 +3090,7 @@ function draw(self: World, renderer: Renderer)
 	-- on a ghost light; it opens as he looses, and is gone once the chapter
 	-- is over. Round it, the arrow's arc (gold as he draws, filling with
 	-- the pull; white after it goes, filling till he can draw again), and
-	-- further out the astra's (filling as it comes back, gold when ready).
+	-- after the astra, further out, a ring of dots filling as it recharges.
 	if self.play and not (self.chapterDone or self.fallen) then
 		local path = self.reticle
 		local x, y = self.aimX, self.aimY
@@ -3062,9 +3140,31 @@ function draw(self: World, renderer: Renderer)
 		elseif self.time - self.loosedAt < RELOAD then
 			arc(21, (self.time - self.loosedAt) / RELOAD, Color.rgba(235, 240, 255, 200), 2.5)
 		end
-		local ready = if self.astraReady <= 0 then 1 else clamp(1 - (self.astraReady - self.time) / ASTRA_COOLDOWN, 0, 1)
-		arc(28, 1, Color.rgba(255, 210, 120, 40), 1.5)
-		arc(28, ready, if ready >= 1 then Color.rgba(255, 200, 90, 210) else Color.rgba(200, 210, 240, 120), 1.5)
+		-- The astra recharging: a ring of dots, gold as far as it has come
+		-- back, faint beyond; gone once it is ready.
+		if self.time < self.astraReady then
+			local ready = clamp(1 - (self.astraReady - self.time) / ASTRA_COOLDOWN, 0, 1)
+			local dots = 36
+			local lit = math.floor(ready * dots + 0.5)
+			for _, on in { true, false } do
+				path:reset()
+				for k = 0, dots - 1 do
+					if (k < lit) == on then
+						local a = -math.pi / 2 + k * 2 * math.pi / dots
+						local cx, cy, r = x + math.cos(a) * 29, y + math.sin(a) * 29, if on then 1.5 else 1.1
+						local q = r * 0.5523
+						path:moveTo(Vector.xy(cx + r, cy))
+						path:cubicTo(Vector.xy(cx + r, cy + q), Vector.xy(cx + q, cy + r), Vector.xy(cx, cy + r))
+						path:cubicTo(Vector.xy(cx - q, cy + r), Vector.xy(cx - r, cy + q), Vector.xy(cx - r, cy))
+						path:cubicTo(Vector.xy(cx - r, cy - q), Vector.xy(cx - q, cy - r), Vector.xy(cx, cy - r))
+						path:cubicTo(Vector.xy(cx + q, cy - r), Vector.xy(cx + r, cy - q), Vector.xy(cx + r, cy))
+						path:close()
+					end
+				end
+				self.reticleDot.color = if on then Color.rgba(255, 200, 90, 230) else Color.rgba(220, 225, 245, 70)
+				renderer:drawPath(path, self.reticleDot)
+			end
+		end
 	end
 end
 
