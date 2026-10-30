@@ -37,10 +37,10 @@
             <DataBindContext sourcePathIds="6:500-6:503" propertyKey="15" converterId="6:62" id="6:33"/>
             <Shape name="Arrowhead" id="6:34">
                 <PointsPath isClosed="true" name="Path" id="6:35">
-                    <StraightVertex x="0" y="-9"/>
-                    <StraightVertex x="7" y="7"/>
-                    <StraightVertex x="0" y="3.5"/>
-                    <StraightVertex x="-7" y="7"/>
+                    <StraightVertex x="0" y="-9" id="0:491843"/>
+                    <StraightVertex x="7" y="7" id="0:491844"/>
+                    <StraightVertex x="0" y="3.5" id="0:491845"/>
+                    <StraightVertex x="-7" y="7" id="0:491846"/>
                 </PointsPath>
                 <Fill name="Fill" id="6:36">
                     <SolidColor colorValue="FFFFF4E0" name="Color" id="6:37"/>
@@ -83,20 +83,20 @@
         <!-- The path, a soft earthen band. -->
         <Shape name="Path" id="6:70">
             <PointsPath isClosed="false" name="Route" id="6:71">
-                <StraightVertex x="24.8" y="208.4" radius="12"/>
-                <StraightVertex x="36.9" y="190.2" radius="12"/>
-                <StraightVertex x="46.6" y="177.2" radius="12"/>
-                <StraightVertex x="56.6" y="164.4" radius="12"/>
-                <StraightVertex x="70.0" y="157.5" radius="12"/>
-                <StraightVertex x="84.2" y="152.0" radius="12"/>
-                <StraightVertex x="99.3" y="145.3" radius="12"/>
-                <StraightVertex x="110.8" y="133.6" radius="12"/>
-                <StraightVertex x="120.5" y="121.0" radius="12"/>
-                <StraightVertex x="130.1" y="108.6" radius="12"/>
-                <StraightVertex x="139.1" y="94.5" radius="12"/>
-                <StraightVertex x="148.3" y="80.8" radius="12"/>
-                <StraightVertex x="157.9" y="68.8" radius="12"/>
-                <StraightVertex x="161.3" y="58.0" radius="12"/>
+                <StraightVertex x="24.8" y="208.4" radius="12" id="0:491847"/>
+                <StraightVertex x="36.9" y="190.2" radius="12" id="0:491848"/>
+                <StraightVertex x="46.6" y="177.2" radius="12" id="0:491849"/>
+                <StraightVertex x="56.6" y="164.4" radius="12" id="0:491850"/>
+                <StraightVertex x="70.0" y="157.5" radius="12" id="0:491851"/>
+                <StraightVertex x="84.2" y="152.0" radius="12" id="0:491852"/>
+                <StraightVertex x="99.3" y="145.3" radius="12" id="0:491853"/>
+                <StraightVertex x="110.8" y="133.6" radius="12" id="0:491854"/>
+                <StraightVertex x="120.5" y="121.0" radius="12" id="0:491855"/>
+                <StraightVertex x="130.1" y="108.6" radius="12" id="0:491856"/>
+                <StraightVertex x="139.1" y="94.5" radius="12" id="0:491857"/>
+                <StraightVertex x="148.3" y="80.8" radius="12" id="0:491858"/>
+                <StraightVertex x="157.9" y="68.8" radius="12" id="0:491859"/>
+                <StraightVertex x="161.3" y="58.0" radius="12" id="0:491860"/>
             </PointsPath>
             <Stroke thickness="11" cap="round" join="round" name="Band" id="6:72">
                 <SolidColor colorValue="FF6E6A44" name="Color" id="6:73"/>
@@ -127,18 +127,18 @@
         </StateMachine>
         <!-- The peepal's ring pulses outward and fades, over and over. -->
         <LinearAnimation duration="90" loopValue="1" name="Pulse" id="6:210">
-            <KeyedObject objectId="6:55">
-                <KeyedProperty propertyKey="16">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="2.2" frame="90" interpolationType="linear"/>
+            <KeyedObject objectId="6:55" id="0:491861">
+                <KeyedProperty propertyKey="16" id="0:491862">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491863"/>
+                    <KeyFrameDouble value="2.2" frame="90" interpolationType="linear" id="0:491864"/>
                 </KeyedProperty>
-                <KeyedProperty propertyKey="17">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="2.2" frame="90" interpolationType="linear"/>
+                <KeyedProperty propertyKey="17" id="0:491865">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491866"/>
+                    <KeyFrameDouble value="2.2" frame="90" interpolationType="linear" id="0:491867"/>
                 </KeyedProperty>
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="0.9" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="0" frame="90" interpolationType="linear"/>
+                <KeyedProperty propertyKey="18" id="0:491868">
+                    <KeyFrameDouble value="0.9" frame="0" interpolationType="linear" id="0:491869"/>
+                    <KeyFrameDouble value="0" frame="90" interpolationType="linear" id="0:491870"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>

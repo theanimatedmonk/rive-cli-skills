@@ -555,68 +555,68 @@
         <LinearAnimation duration="60" loopValue="1" name="Play" id="5:210"/>
         <!-- Playing: the map shown, no card. -->
         <LinearAnimation duration="1" name="Chapter Playing" id="5:820">
-            <KeyedObject objectId="5:900">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+            <KeyedObject objectId="5:900" id="0:491805">
+                <KeyedProperty propertyKey="18" id="0:491806">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491807"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:950">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="hold"/>
+            <KeyedObject objectId="5:950" id="0:491808">
+                <KeyedProperty propertyKey="18" id="0:491809">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:491810"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:600">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+            <KeyedObject objectId="5:600" id="0:491811">
+                <KeyedProperty propertyKey="18" id="0:491812">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491813"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:700">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="hold"/>
+            <KeyedObject objectId="5:700" id="0:491814">
+                <KeyedProperty propertyKey="18" id="0:491815">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:491816"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
         <!-- Fallen: the map and the health fade, and the fallen card. -->
         <LinearAnimation duration="130" name="Chapter Fallen" id="5:822">
-            <KeyedObject objectId="5:900">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="linear"/>
-                    <KeyFrameDouble value="1" frame="130" interpolationType="hold"/>
+            <KeyedObject objectId="5:900" id="0:491817">
+                <KeyedProperty propertyKey="18" id="0:491818">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491819"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="linear" id="0:491820"/>
+                    <KeyFrameDouble value="1" frame="130" interpolationType="hold" id="0:491821"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:700">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+            <KeyedObject objectId="5:700" id="0:491822">
+                <KeyedProperty propertyKey="18" id="0:491823">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491824"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491825"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:950">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+            <KeyedObject objectId="5:950" id="0:491826">
+                <KeyedProperty propertyKey="18" id="0:491827">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491828"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491829"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
         <!-- Done: the map and the health fade, and after a breath the card. -->
         <LinearAnimation duration="150" name="Chapter Done" id="5:821">
-            <KeyedObject objectId="5:950">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+            <KeyedObject objectId="5:950" id="0:491830">
+                <KeyedProperty propertyKey="18" id="0:491831">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491832"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491833"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:600">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
-                    <KeyFrameDouble value="0" frame="60" interpolationType="linear"/>
-                    <KeyFrameDouble value="1" frame="150" interpolationType="hold"/>
+            <KeyedObject objectId="5:600" id="0:491834">
+                <KeyedProperty propertyKey="18" id="0:491835">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491836"/>
+                    <KeyFrameDouble value="0" frame="60" interpolationType="linear" id="0:491837"/>
+                    <KeyFrameDouble value="1" frame="150" interpolationType="hold" id="0:491838"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:700">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+            <KeyedObject objectId="5:700" id="0:491839">
+                <KeyedProperty propertyKey="18" id="0:491840">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491841"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491842"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
