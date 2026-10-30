@@ -197,4 +197,8 @@
          drawn. -->
     <AudioAsset file="../bow-release.flac" name="bowRelease" id="0:909"/>
     <AudioAsset file="../stretch.mp3" name="bowPull" id="0:910"/>
+    <!-- The game's arrows (made by hand for it): one loosed (a thwip and the
+         shaft's whoosh) and one striking wood. -->
+    <AudioAsset file="../arrow-loose.wav" name="arrowLoose" id="0:921"/>
+    <AudioAsset file="../arrow-hit.wav" name="arrowHit" id="0:922"/>
 </Rive>

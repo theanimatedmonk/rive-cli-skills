@@ -7,7 +7,11 @@
 # colour, normal, roughness/metal), his bow (VKK_Bow: limbs, gold fittings
 # and the string, on bow bones of the same rig, with a shape key for the
 # drawn string) and four in-place clips, VKK_Idle, VKK_Walk, VKK_Draw and
-# VKK_Shoot (the draw, the loose and the follow-through, played once).
+# VKK_Shoot (the draw, the loose and the follow-through, played once); for
+# the game, the shot in parts: VKK_AimHold (a loop at full draw) and
+# VKK_Release (the loose and the follow-through), and three held full-draw
+# poses that differ only in how the upper body pitches, VKK_Aim_Level,
+# VKK_Aim_Up (+45 degrees) and VKK_Aim_Down (-35), for aiming.
 # The skinning is baked here: for every key of each loop, each bone's skin
 # matrix (its posed world matrix times its inverse bind), so the script only
 # blends matrices and the GPU skins. The rig may be placed anywhere in the
@@ -54,7 +58,8 @@ from PIL import Image
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else 'Vikram_King.glb'
 OUT = sys.argv[2] if len(sys.argv) > 2 else 'king.bin'
-LOOPS = ['VKK_Idle', 'VKK_Walk', 'VKK_Draw', 'VKK_Shoot']
+LOOPS = ['VKK_Idle', 'VKK_Walk', 'VKK_Draw', 'VKK_Shoot', 'VKK_AimHold', 'VKK_Release',
+         'VKK_Aim_Level', 'VKK_Aim_Up', 'VKK_Aim_Down']
 BOW_PARTS = {'VKK_BowLimb': 0, 'VKK_BowGold': 1, 'VKK_BowString': 2}
 BOW_SAMPLES = 13
 # Where his face is, in bind pose (metres; measured off the textured head).
@@ -389,16 +394,21 @@ if limb_pts:
         near = np.argmin(np.linalg.norm(lp[m] - c, axis=1))
         jw = lw[m][near] / max(lw[m][near].sum(), 1e-6)
         rows.append(np.concatenate([c, ld[m].mean(0), lj[m][near].astype(float), jw]))
-    if string_pts is not None:
+    jnames = [nodes[j]['name'] for j in joints]
+    grip_j = jnames.index('bow_grip') if 'bow_grip' in jnames else -1
+    nock_j = jnames.index('bow_nock') if 'bow_nock' in jnames else -1
+    if nock_j >= 0:
+        # The nock is its own bone (at the string's middle): where it is in
+        # the bind pose, moved wholly by it.
+        at = (Rinv @ np.linalg.inv(ibm[nock_j]) @ np.array([0, 0, 0, 1.0]))[:3]
+        rows.append(np.concatenate([at, np.zeros(3), [nock_j, 0, 0, 0], [1, 0, 0, 0]]))
+    elif string_pts is not None:
         sp, sd, sj, sw = string_pts
         nock = np.argmax(np.linalg.norm(sd, axis=1))
         rows.append(np.concatenate([sp[nock], sd[nock], sj[nock].astype(float), sw[nock] / max(sw[nock].sum(), 1e-6)]))
     else:
         rows.append(rows[BOW_SAMPLES // 2])
     origin = centre + axis * lo_t
-    jnames = [nodes[j]['name'] for j in joints]
-    grip_j = jnames.index('bow_grip') if 'bow_grip' in jnames else -1
-    nock_j = jnames.index('bow_nock') if 'bow_nock' in jnames else -1
     bow_info = np.concatenate([np.array(rows).ravel(), origin, axis, [hi_t - lo_t, grip_j, nock_j]]).astype('<f4')
     print(f'bow axis: {axis.round(3)}, {hi_t - lo_t:.2f} m long, grip at {centre.round(3)}')
 

@@ -314,3 +314,77 @@ body {
   background: #e0a04a;
   color: #1a0f06;
 }
+
+/* The game's panel: the story menu's, with turn buttons and the keys. */
+.game-menu .story-menu__panel {
+  width: 230px;
+}
+
+.game-turn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.game-turn__button {
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(160, 180, 255, 0.06);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-turn__button:hover {
+  background: rgba(160, 180, 255, 0.12);
+}
+
+.game-turn__button:active {
+  background: #e0a04a;
+  color: #1a0f06;
+}
+
+.game-controls {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 7px 10px;
+  margin: 2px 4px 2px;
+  font-size: 12px;
+  align-items: center;
+}
+
+.game-controls dt {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.game-controls dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.game-controls kbd {
+  display: inline-block;
+  min-width: 1.4em;
+  margin-right: 2px;
+  padding: 1px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  font: inherit;
+  font-size: 11px;
+  text-align: center;
+}
+
+#scene:focus {
+  outline: none;
+}
+
+/* In the game, the target circle (drawn by the file) is the cursor. */
+.game #scene {
+  cursor: none;
+}

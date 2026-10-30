@@ -3,7 +3,9 @@
 --
 --   local Hero = require('Hero')
 --   local hero = Hero.load(context, 'king')         -- king.bin
---   Hero.advance(hero, dt, pose, speed)              -- 0 idle, 1 walk, 2 draw, 3 shoot
+--   Hero.advance(hero, dt, pose, speed)              -- 0 idle, 1 walk, 2 draw, 3 shoot,
+--                                                    -- 4 hold at full draw, 5 loose
+--   Hero.aim(hero, pitch)                            -- drawn, the bow aims up or down
 --   Hero.write(hero, u, settings)                    -- his part of the uniforms
 --   Hero.pipelines(hero, shader, format, samples)    -- king.wgsl
 --   Hero.drawShadow(hero, pass, ubo, shadowView, shadowSampler)
@@ -14,6 +16,12 @@
 -- Hero writes where he stands, his eyes, earrings and blink, the bones, the
 -- bow's shape key and its aura, and draws his body, its ink outline, the
 -- earrings' halos and the aura.
+--
+-- For the game the shot comes in parts: the draw (pose 2) into the hold at
+-- full draw (pose 4, a loop) and the loose (pose 5: the string lets go at
+-- its key, and he follows through). Drawn, `Hero.aim` pitches his upper body
+-- (degrees, + up; blending the GLB's three aim poses) so the bow points up
+-- or down.
 --
 -- The release (`settings.release`, 0-1 over about 3 s): the string snaps
 -- home from full draw and shivers still, a flash at the grip, and rings of
@@ -35,6 +43,11 @@ Hero.MAX_JOINTS = 80
 Hero.UNIFORM_SIZE = Hero.BONES + Hero.MAX_JOINTS * 48
 local BONES = Hero.BONES
 local BOW_SAMPLES = 13
+-- The loops, as king.bin has them (1-based): the poses, then the aim poses.
+local DRAW, SHOOT, HOLD, LOOSE = 3, 4, 5, 6
+local AIM_LEVEL, AIM_UP, AIM_DOWN = 7, 8, 9
+-- The aim poses pitch the bow this far (degrees) up and down.
+local AIM_UP_DEGREES, AIM_DOWN_DEGREES = 45, 35
 -- The aura's pieces (king.wgsl's vs_aura), the ripples last.
 local AURA_PIECES = 523
 local VERTEX_STRIDE = 32
@@ -85,6 +98,9 @@ export type Settings = {
 
 export type Hero = {
 	loops: { Loop },
+	-- How much he aims up and down (0-1 each; the aim poses' shares).
+	aimUp: number,
+	aimDown: number,
 	-- Each loop's time (seconds) and share of the pose (summing to 1).
 	loopTimes: { number },
 	mixes: { number },
@@ -281,8 +297,10 @@ function Hero.load(context: Context, asset: string): (Hero?, string?)
 	end
 	local hero: Hero = {
 		loops = loops,
-		loopTimes = { 0, 0, 0, 0 },
-		mixes = { 1, 0, 0, 0 },
+		loopTimes = table.create(#loops, 0),
+		mixes = table.create(#loops, 0),
+		aimUp = 0,
+		aimDown = 0,
 		lastPose = 0,
 		pull = 0,
 		jointCount = math.min(buffer.readu32(data, 12), Hero.MAX_JOINTS),
@@ -357,6 +375,7 @@ function Hero.load(context: Context, asset: string): (Hero?, string?)
 			end)
 		end
 	end
+	hero.mixes[1] = 1
 	return hero, nil
 end
 
@@ -386,9 +405,28 @@ function Hero.advance(hero: Hero, dt: number, pose: number, speed: number)
 	end
 end
 
--- How much of each pose he is in now: idle, walk, draw, shoot.
+-- How much of each pose he is in now: idle, walk, draw, shoot, hold, loose.
 function Hero.mix(hero: Hero, pose: number): number
 	return hero.mixes[pose + 1] or 0
+end
+
+-- Where his bow aims, drawn: degrees above the level (below, negative).
+function Hero.aim(hero: Hero, pitch: number)
+	hero.aimUp = clamp(pitch / AIM_UP_DEGREES, 0, 1)
+	hero.aimDown = clamp(-pitch / AIM_DOWN_DEGREES, 0, 1)
+end
+
+-- How long ago (seconds of the clip) the string let go, in the shoot or
+-- the loose, whichever he is in; nil before it has (or in neither).
+function Hero.sinceLetGo(hero: Hero): number?
+	for _, li in { SHOOT, LOOSE } do
+		local loop = hero.loops[li]
+		if loop and loop.letGo >= 0 and hero.mixes[li] > 0.5 then
+			local since = hero.loopTimes[li] - loop.letGo / loop.fps
+			return if since >= 0 then since else nil
+		end
+	end
+	return nil
 end
 
 ---------------------------------------------------------------------------
@@ -416,7 +454,9 @@ local function keysAt(loop: Loop, time: number, once: boolean, rock: boolean): (
 end
 
 -- The skin matrices for now: each loop's two nearest keys, blended by the
--- loops' shares of the pose; and how far the string is drawn.
+-- loops' shares of the pose; and how far the string is drawn. Drawn (in the
+-- hold, the drawn end of the draw, the loose as it lets go), the aim poses
+-- add how far up or down they pitch from the level one.
 local function writeBones(hero: Hero, u: buffer)
 	local joints = hero.jointCount
 	local floats = joints * 12
@@ -425,8 +465,9 @@ local function writeBones(hero: Hero, u: buffer)
 	local pull = 0
 	for li, loop in hero.loops do
 		local w = hero.mixes[li]
-		if w > 0.0005 then
-			local i0, i1, k = keysAt(loop, hero.loopTimes[li], li >= 3, li == 3)
+		if w > 0.0005 and li < AIM_LEVEL then
+			local once = li == DRAW or li == SHOOT or li == LOOSE
+			local i0, i1, k = keysAt(loop, hero.loopTimes[li], once, li == DRAW)
 			local wa, wb = loop.weights[i0 + 1] or 0, loop.weights[i1 + 1] or 0
 			pull += (wa + (wb - wa) * k) * w
 			local data = loop.data
@@ -444,6 +485,26 @@ local function writeBones(hero: Hero, u: buffer)
 		end
 	end
 	hero.pull = pull
+	local level, up, down = hero.loops[AIM_LEVEL], hero.loops[AIM_UP], hero.loops[AIM_DOWN]
+	if level and up and down and not first then
+		local drawn = (hero.mixes[HOLD] or 0) + (hero.mixes[DRAW] or 0) * clamp(pull, 0, 1)
+		local loose = hero.loops[LOOSE]
+		if loose and hero.mixes[LOOSE] > 0 then
+			drawn += hero.mixes[LOOSE] * clamp(1 - hero.loopTimes[LOOSE] / 0.6, 0, 1)
+		end
+		local wu, wd = hero.aimUp * drawn, hero.aimDown * drawn
+		if wu + wd > 0.001 then
+			local dl, du, dd = level.data, up.data, down.data
+			for j = 0, floats - 1 do
+				local o = j * 4
+				local l = buffer.readf32(dl, level.offset + o)
+				local v = buffer.readf32(u, BONES + o)
+					+ wu * (buffer.readf32(du, up.offset + o) - l)
+					+ wd * (buffer.readf32(dd, down.offset + o) - l)
+				buffer.writef32(u, BONES + o, v)
+			end
+		end
+	end
 end
 
 -- His part of king.wgsl's uniforms (the host writes the rest).
@@ -463,15 +524,12 @@ function Hero.write(hero: Hero, u: buffer, s: Settings)
 	end
 	writeBones(hero, u)
 
-	-- The release: the string snaps home and shivers still. In the shoot it
-	-- comes when the clip lets go of the string.
+	-- The release: the string snaps home and shivers still. In the shoot
+	-- and the loose it comes when the clip lets go of the string.
 	local release = clamp(s.release, 0, 1)
-	local shoot = hero.loops[4]
-	if shoot and shoot.letGo >= 0 and hero.mixes[4] > 0.5 then
-		local since = hero.loopTimes[4] - shoot.letGo / shoot.fps
-		if since >= 0 then
-			release = math.max(release, math.min(since / 3, 1))
-		end
+	local since = Hero.sinceLetGo(hero)
+	if since then
+		release = math.max(release, math.min(since / 3, 1))
 	end
 	local snap = if release > 0 then math.min(release / 0.02, 1) else 0
 	local secs = release * 3

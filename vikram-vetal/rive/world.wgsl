@@ -1237,3 +1237,34 @@ fn fs_pollen(in: PollenOut) -> FragOut {
     out.color = vec4<f32>(sqrt(c / (1.0 + c)) * a, a);
     return out;
 }
+
+// ---------------------------------------------------------------------------
+// King Vikram's arrows: ribbons the script builds each frame (shaft,
+// fletching, head), facing the camera, in world space. Lit faintly by the
+// moon, with a golden glow (alpha) while they fly, and hazed like the rest.
+
+struct ArrowOut {
+    @builtin(position) clip: vec4<f32>,
+    @location(0) world: vec3<f32>,
+    @location(1) color: vec4<f32>, // albedo rgb, glow
+};
+
+@vertex
+fn vs_arrow(@location(0) position: vec3<f32>, @location(1) color: vec4<f32>) -> ArrowOut {
+    var out: ArrowOut;
+    out.clip = u.viewProj * vec4<f32>(position, 1.0);
+    out.world = position;
+    out.color = color;
+    return out;
+}
+
+@fragment
+fn fs_arrow(in: ArrowOut) -> FragOut {
+    var out: FragOut;
+    let moon = u.sunColor.rgb * u.sunDir.w * 0.35 + u.shadowColor.rgb * 0.5;
+    let glow = vec3<f32>(1.0, 0.72, 0.32) * in.color.a * 3.0;
+    let c = in.color.rgb * (moon + vec3<f32>(0.12, 0.09, 0.07)) + glow;
+    let hz = haze(c, in.world);
+    out.color = encode(hz.rgb, hz.w);
+    return out;
+}

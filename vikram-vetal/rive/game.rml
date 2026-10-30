@@ -1,0 +1,387 @@
+<Rive version="1" kind="fragment">
+    <!-- The game: King Vikram walks the night, the player's to steer. The
+         World node (World.luau) with `play` on: the arrow keys walk him,
+         as the camera sees it, along the path to the peepal (he cannot
+         leave it); the keypad (8 4 6 2, the number row's too, or W A S D) turns the camera round
+         him and tilts it, as in San Andreas; so does a drag, and a touchpad's
+         swipe (through dragX / dragY, from the host). A target circle follows
+         the pointer; Space held draws an arrow and aims it there, let go it
+         looses; a click is the astra (no arrow, the golden wave). The keys reach the World node
+         through the Game view model: the listeners below write it, and a
+         host (web/game.js) can too. -->
+    <Artboard defaultStateMachineId="5:200" viewModelId="5:500" viewModelInstanceId="5:520" x="0" y="1800" width="1280" height="720" styleId="5:2" name="Game" id="5:1">
+        <LayoutComponentStyle name="Game Style" id="5:2"/>
+        <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="World" id="5:10">
+            <ScriptInputString propertyValue="world" name="asset" id="5:100"/>
+            <ScriptInputNumber propertyValue="1280" name="width" id="5:101"/>
+            <ScriptInputNumber propertyValue="720" name="height" id="5:102"/>
+            <ScriptInputNumber propertyValue="1" name="resolution" id="5:103"/>
+            <ScriptInputNumber propertyValue="4" name="msaa" id="5:104"/>
+            <ScriptInputNumber propertyValue="0" name="drift" id="5:105"/>
+            <ScriptInputNumber propertyValue="-40" name="sunAzimuth" id="5:106"/>
+            <ScriptInputNumber propertyValue="26" name="sunElevation" id="5:107"/>
+            <ScriptInputNumber propertyValue="1" name="sunIntensity" id="5:108"/>
+            <ScriptInputNumber propertyValue="0.15" name="lightLeak" id="5:109"/>
+            <ScriptInputNumber propertyValue="0.6" name="shafts" id="5:110"/>
+            <ScriptInputBoolean propertyValue="false" name="navigation" id="5:111"/>
+            <ScriptInputNumber name="navMode" id="5:112"/>
+            <ScriptInputNumber propertyValue="1" name="zoom" id="5:113"/>
+            <ScriptInputNumber name="resetView" id="5:114"/>
+            <ScriptInputNumber name="dragX" id="5:115">
+                <DataBindContext sourcePathIds="5:500-5:509" propertyKey="243" id="5:319"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="dragY" id="5:116">
+                <DataBindContext sourcePathIds="5:500-5:510" propertyKey="243" id="5:320"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="0.6" name="gustiness" id="5:117"/>
+            <ScriptInputNumber propertyValue="1" name="flutter" id="5:118"/>
+            <ScriptInputNumber propertyValue="0.35" name="clouds" id="5:119"/>
+            <ScriptInputNumber propertyValue="0.9" name="bloom" id="5:120"/>
+            <ScriptInputNumber propertyValue="0.22" name="glow" id="5:121"/>
+            <ScriptInputNumber propertyValue="0.3" name="depthOfField" id="5:122"/>
+            <ScriptInputNumber propertyValue="1.3" name="exposure" id="5:123"/>
+            <ScriptInputNumber propertyValue="0.1" name="grain" id="5:124"/>
+            <ScriptInputNumber propertyValue="0.03" name="fireflySize" id="5:125"/>
+            <ScriptInputNumber propertyValue="0.6" name="fireflySpeed" id="5:126"/>
+            <ScriptInputNumber propertyValue="-7.33" name="cameraX" id="5:127"/>
+            <ScriptInputNumber propertyValue="1.69" name="cameraY" id="5:128"/>
+            <ScriptInputNumber propertyValue="8.92" name="cameraZ" id="5:129"/>
+            <ScriptInputNumber propertyValue="9.5" name="rotationX" id="5:130"/>
+            <ScriptInputNumber propertyValue="-33.5" name="rotationY" id="5:131"/>
+            <ScriptInputNumber name="rotationZ" id="5:132"/>
+            <ScriptInputNumber propertyValue="56" name="fov" id="5:133"/>
+            <ScriptInputNumber propertyValue="1" name="windStrength" id="5:134"/>
+            <ScriptInputNumber propertyValue="1" name="windSpeed" id="5:135"/>
+            <ScriptInputNumber propertyValue="30" name="windDirection" id="5:136"/>
+            <ScriptInputNumber propertyValue="1.6" name="haze" id="5:137"/>
+            <ScriptInputNumber propertyValue="1500" name="fireflies" id="5:138"/>
+            <ScriptInputNumber propertyValue="4.2" name="focusDistance" id="5:139"/>
+            <ScriptInputColor propertyValue="FFD2FF78" name="fireflyColor" id="5:140"/>
+            <ScriptInputColor propertyValue="FF96AFF5" name="sunColor" id="5:141"/>
+            <ScriptInputColor propertyValue="FF242C5C" name="shadowColor" id="5:142"/>
+            <ScriptInputColor propertyValue="FF03050E" name="skyColor" id="5:143"/>
+            <ScriptInputColor propertyValue="FF0E1230" name="skyMidColor" id="5:144"/>
+            <ScriptInputNumber propertyValue="1" name="mountains" id="5:145"/>
+            <ScriptInputColor propertyValue="FF080B18" name="mountainColor" id="5:146"/>
+            <ScriptInputNumber propertyValue="0.1" name="moon" id="5:147"/>
+            <ScriptInputNumber propertyValue="1.95" name="heroX" id="5:148"/>
+            <ScriptInputNumber propertyValue="-0.16" name="heroY" id="5:149"/>
+            <ScriptInputNumber propertyValue="-4.93" name="heroZ" id="5:150"/>
+            <ScriptInputNumber propertyValue="0.5" name="heroFireflies" id="5:151"/>
+            <ScriptInputNumber propertyValue="8" name="ghostLights" id="5:152"/>
+            <ScriptInputColor propertyValue="FF96DCFF" name="ghostColor" id="5:153"/>
+            <ScriptInputColor propertyValue="FF18283C" name="horizonColor" id="5:154"/>
+            <ScriptInputColor propertyValue="FF222E4C" name="hazeColor" id="5:155"/>
+            <ScriptInputNumber propertyValue="0" name="cinematic" id="5:156"/>
+            <ScriptInputNumber name="camFollow" id="5:157"/>
+            <ScriptInputNumber propertyValue="1.95" name="camTargetX" id="5:158"/>
+            <ScriptInputNumber propertyValue="3.2" name="camTargetY" id="5:159"/>
+            <ScriptInputNumber propertyValue="-4.93" name="camTargetZ" id="5:160"/>
+            <ScriptInputNumber propertyValue="295" name="camAngle" id="5:161"/>
+            <ScriptInputNumber propertyValue="4.2" name="camDistance" id="5:162"/>
+            <ScriptInputNumber propertyValue="2" name="camHeight" id="5:163"/>
+            <ScriptInputNumber propertyValue="2.2" name="clearNear" id="5:164"/>
+            <ScriptInputNumber propertyValue="1" name="kingHairWind" id="5:196"/>
+            <ScriptInputNumber propertyValue="1" name="kingClothWind" id="5:197"/>
+            <ScriptInputNumber propertyValue="-14.71" name="kingX" id="5:165"/>
+            <ScriptInputNumber propertyValue="13.35" name="kingZ" id="5:166"/>
+            <ScriptInputNumber name="kingTurn" id="5:167"/>
+            <ScriptInputNumber name="kingPose" id="5:168"/>
+            <ScriptInputNumber name="kingRelease" id="5:169"/>
+            <ScriptInputNumber propertyValue="1" name="kingAura" id="5:170"/>
+            <ScriptInputNumber name="blast" id="5:171"/>
+            <ScriptInputNumber propertyValue="1" name="kingSpeed" id="5:172"/>
+            <ScriptInputNumber propertyValue="0.3" name="kingFill" id="5:173"/>
+            <ScriptInputNumber name="kingBlink" id="5:174"/>
+            <ScriptInputNumber propertyValue="45" name="blastRange" id="5:175"/>
+            <ScriptInputNumber propertyValue="1.2" name="blastStrength" id="5:176"/>
+            <ScriptInputColor propertyValue="FFFFBE5A" name="kingAuraColor" id="5:177"/>
+            <ScriptInputColor propertyValue="FFFFB450" name="blastColor" id="5:178"/>
+            <ScriptInputString propertyValue="vikram" name="king" id="5:179"/>
+            <ScriptInputString propertyValue="vetal" name="vetal" id="5:199"/>
+            <ScriptInputNumber name="ghostsFlee" id="5:198"/>
+            <!-- The game: King Vikram is the player's. The keys come in on the
+                 Game view model (the listeners below, or a host). -->
+            <ScriptInputBoolean propertyValue="true" name="play" id="5:300"/>
+            <ScriptInputNumber name="keyUp" id="5:301">
+                <DataBindContext sourcePathIds="5:500-5:501" propertyKey="243" id="5:311"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="keyDown" id="5:302">
+                <DataBindContext sourcePathIds="5:500-5:502" propertyKey="243" id="5:312"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="keyLeft" id="5:303">
+                <DataBindContext sourcePathIds="5:500-5:503" propertyKey="243" id="5:313"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="keyRight" id="5:304">
+                <DataBindContext sourcePathIds="5:500-5:504" propertyKey="243" id="5:314"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="lookUp" id="5:305">
+                <DataBindContext sourcePathIds="5:500-5:505" propertyKey="243" id="5:315"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="lookDown" id="5:306">
+                <DataBindContext sourcePathIds="5:500-5:506" propertyKey="243" id="5:316"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="lookLeft" id="5:307">
+                <DataBindContext sourcePathIds="5:500-5:507" propertyKey="243" id="5:317"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="fire" id="5:321">
+                <DataBindContext sourcePathIds="5:500-5:511" propertyKey="243" id="5:322"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber name="lookRight" id="5:308">
+                <DataBindContext sourcePathIds="5:500-5:508" propertyKey="243" id="5:318"/>
+            </ScriptInputNumber>
+        </ScriptedDrawable>
+        <!-- The keys' surface: full-bleed behind the world, focused as the
+             game starts, so the keys have somewhere to go. -->
+        <Shape x="640" y="360" name="Keys" id="5:20">
+            <FocusData id="5:21"/>
+            <Rectangle width="1280" height="720" name="Path" id="5:22"/>
+            <Fill name="Night" id="5:23">
+                <SolidColor colorValue="FF060A1E" name="Color" id="5:24"/>
+            </Fill>
+        </Shape>
+        <StateMachine name="Game" id="5:200">
+            <StateMachineLayer name="Game" id="5:201">
+                <AnyState x="200" y="-120" id="5:202"/>
+                <ExitState x="400" y="-120" id="5:203"/>
+                <EntryState id="5:204">
+                    <StateTransition stateToId="5:205" id="5:206"/>
+                </EntryState>
+                <AnimationState x="200" animationId="5:210" id="5:205">
+                    <FocusActionTarget targetId="5:20"/>
+                </AnimationState>
+            </StateMachineLayer>
+            <!-- Each key: held, its number is 1; let go, 0. -->
+            <StateMachineListener targetId="5:20" name="keyUp down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="up" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyUp up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="up" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyDown down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="down" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyDown up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="down" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyLeft down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="left" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyLeft up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="left" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyRight down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="right" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="keyRight up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="right" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookUp down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp8" keyPhase="1"/>
+                    <KeyboardInput keyType="key8" keyPhase="1"/>
+                    <KeyboardInput keyType="w" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookUp up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp8" keyPhase="4"/>
+                    <KeyboardInput keyType="key8" keyPhase="4"/>
+                    <KeyboardInput keyType="w" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookDown down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp2" keyPhase="1"/>
+                    <KeyboardInput keyType="key2" keyPhase="1"/>
+                    <KeyboardInput keyType="s" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookDown up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp2" keyPhase="4"/>
+                    <KeyboardInput keyType="key2" keyPhase="4"/>
+                    <KeyboardInput keyType="s" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookLeft down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp4" keyPhase="1"/>
+                    <KeyboardInput keyType="key4" keyPhase="1"/>
+                    <KeyboardInput keyType="a" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookLeft up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp4" keyPhase="4"/>
+                    <KeyboardInput keyType="key4" keyPhase="4"/>
+                    <KeyboardInput keyType="a" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookRight down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp6" keyPhase="1"/>
+                    <KeyboardInput keyType="key6" keyPhase="1"/>
+                    <KeyboardInput keyType="d" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="lookRight up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="kp6" keyPhase="4"/>
+                    <KeyboardInput keyType="key6" keyPhase="4"/>
+                    <KeyboardInput keyType="d" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="fire down">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="space" keyPhase="1"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="1">
+                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+            <StateMachineListener targetId="5:20" name="fire up">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
+                    <KeyboardInput keyType="space" keyPhase="4"/>
+                </ListenerInputTypeKeyboard>
+                <ListenerViewModelChange>
+                    <BindablePropertyNumber propertyValue="0">
+                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true"/>
+                    </BindablePropertyNumber>
+                </ListenerViewModelChange>
+            </StateMachineListener>
+        </StateMachine>
+        <!-- The game animates itself; this loop keeps the state machine
+             (and the view model binds) running. -->
+        <LinearAnimation duration="60" loopValue="1" name="Play" id="5:210"/>
+    </Artboard>
+
+    <!-- The keys held (1) or not (0): the arrows walk him, the keypad looks. -->
+    <ViewModel name="Game" id="5:500">
+        <ViewModelPropertyNumber name="keyUp" id="5:501"/>
+        <ViewModelPropertyNumber name="keyDown" id="5:502"/>
+        <ViewModelPropertyNumber name="keyLeft" id="5:503"/>
+        <ViewModelPropertyNumber name="keyRight" id="5:504"/>
+        <ViewModelPropertyNumber name="lookUp" id="5:505"/>
+        <ViewModelPropertyNumber name="lookDown" id="5:506"/>
+        <ViewModelPropertyNumber name="lookLeft" id="5:507"/>
+        <ViewModelPropertyNumber name="lookRight" id="5:508"/>
+        <!-- Look: a running total of pixels a host has moved the view by
+             (a touchpad's swipe, mouse-look); each change turns it. -->
+        <ViewModelPropertyNumber name="dragX" id="5:509"/>
+        <ViewModelPropertyNumber name="dragY" id="5:510"/>
+        <!-- Space: held 1 (drawing, aiming), let go 0 (it looses). -->
+        <ViewModelPropertyNumber name="fire" id="5:511"/>
+        <ViewModelInstance exports="true" name="Default" id="5:520">
+            <ViewModelInstanceNumber viewModelPropertyId="5:501" id="5:1501"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:502" id="5:1502"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:503" id="5:1503"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:504" id="5:1504"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:505" id="5:1505"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:506" id="5:1506"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:507" id="5:1507"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:508" id="5:1508"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:509" id="5:1509"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:510" id="5:1510"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:511" id="5:1511"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>
