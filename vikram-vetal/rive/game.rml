@@ -2,7 +2,7 @@
     <!-- The game, chapter I: King Vikram walks the path to the peepal as the
          ghost lights come at him (a wave of them; more than half reaching
          him, he falls), and shoots them down; a column of light near the
-         tree ends it. A Map and a Health component sit in the corners. The player's to steer. The
+         tree ends it. A Health component sits in the corner. The player's to steer. The
          World node (World.luau) with `play` on: the arrow keys walk him,
          as the camera sees it, along the path to the peepal (he cannot
          leave it); the keypad (8 4 6 2, the number row's too, or W A S D) turns the camera round
@@ -122,29 +122,8 @@
                 <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="7:501" id="5:952">
                     <DataBindContext sourcePathIds="5:500-5:518" propertyKey="575" id="5:953"/>
                 </ViewModelInstanceNumber>
-                <ViewModelInstanceString propertyValue="Struck  0 of 6" viewModelPropertyId="7:502" id="5:954">
+                <ViewModelInstanceString propertyValue="Struck  0 of 10" viewModelPropertyId="7:502" id="5:954">
                     <DataBindContext sourcePathIds="5:500-5:519" propertyKey="561" id="5:955"/>
-                </ViewModelInstanceString>
-            </ViewModelInstance>
-        </NestedArtboard>
-        <!-- The map, in the corner (the Map component, bound to this view
-             model). -->
-        <NestedArtboard artboardId="6:1" isStateful="true" x="1038" y="64" name="Map" id="5:700">
-            <ViewModelInstance viewModelId="6:500" exports="true" name="Game Map" id="5:701">
-                <ViewModelInstanceNumber propertyValue="-14.71" viewModelPropertyId="6:501" id="5:702">
-                    <DataBindContext sourcePathIds="5:500-5:512" propertyKey="575" id="5:703"/>
-                </ViewModelInstanceNumber>
-                <ViewModelInstanceNumber propertyValue="13.35" viewModelPropertyId="6:502" id="5:704">
-                    <DataBindContext sourcePathIds="5:500-5:513" propertyKey="575" id="5:705"/>
-                </ViewModelInstanceNumber>
-                <ViewModelInstanceNumber propertyValue="65" viewModelPropertyId="6:503" id="5:706">
-                    <DataBindContext sourcePathIds="5:500-5:514" propertyKey="575" id="5:707"/>
-                </ViewModelInstanceNumber>
-                <ViewModelInstanceString propertyValue="The peepal" viewModelPropertyId="6:504" id="5:708">
-                    <DataBindContext sourcePathIds="5:500-5:515" propertyKey="561" id="5:709"/>
-                </ViewModelInstanceString>
-                <ViewModelInstanceString propertyValue="Spirits felled  0" viewModelPropertyId="6:505" id="5:710">
-                    <DataBindContext sourcePathIds="5:500-5:516" propertyKey="561" id="5:711"/>
                 </ViewModelInstanceString>
             </ViewModelInstance>
         </NestedArtboard>
@@ -268,7 +247,7 @@
             <ScriptInputNumber propertyValue="1.1" name="goalRadius" id="5:325"/>
             <!-- How many ghost lights come at him; more than half upon him,
                  he falls. -->
-            <ScriptInputNumber propertyValue="12" name="ghostWave" id="5:326"/>
+            <ScriptInputNumber propertyValue="20" name="ghostWave" id="5:326"/>
             <ScriptInputNumber name="fire" id="5:321">
                 <DataBindContext sourcePathIds="5:500-5:511" propertyKey="243" id="5:322"/>
             </ScriptInputNumber>
@@ -553,7 +532,7 @@
         <!-- The game animates itself; this loop keeps the state machine
              (and the view model binds) running. -->
         <LinearAnimation duration="60" loopValue="1" name="Play" id="5:210"/>
-        <!-- Playing: the map shown, no card. -->
+        <!-- Playing: the health shown, no card. -->
         <LinearAnimation duration="1" name="Chapter Playing" id="5:820">
             <KeyedObject objectId="5:900" id="0:491805">
                 <KeyedProperty propertyKey="18" id="0:491806">
@@ -570,25 +549,14 @@
                     <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491813"/>
                 </KeyedProperty>
             </KeyedObject>
-            <KeyedObject objectId="5:700" id="0:491814">
-                <KeyedProperty propertyKey="18" id="0:491815">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="hold" id="0:491816"/>
-                </KeyedProperty>
-            </KeyedObject>
         </LinearAnimation>
-        <!-- Fallen: the map and the health fade, and the fallen card. -->
+        <!-- Fallen: the health fades, and the fallen card. -->
         <LinearAnimation duration="130" name="Chapter Fallen" id="5:822">
             <KeyedObject objectId="5:900" id="0:491817">
                 <KeyedProperty propertyKey="18" id="0:491818">
                     <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491819"/>
                     <KeyFrameDouble value="0" frame="40" interpolationType="linear" id="0:491820"/>
                     <KeyFrameDouble value="1" frame="130" interpolationType="hold" id="0:491821"/>
-                </KeyedProperty>
-            </KeyedObject>
-            <KeyedObject objectId="5:700" id="0:491822">
-                <KeyedProperty propertyKey="18" id="0:491823">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491824"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491825"/>
                 </KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="5:950" id="0:491826">
@@ -598,7 +566,7 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
-        <!-- Done: the map and the health fade, and after a breath the card. -->
+        <!-- Done: the health fades, and after a breath the card. -->
         <LinearAnimation duration="150" name="Chapter Done" id="5:821">
             <KeyedObject objectId="5:950" id="0:491830">
                 <KeyedProperty propertyKey="18" id="0:491831">
@@ -611,12 +579,6 @@
                     <KeyFrameDouble value="0" frame="0" interpolationType="hold" id="0:491836"/>
                     <KeyFrameDouble value="0" frame="60" interpolationType="linear" id="0:491837"/>
                     <KeyFrameDouble value="1" frame="150" interpolationType="hold" id="0:491838"/>
-                </KeyedProperty>
-            </KeyedObject>
-            <KeyedObject objectId="5:700" id="0:491839">
-                <KeyedProperty propertyKey="18" id="0:491840">
-                    <KeyFrameDouble value="1" frame="0" interpolationType="linear" id="0:491841"/>
-                    <KeyFrameDouble value="0" frame="40" interpolationType="hold" id="0:491842"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
@@ -638,14 +600,9 @@
         <ViewModelPropertyNumber name="dragY" id="5:510"/>
         <!-- Space: held 1 (drawing, aiming), let go 0 (it looses). -->
         <ViewModelPropertyNumber name="fire" id="5:511"/>
-        <!-- Written by the World node for the map and the end card: where he
-             is (metres) and faces (degrees on the map), the two lines under
-             the map, his health (0-1) and the line under it, and chapter I
-             (0 playing, 1 reached, 2 fallen). -->
-        <ViewModelPropertyNumber name="playerX" id="5:512"/>
-        <ViewModelPropertyNumber name="playerZ" id="5:513"/>
-        <ViewModelPropertyNumber name="playerHeading" id="5:514"/>
-        <ViewModelPropertyString name="goalLabel" id="5:515"/>
+        <!-- Written by the World node for the HUD and the end cards: the
+             spirits felled, his health (0-1) and the line under it, and
+             chapter I (0 playing, 1 reached, 2 fallen). -->
         <ViewModelPropertyString name="statusLabel" id="5:516"/>
         <ViewModelPropertyNumber name="chapterState" id="5:517"/>
         <ViewModelPropertyNumber name="health" id="5:518"/>
@@ -662,14 +619,10 @@
             <ViewModelInstanceNumber viewModelPropertyId="5:509" id="5:1509"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:510" id="5:1510"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:511" id="5:1511"/>
-            <ViewModelInstanceNumber propertyValue="-14.71" viewModelPropertyId="5:512" id="5:1512"/>
-            <ViewModelInstanceNumber propertyValue="13.35" viewModelPropertyId="5:513" id="5:1513"/>
-            <ViewModelInstanceNumber propertyValue="65" viewModelPropertyId="5:514" id="5:1514"/>
-            <ViewModelInstanceString propertyValue="The peepal" viewModelPropertyId="5:515" id="5:1515"/>
             <ViewModelInstanceString propertyValue="Spirits felled  0" viewModelPropertyId="5:516" id="5:1516"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:517" id="5:1517"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="5:518" id="5:1518"/>
-            <ViewModelInstanceString propertyValue="Struck  0 of 6" viewModelPropertyId="5:519" id="5:1519"/>
+            <ViewModelInstanceString propertyValue="Struck  0 of 10" viewModelPropertyId="5:519" id="5:1519"/>
         </ViewModelInstance>
     </ViewModel>
 </Rive>

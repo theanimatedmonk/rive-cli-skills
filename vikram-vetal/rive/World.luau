@@ -275,7 +275,7 @@ export type World = {
 	-- The chapter: its ghost lights (the script flies them in the game),
 	-- the next attack (scene time), how many he has felled and been struck
 	-- by, a shove and a shake from a strike, whether he has reached the
-	-- goal, and the view model the map and the end card read.
+	-- goal, and the view model the HUD and the end cards read.
 	ghosts: { Ghost },
 	nextAttack: number,
 	felled: number,
@@ -299,6 +299,9 @@ export type World = {
 	astraReady: number,
 	-- Until when (scene time) the astra has them slowed.
 	slowUntil: number,
+	-- Struck: the reaction he is playing (a Hero pose; -1 none), how long.
+	hitPose: number,
+	hitT: number,
 	aimGhost: number,
 	hud: { [string]: any },
 	ghostSound: AudioSource?,
@@ -556,13 +559,19 @@ local ARROW_OFFSET = -19
 -- how often one breaks off to (seconds), how many at once, how near an
 -- arrow must pass to fell one and one must come to strike him (metres),
 -- how long a felled one is gone, and how far a strike shoves him.
-local GHOST_SPEED = 2.8
-local ATTACK_GAP = 2.6
-local MAX_ATTACKERS = 3
-local GHOST_HIT = 0.6
+local GHOST_SPEED = 4.3
+local ATTACK_GAP = 1.4
+local MAX_ATTACKERS = 5
+local GHOST_HIT = 0.5
 local GHOST_REACH = 0.75
 local GHOST_RESPAWN = 4
 local SHOVE = 2.2
+-- Struck, he reacts for this long (seconds; the clip is 0.75), blending in
+-- this fast (so the impact lands), and then is the player's again.
+local HIT_TIME = 0.65
+local HIT_BLEND = 14
+-- How far they weave side to side as they come (metres a second across).
+local GHOST_WEAVE = 2.6
 -- The astra's string, letting go, slows the ghost lights coming at him to
 -- this share of their speed, for this long (seconds).
 local ASTRA_SLOW, ASTRA_SLOW_TIME = 0.5, 5
@@ -866,14 +875,14 @@ function init(self: World, context: Context): boolean
 	self.hitSound = context:audio('arrowHit')
 	self.ghostSound = context:audio('ghostFell')
 	self.strikeSound = context:audio('ghostStrike')
-	-- The view model the game's map and end card read (init runs twice;
+	-- The view model the game's HUD and end cards read (init runs twice;
 	-- the view model is there the second time).
 	local vm = context:viewModel()
 	if vm then
-		for _, name in { 'playerX', 'playerZ', 'playerHeading', 'health', 'chapterState' } do
+		for _, name in { 'health', 'chapterState' } do
 			self.hud[name] = vm:getNumber(name)
 		end
-		for _, name in { 'goalLabel', 'statusLabel', 'healthLabel' } do
+		for _, name in { 'statusLabel', 'healthLabel' } do
 			self.hud[name] = vm:getString(name)
 		end
 	end
@@ -1111,8 +1120,9 @@ local function startChapter(self: World)
 	table.clear(self.arrows)
 	table.clear(self.bursts)
 	self.loosedAt, self.astraReady = -100, 0
-	self.nextAttack = self.time + 4
+	self.nextAttack = self.time + 3
 	self.slowUntil = 0
+	self.hitPose, self.hitT = -1, 0
 	self.felled, self.struck = 0, 0
 	self.pushX, self.pushZ, self.shake = 0, 0, 0
 	self.chapterDone, self.fallen = false, false
@@ -1200,7 +1210,7 @@ local function flyGhosts(self: World, dt: number)
 			local d = math.max(math.sqrt(dx * dx + dy * dy + dz * dz), 1e-4)
 			-- Weaving: side to side across its line, and up and down.
 			local sx, sz = -dz / d, dx / d
-			local weave = math.sin(self.time * 2.6 + i * 1.9) * 1.6 * math.min(d / 4, 1) * (if self.time < self.slowUntil then ASTRA_SLOW else 1)
+			local weave = math.sin(self.time * 2.6 + i * 1.9) * GHOST_WEAVE * math.min(d / 4, 1) * (if self.time < self.slowUntil then ASTRA_SLOW else 1)
 			-- The astra's wave slows them.
 			local slow = if self.time < self.slowUntil then ASTRA_SLOW else 1
 			local speed = GHOST_SPEED * (1 + 0.6 * math.exp(-d / 3)) * slow
@@ -1222,6 +1232,16 @@ local function flyGhosts(self: World, dt: number)
 				self.struck += 1
 				local hx, hz = cx - px, cz - pz
 				local hl = math.max(math.sqrt(hx * hx + hz * hz), 1e-4)
+				-- He reacts from the side it came at him (his right is -X
+				-- facing +Z, as in Blender), and any shot is lost.
+				local fa = math.rad(self.kingFacing)
+				local ahead = -(hx * math.sin(fa) + hz * math.cos(fa))
+				local right = -(hx * -math.cos(fa) + hz * math.sin(fa))
+				self.hitPose = if math.abs(ahead) >= math.abs(right)
+					then (if ahead > 0 then Hero.HIT_FRONT else Hero.HIT_BACK)
+					else (if right > 0 then Hero.HIT_RIGHT else Hero.HIT_LEFT)
+				self.hitT = 0
+				self.shot = SHOT_NONE
 				self.pushX, self.pushZ = hx / hl * SHOVE, hz / hl * SHOVE
 				self.shake = 1
 				local strike = self.strikeSound
@@ -1330,6 +1350,10 @@ end
 
 -- He begins a shot (an arrow, or the astra), unless he is in one.
 local function startShot(self: World, kind: number)
+	-- Not while struck, nor once fallen.
+	if self.hitPose >= 0 or self.fallen then
+		return
+	end
 	-- Mid-shot, only once an arrow is away and he has reloaded.
 	if self.shot ~= SHOT_NONE and not (self.shot == SHOT_ARROW and self.loosed and self.time - self.loosedAt >= RELOAD) then
 		return
@@ -1572,11 +1596,9 @@ local function arrowRibbons(self: World): number
 	return count
 end
 
--- What the map and the end card read off the view model (when the
--- artboard's has them): where he is and faces (the map's degrees,
--- clockwise from its up, which is -Z), how far the peepal is, the felled,
--- his health (1 whole, 0 fallen) and strikes, and the chapter (0 playing,
--- 1 reached, 2 fallen).
+-- What the HUD and the end cards read off the view model (when the
+-- artboard's has them): the felled, his health (1 whole, 0 fallen) and
+-- strikes, and the chapter (0 playing, 1 reached, 2 fallen).
 local function writeHud(self: World)
 	local hud = self.hud
 	local function number(name: string, v: number)
@@ -1591,11 +1613,6 @@ local function writeHud(self: World)
 			prop.value = v
 		end
 	end
-	number('playerX', self.kx)
-	number('playerZ', self.kz)
-	number('playerHeading', (180 - self.kingFacing) % 360)
-	local d = math.sqrt((self.goalX - self.kx) ^ 2 + (self.goalZ - self.kz) ^ 2)
-	text('goalLabel', if self.chapterDone then 'The peepal' else string.format('The peepal  ·  %d m', math.floor(d + 0.5)))
 	text('statusLabel', string.format('Spirits felled  %d', self.felled))
 	local bear = bearable(self)
 	number('health', clamp(1 - self.struck / (bear + 1), 0, 1))
@@ -1664,7 +1681,21 @@ function advance(self: World, seconds: number): boolean
 				startShot(self, SHOT_ARROW)
 			end
 		end
-		if self.shot ~= SHOT_NONE then
+		if self.fallen then
+			-- Felled: down to one knee, and there he stays.
+			if hero then
+				Hero.advance(hero, dt, Hero.FALL, 1, HIT_BLEND)
+			end
+		elseif self.hitPose >= 0 then
+			-- Struck: the reaction plays out, sharp, and he is held.
+			self.hitT += dt
+			if hero then
+				Hero.advance(hero, dt, self.hitPose, 1, HIT_BLEND)
+			end
+			if self.hitT >= HIT_TIME then
+				self.hitPose = -1
+			end
+		elseif self.shot ~= SHOT_NONE then
 			if not shooting(self, hero, dt) then
 				self.shot = SHOT_NONE
 			end
@@ -1674,7 +1705,7 @@ function advance(self: World, seconds: number): boolean
 				Hero.advance(hero, dt, pose, self.kingSpeed)
 			end
 		end
-		if not over then
+		if not over and self.hitPose < 0 then
 			walk(self, hero, dt)
 		end
 		-- A strike's shove, along the path, dying away.
@@ -3393,6 +3424,8 @@ return function(): Node<World>
 		loosedAt = -100,
 		astraReady = 0,
 		slowUntil = 0,
+		hitPose = -1,
+		hitT = 0,
 		aimGhost = 0,
 		hud = {},
 		ghostSound = nil,

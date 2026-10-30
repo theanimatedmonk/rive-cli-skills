@@ -11,7 +11,9 @@
 # the game, the shot in parts: VKK_AimHold (a loop at full draw) and
 # VKK_Release (the loose and the follow-through), and three held full-draw
 # poses that differ only in how the upper body pitches, VKK_Aim_Level,
-# VKK_Aim_Up (+45 degrees) and VKK_Aim_Down (-35), for aiming.
+# VKK_Aim_Up (+45 degrees) and VKK_Aim_Down (-35), for aiming; and his
+# reactions to a ghost light striking him (in place, each from a side:
+# VKK_Hit_Front, _Back, _Left, _Right) and his fall (VKK_Fall, to one knee).
 # The skinning is baked here: for every key of each loop, each bone's skin
 # matrix (its posed world matrix times its inverse bind), so the script only
 # blends matrices and the GPU skins. The rig may be placed anywhere in the
@@ -59,7 +61,8 @@ from PIL import Image
 SRC = sys.argv[1] if len(sys.argv) > 1 else 'Vikram_King.glb'
 OUT = sys.argv[2] if len(sys.argv) > 2 else 'king.bin'
 LOOPS = ['VKK_Idle', 'VKK_Walk', 'VKK_Draw', 'VKK_Shoot', 'VKK_AimHold', 'VKK_Release',
-         'VKK_Aim_Level', 'VKK_Aim_Up', 'VKK_Aim_Down']
+         'VKK_Aim_Level', 'VKK_Aim_Up', 'VKK_Aim_Down',
+         'VKK_Hit_Front', 'VKK_Hit_Back', 'VKK_Hit_Left', 'VKK_Hit_Right', 'VKK_Fall']
 BOW_PARTS = {'VKK_BowLimb': 0, 'VKK_BowGold': 1, 'VKK_BowString': 2}
 BOW_SAMPLES = 13
 # Where his face is, in bind pose (metres; measured off the textured head).

@@ -3,8 +3,9 @@
 --
 --   local Hero = require('Hero')
 --   local hero = Hero.load(context, 'king')         -- king.bin
---   Hero.advance(hero, dt, pose, speed)              -- 0 idle, 1 walk, 2 draw, 3 shoot,
---                                                    -- 4 hold at full draw, 5 loose
+--   Hero.advance(hero, dt, pose, speed, blend?)      -- 0 idle, 1 walk, 2 draw, 3 shoot,
+--                                                    -- 4 hold at full draw, 5 loose,
+--                                                    -- 9-12 struck (Hero.HIT_*), 13 fall
 --   Hero.aim(hero, pitch)                            -- drawn, the bow aims up or down
 --   Hero.write(hero, u, settings)                    -- his part of the uniforms
 --   Hero.pipelines(hero, shader, format, samples)    -- king.wgsl
@@ -22,6 +23,12 @@
 -- its key, and he follows through). Drawn, `Hero.aim` pitches his upper body
 -- (degrees, + up; blending the GLB's three aim poses) so the bow points up
 -- or down.
+--
+-- Struck (a ghost light breaking on him), he reacts from the side it came
+-- (Hero.HIT_FRONT, _BACK, _LEFT, _RIGHT: in place, about 0.75 s, the
+-- impact Hero.HIT_IMPACT seconds in); felled, he goes down to one knee and
+-- stays (Hero.FALL). Pass a quicker `blend` (5 is the usual, about half a
+-- second) for a hit to land sharply.
 --
 -- The release (`settings.release`, 0-1 over about 3 s): the string snaps
 -- home from full draw and shivers still, a flash at the grip, and rings of
@@ -48,6 +55,12 @@ local DRAW, SHOOT, HOLD, LOOSE = 3, 4, 5, 6
 local AIM_LEVEL, AIM_UP, AIM_DOWN = 7, 8, 9
 -- The aim poses pitch the bow this far (degrees) up and down.
 local AIM_UP_DEGREES, AIM_DOWN_DEGREES = 45, 35
+-- Then the reactions: struck from the front, back, left and right, and the
+-- fall; as poses (0-based) for Hero.advance.
+local HIT_FIRST = 10
+Hero.HIT_FRONT, Hero.HIT_BACK, Hero.HIT_LEFT, Hero.HIT_RIGHT = 9, 10, 11, 12
+Hero.FALL = 13
+Hero.HIT_IMPACT = 0.125
 -- The aura's pieces (king.wgsl's vs_aura), the ripples last.
 local AURA_PIECES = 523
 local VERTEX_STRIDE = 32
@@ -384,7 +397,7 @@ end
 
 -- From one pose into the next over about half a second (0 idle, 1 walk, 2
 -- draw, 3 shoot); the draw and the shoot start from the beginning each time.
-function Hero.advance(hero: Hero, dt: number, pose: number, speed: number)
+function Hero.advance(hero: Hero, dt: number, pose: number, speed: number, blend: number?)
 	local count = #hero.loops
 	local p = clamp(math.floor(pose + 0.5), 0, count - 1)
 	if p ~= hero.lastPose then
@@ -393,7 +406,7 @@ function Hero.advance(hero: Hero, dt: number, pose: number, speed: number)
 		end
 		hero.lastPose = p
 	end
-	local k = 1 - math.exp(-dt * 5)
+	local k = 1 - math.exp(-dt * (blend or 5))
 	local s = clamp(speed, 0, 3)
 	for i = 1, count do
 		hero.loopTimes[i] += dt * s
@@ -465,8 +478,8 @@ local function writeBones(hero: Hero, u: buffer)
 	local pull = 0
 	for li, loop in hero.loops do
 		local w = hero.mixes[li]
-		if w > 0.0005 and li < AIM_LEVEL then
-			local once = li == DRAW or li == SHOOT or li == LOOSE
+		if w > 0.0005 and (li < AIM_LEVEL or li > AIM_DOWN) then
+			local once = li == DRAW or li == SHOOT or li == LOOSE or li >= HIT_FIRST
 			local i0, i1, k = keysAt(loop, hero.loopTimes[li], once, li == DRAW)
 			local wa, wb = loop.weights[i0 + 1] or 0, loop.weights[i1 + 1] or 0
 			pull += (wa + (wb - wa) * k) * w
