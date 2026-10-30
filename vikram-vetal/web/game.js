@@ -5,7 +5,7 @@
 // the arrows.
 // (The file's own keyboard listeners write the same numbers wherever the
 // runtime passes it the keys.)
-const SRC = "vikram-vetal.riv?v=75";
+const SRC = "vikram-vetal.riv?v=77";
 
 // The keys, by KeyboardEvent.code: the arrows walk him, the keypad (or the
 // number row's 8 4 6 2, or W A S D) turns and tilts the camera, and Space,

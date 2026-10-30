@@ -287,6 +287,16 @@ export type World = {
 	fallen: boolean,
 	doneAt: number,
 	waveLeft: number,
+	-- The bursts of ghost lights dying, drawn in 2D over the scene: where
+	-- (world), how long ago, what kind (1 shot, 2 struck him), a seed.
+	bursts: { { number } },
+	burstPath: Path,
+	burstFill: Paint,
+	burstStroke: Paint,
+	-- When his last arrow went (scene time), and when the astra is ready
+	-- again.
+	loosedAt: number,
+	astraReady: number,
 	-- Until when (scene time) the astra has them slowed.
 	slowUntil: number,
 	aimGhost: number,
@@ -529,7 +539,14 @@ local ARROW_SPEED = 30
 local ARROW_RANGE = 70
 local ARROW_EMBED = 0.2
 local SHOOT_SPEED = 1.5
-local DRAW_SPEED = 1.6
+local DRAW_SPEED = 2.4
+local LOOSE_SPEED = 1.6
+-- After an arrow goes he can draw the next this soon (seconds); the astra,
+-- once loosed, is ready again after this long.
+local RELOAD = 0.45
+local ASTRA_COOLDOWN = 8
+-- A ghost light's burst lasts this long (seconds).
+local BURST_TIME = 0.8
 -- At full draw his bow aims this far (degrees) from where he faces (the
 -- shoot and the arrow's hold both stand him side-on, the shoot more); he
 -- faces that far off the circle so the bow is on it.
@@ -1092,6 +1109,8 @@ local function startChapter(self: World)
 		table.insert(self.ghosts, { mode = 'orbit', t = 0, x = x, y = y, z = z, vx = 0, vy = 0, vz = 0, glow = 0.8, size = 1 })
 	end
 	table.clear(self.arrows)
+	table.clear(self.bursts)
+	self.loosedAt, self.astraReady = -100, 0
 	self.nextAttack = self.time + 4
 	self.slowUntil = 0
 	self.felled, self.struck = 0, 0
@@ -1116,8 +1135,10 @@ local function endChapter(self: World, reached: boolean)
 end
 
 -- A ghost light bursts: shot, it scatters; striking him, it breaks on him.
-local function burst(g: Ghost)
-	g.mode, g.t = 'burst', 0
+-- Its light goes out at once, and a burst is drawn in 2D where it was.
+local function burst(self: World, g: Ghost, kind: number)
+	g.mode, g.t, g.glow = 'burst', 0, 0
+	table.insert(self.bursts, { g.x, g.y, g.z, 0, kind, math.random() * 1000 })
 end
 
 -- His chest, where the ghost lights come for.
@@ -1159,6 +1180,13 @@ local function flyGhosts(self: World, dt: number)
 		end
 		self.nextAttack = self.time + ATTACK_GAP * (0.7 + 0.6 * math.random())
 	end
+	for i = #self.bursts, 1, -1 do
+		local b = self.bursts[i]
+		b[4] += dt
+		if b[4] > BURST_TIME then
+			table.remove(self.bursts, i)
+		end
+	end
 	for i, g in self.ghosts do
 		g.t += dt
 		local px, py, pz = g.x, g.y, g.z
@@ -1190,7 +1218,7 @@ local function flyGhosts(self: World, dt: number)
 			g.size = 1.35
 			if d < GHOST_REACH then
 				-- It breaks on him: a shove away from it, and a shake.
-				burst(g)
+				burst(self, g, 2)
 				self.struck += 1
 				local hx, hz = cx - px, cz - pz
 				local hl = math.max(math.sqrt(hx * hx + hz * hz), 1e-4)
@@ -1207,15 +1235,9 @@ local function flyGhosts(self: World, dt: number)
 				end
 			end
 		elseif g.mode == 'burst' then
-			-- A flash, then scattering up and out as it fades.
-			local k = math.exp(-dt * 3)
-			g.vx, g.vy, g.vz = g.vx * k, g.vy * k + 1.2 * dt, g.vz * k
-			g.x += g.vx * dt
-			g.y += g.vy * dt
-			g.z += g.vz * dt
-			g.glow = 3 * math.exp(-g.t * 5)
-			g.size = 1.4 + g.t * 4
-			if g.t > 0.7 then
+			-- Out (the 2D burst shows it), then gone a while.
+			g.glow = 0
+			if g.t > BURST_TIME then
 				g.mode, g.t, g.glow = 'gone', 0, 0
 			end
 		elseif g.mode == 'gone' then
@@ -1308,7 +1330,11 @@ end
 
 -- He begins a shot (an arrow, or the astra), unless he is in one.
 local function startShot(self: World, kind: number)
-	if self.shot ~= SHOT_NONE then
+	-- Mid-shot, only once an arrow is away and he has reloaded.
+	if self.shot ~= SHOT_NONE and not (self.shot == SHOT_ARROW and self.loosed and self.time - self.loosedAt >= RELOAD) then
+		return
+	end
+	if kind == SHOT_ASTRA and self.time < self.astraReady then
 		return
 	end
 	self.shot, self.lastShot = kind, kind
@@ -1327,7 +1353,7 @@ end
 -- shoulder, with no bow drawn) for what the circle is on, with its sound.
 local function loose(self: World)
 	local on = nockedArrow(self)
-	self.loosed = true
+	self.loosed, self.loosedAt = true, self.time
 	self.aimKick = 1
 	play(self.arrowSound)
 	local tx, ty, tz = aimPoint(self)
@@ -1370,6 +1396,7 @@ local function looseAstra(self: World)
 	play(self.looseSound)
 	self.gameBlast = 0.0001
 	self.slowUntil = self.time + ASTRA_SLOW_TIME
+	self.astraReady = self.time + ASTRA_COOLDOWN
 end
 
 -- In a shot. He turns so his drawn bow is on the circle (an arrow's also
@@ -1412,7 +1439,7 @@ local function shooting(self: World, hero: Hero.Hero?, dt: number): boolean
 			self.shotPose = 5
 		end
 	end
-	local speed = if self.shotPose == 3 then SHOOT_SPEED elseif self.shotPose == 2 then DRAW_SPEED else 1
+	local speed = if self.shotPose == 3 then SHOOT_SPEED elseif self.shotPose == 2 then DRAW_SPEED elseif self.shotPose == 5 then LOOSE_SPEED else 1
 	Hero.advance(hero, dt, self.shotPose, speed)
 	if not self.pulled and hero.pull > 0.15 then
 		self.pulled = true
@@ -1458,7 +1485,7 @@ local function flyArrows(self: World, dt: number)
 					local t = clamp(vx * a.dx + vy * a.dy + vz * a.dz, from - ARROW_LENGTH, a.tip)
 					local ex, ey, ez = vx - a.dx * t, vy - a.dy * t, vz - a.dz * t
 					if ex * ex + ey * ey + ez * ez < GHOST_HIT * GHOST_HIT then
-						burst(g)
+						burst(self, g, 1)
 						g.vx, g.vy, g.vz = a.dx * 4, a.dy * 4, a.dz * 4
 						self.felled += 1
 						play(self.ghostSound)
@@ -2876,6 +2903,88 @@ local function pointerExit(self: World, event: PointerEvent)
 	pointerUp(self, event)
 end
 
+-- The ghost lights' bursts, in 2D over the scene where each died: a soft
+-- flash, a shockwave ring and a thinner one after it, sparks flung out and
+-- falling, embers drifting; pale cyan for one shot down, violet for one
+-- that struck him.
+local function drawBursts(self: World, renderer: Renderer)
+	local cam = self.camera
+	local path, fill, stroke = self.burstPath, self.burstFill, self.burstStroke
+	local halfW, halfH = self.width / 2, self.height / 2
+	local function circle(x: number, y: number, r: number)
+		local k = r * 0.5523
+		path:moveTo(Vector.xy(x + r, y))
+		path:cubicTo(Vector.xy(x + r, y + k), Vector.xy(x + k, y + r), Vector.xy(x, y + r))
+		path:cubicTo(Vector.xy(x - k, y + r), Vector.xy(x - r, y + k), Vector.xy(x - r, y))
+		path:cubicTo(Vector.xy(x - r, y - k), Vector.xy(x - k, y - r), Vector.xy(x, y - r))
+		path:cubicTo(Vector.xy(x + k, y - r), Vector.xy(x + r, y - k), Vector.xy(x + r, y))
+		path:close()
+	end
+	local function rgba(r: number, g: number, b: number, a: number): Color
+		return Color.rgba(math.floor(r), math.floor(g), math.floor(b), math.floor(clamp(a, 0, 1) * 255))
+	end
+	for _, b in self.bursts do
+		local vx, vy, vz = b[1] - cam.x, b[2] - cam.y, b[3] - cam.z
+		local depth = vx * cam.fx + vy * cam.fy + vz * cam.fz
+		if depth > 0.3 then
+			local sx = (vx * cam.rx + vy * cam.ry + vz * cam.rz) / depth / cam.tanX * halfW
+			local sy = -(vx * cam.ux + vy * cam.uy + vz * cam.uz) / depth / cam.tanY * halfH
+			-- A metre there, in pixels; the burst spans about one.
+			local R = clamp(halfH / cam.tanY / depth, 18, 260)
+			local age = b[4]
+			local u = clamp(age / BURST_TIME, 0, 1)
+			local out = 1 - (1 - u) ^ 3
+			local struck = b[5] == 2
+			local cr, cg, cb = if struck then 190 else 150, if struck then 140 else 225, 255
+			local seed = b[6]
+			-- The flash.
+			path:reset()
+			circle(sx, sy, R * (0.25 + 0.35 * out))
+			fill.feather = R * 0.4
+			fill.color = rgba(255, 255, 255, (1 - u) ^ 3 * 0.95)
+			renderer:drawPath(path, fill)
+			fill.feather = 0
+			-- The shockwave, and a thinner one after it.
+			path:reset()
+			circle(sx, sy, R * (0.2 + 0.95 * out))
+			stroke.thickness = math.max(R * 0.07 * (1 - u), 0.6)
+			stroke.color = rgba(cr, cg, cb, (1 - u) ^ 1.5)
+			renderer:drawPath(path, stroke)
+			local u2 = clamp((age - 0.1) / (BURST_TIME - 0.1), 0, 1)
+			if u2 > 0 then
+				path:reset()
+				circle(sx, sy, R * (0.15 + 0.7 * (1 - (1 - u2) ^ 2)))
+				stroke.thickness = math.max(R * 0.025 * (1 - u2), 0.5)
+				stroke.color = rgba(255, 255, 255, (1 - u2) ^ 2 * 0.8)
+				renderer:drawPath(path, stroke)
+			end
+			-- Sparks: flung out, shortening, falling a little.
+			path:reset()
+			for k = 0, 13 do
+				local a = (k / 14) * 2 * math.pi + math.sin(seed + k * 12.9898) * 0.35
+				local reach = 0.75 + 0.5 * (0.5 + 0.5 * math.sin(seed * 1.7 + k * 78.233))
+				local r0 = R * (0.12 + 0.95 * out * reach)
+				local r1 = r0 + R * 0.32 * (1 - u)
+				local fall = R * 0.35 * u * u
+				path:moveTo(Vector.xy(sx + math.cos(a) * r0, sy + math.sin(a) * r0 + fall))
+				path:lineTo(Vector.xy(sx + math.cos(a) * r1, sy + math.sin(a) * r1 + fall))
+			end
+			stroke.thickness = math.max(R * 0.035 * (1 - u * 0.7), 0.8)
+			stroke.color = rgba(255 * 0.5 + cr * 0.5, 255 * 0.5 + cg * 0.5, 255, (1 - u) ^ 1.2)
+			renderer:drawPath(path, stroke)
+			-- Embers, drifting out and up, flickering.
+			path:reset()
+			for k = 0, 9 do
+				local a = math.sin(seed * 0.37 + k * 4.1) * math.pi
+				local r = R * (0.3 + 1.1 * out) * (0.6 + 0.4 * math.sin(seed + k * 2.3))
+				circle(sx + math.cos(a) * r, sy + math.sin(a) * r - R * 0.4 * u, R * 0.035 + 1)
+			end
+			fill.color = rgba(cr, cg, cb, (1 - u) * (0.6 + 0.4 * math.sin(age * 40 + seed)))
+			renderer:drawPath(path, fill)
+		end
+	end
+end
+
 function draw(self: World, renderer: Renderer)
 	if self.failed then
 		return
@@ -2896,9 +3005,14 @@ function draw(self: World, renderer: Renderer)
 		renderer:drawImage(image, self.drawSampler, 'srcOver', 1)
 		renderer:restore()
 	end
+	if self.play then
+		drawBursts(self, renderer)
+	end
 	-- The target circle: a ring and a dot, gold over the peepal's wood, red
 	-- on a ghost light; it opens as he looses, and is gone once the chapter
-	-- is over.
+	-- is over. Round it, the arrow's arc (gold as he draws, filling with
+	-- the pull; white after it goes, filling till he can draw again), and
+	-- further out the astra's (filling as it comes back, gold when ready).
 	if self.play and not (self.chapterDone or self.fallen) then
 		local path = self.reticle
 		local x, y = self.aimX, self.aimY
@@ -2923,6 +3037,34 @@ function draw(self: World, renderer: Renderer)
 		circle(2.2)
 		self.reticleDot.color = color
 		renderer:drawPath(path, self.reticleDot)
+		local function arc(r: number, amount: number, c: Color, width: number)
+			if amount <= 0.001 then
+				return
+			end
+			path:reset()
+			local steps = math.max(math.ceil(amount * 48), 2)
+			for k = 0, steps do
+				local a = -math.pi / 2 + amount * 2 * math.pi * k / steps
+				local p = Vector.xy(x + math.cos(a) * r, y + math.sin(a) * r)
+				if k == 0 then
+					path:moveTo(p)
+				else
+					path:lineTo(p)
+				end
+			end
+			local paint = self.burstStroke
+			paint.color, paint.thickness = c, width
+			renderer:drawPath(path, paint)
+		end
+		local hero = self.hero
+		if self.shot == SHOT_ARROW and not self.loosed and hero then
+			arc(21, clamp(hero.pull, 0, 1), Color.rgba(255, 200, 100, 230), 2.5)
+		elseif self.time - self.loosedAt < RELOAD then
+			arc(21, (self.time - self.loosedAt) / RELOAD, Color.rgba(235, 240, 255, 200), 2.5)
+		end
+		local ready = if self.astraReady <= 0 then 1 else clamp(1 - (self.astraReady - self.time) / ASTRA_COOLDOWN, 0, 1)
+		arc(28, 1, Color.rgba(255, 210, 120, 40), 1.5)
+		arc(28, ready, if ready >= 1 then Color.rgba(255, 200, 90, 210) else Color.rgba(200, 210, 240, 120), 1.5)
 	end
 end
 
@@ -3144,6 +3286,12 @@ return function(): Node<World>
 		fallen = false,
 		doneAt = 0,
 		waveLeft = 0,
+		bursts = {},
+		burstPath = Path.new(),
+		burstFill = Paint.with({ style = 'fill', color = Color.rgba(255, 255, 255, 255) }),
+		burstStroke = Paint.with({ style = 'stroke', thickness = 2, cap = 'round', color = Color.rgba(255, 255, 255, 255) }),
+		loosedAt = -100,
+		astraReady = 0,
 		slowUntil = 0,
 		aimGhost = 0,
 		hud = {},
