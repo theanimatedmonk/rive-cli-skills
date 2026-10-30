@@ -1,5 +1,8 @@
 <Rive version="1" kind="fragment">
-    <!-- The game: King Vikram walks the night, the player's to steer. The
+    <!-- The game, chapter I: King Vikram walks the path to the peepal as the
+         ghost lights come at him (a wave of them; more than half reaching
+         him, he falls), and shoots them down; a column of light near the
+         tree ends it. A Map and a Health component sit in the corners. The player's to steer. The
          World node (World.luau) with `play` on: the arrow keys walk him,
          as the camera sees it, along the path to the peepal (he cannot
          leave it); the keypad (8 4 6 2, the number row's too, or W A S D) turns the camera round
@@ -11,6 +14,140 @@
          host (web/game.js) can too. -->
     <Artboard defaultStateMachineId="5:200" viewModelId="5:500" viewModelInstanceId="5:520" x="0" y="1800" width="1280" height="720" styleId="5:2" name="Game" id="5:1">
         <LayoutComponentStyle name="Game Style" id="5:2"/>
+        <!-- The chapter's end: a card over the scene (it fades in once he
+             reaches the goal; see the Chapter layer). -->
+        <Node x="640" y="360" opacity="0" name="Chapter End" id="5:600">
+            <Text x="0" y="-92" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Chapter" id="5:5610">
+                <TextStylePaint fontSize="20" fontAssetId="0:925" name="Chapter Style" id="5:5611">
+                    <Fill name="Fill" id="5:5612">
+                        <SolidColor colorValue="FFD8B070" name="Color" id="5:5613"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5611" text="CHAPTER  I" name="Run" id="5:5614"/>
+            </Text>
+            <Text x="0" y="-38" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Title" id="5:5620">
+                <TextStylePaint fontSize="62" fontAssetId="0:925" name="Title Style" id="5:5621">
+                    <Fill name="Fill" id="5:5622">
+                        <SolidColor colorValue="FFF6E7C8" name="Color" id="5:5623"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5621" text="The Path to the Peepal" name="Run" id="5:5624"/>
+            </Text>
+            <Text x="0" y="26" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Felled" id="5:5630">
+                <TextStylePaint fontSize="22" fontAssetId="0:925" name="Felled Style" id="5:5631">
+                    <Fill name="Fill" id="5:5632">
+                        <SolidColor colorValue="FFB9C6E6" name="Color" id="5:5633"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5631" text="Spirits felled  0" name="Run" id="5:5634">
+                    <DataBindContext sourcePathIds="5:500-5:516" propertyKey="268" id="5:5635"/>
+                </TextValueRun>
+            </Text>
+            <Text x="0" y="78" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Line" id="5:5640">
+                <TextStylePaint fontSize="20" fontAssetId="0:925" name="Line Style" id="5:5641">
+                    <Fill name="Fill" id="5:5642">
+                        <SolidColor colorValue="FFE8C88A" name="Color" id="5:5643"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5641" text="The ghost lights flee. Beneath the peepal, the Vetal waits." name="Run" id="5:5644"/>
+            </Text>
+            <Text x="0" y="150" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Again" id="5:5650">
+                <TextStylePaint fontSize="16" fontAssetId="0:925" name="Again Style" id="5:5651">
+                    <Fill name="Fill" id="5:5652">
+                        <SolidColor colorValue="FF8C97B8" name="Color" id="5:5653"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5651" text="Click to walk it again" name="Run" id="5:5654"/>
+            </Text>
+            <Shape name="Veil" id="5:601">
+                <Rectangle width="1280" height="720" name="Path" id="5:602"/>
+                <Fill name="Fill" id="5:603">
+                    <SolidColor colorValue="B0040714" name="Color" id="5:604"/>
+                </Fill>
+            </Shape>
+        </Node>
+        <!-- Fallen: more than half the ghost lights upon him. -->
+        <Node x="640" y="360" opacity="0" name="Chapter Fallen" id="5:900">
+            <Text x="0" y="-92" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Chapter" id="5:5910">
+                <TextStylePaint fontSize="20" fontAssetId="0:925" name="Chapter Style" id="5:5911">
+                    <Fill name="Fill" id="5:5912">
+                        <SolidColor colorValue="FFE08A7A" name="Color" id="5:5913"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5911" text="CHAPTER  I" name="Run" id="5:5914"/>
+            </Text>
+            <Text x="0" y="-38" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Title" id="5:5920">
+                <TextStylePaint fontSize="62" fontAssetId="0:925" name="Title Style" id="5:5921">
+                    <Fill name="Fill" id="5:5922">
+                        <SolidColor colorValue="FFF6E7C8" name="Color" id="5:5923"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5921" text="The Spirits Overcome Him" name="Run" id="5:5924"/>
+            </Text>
+            <Text x="0" y="26" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Line" id="5:5930">
+                <TextStylePaint fontSize="22" fontAssetId="0:925" name="Line Style" id="5:5931">
+                    <Fill name="Fill" id="5:5932">
+                        <SolidColor colorValue="FFB9C6E6" name="Color" id="5:5933"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5931" text="Too many ghost lights reached the king." name="Run" id="5:5934"/>
+            </Text>
+            <Text x="0" y="78" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Hint" id="5:5940">
+                <TextStylePaint fontSize="20" fontAssetId="0:925" name="Hint Style" id="5:5941">
+                    <Fill name="Fill" id="5:5942">
+                        <SolidColor colorValue="FFE8C88A" name="Color" id="5:5943"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5941" text="Shoot them down before they reach him." name="Run" id="5:5944"/>
+            </Text>
+            <Text x="0" y="150" originX="0.5" originY="0.5" sizingValue="autoWidth" name="Again" id="5:5950">
+                <TextStylePaint fontSize="16" fontAssetId="0:925" name="Again Style" id="5:5951">
+                    <Fill name="Fill" id="5:5952">
+                        <SolidColor colorValue="FF8C97B8" name="Color" id="5:5953"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="5:5951" text="Click to try again" name="Run" id="5:5954"/>
+            </Text>
+            <Shape name="Veil" id="5:901">
+                <Rectangle width="1280" height="720" name="Path" id="5:902"/>
+                <Fill name="Fill" id="5:903">
+                    <SolidColor colorValue="C0140408" name="Color" id="5:904"/>
+                </Fill>
+            </Shape>
+        </Node>
+        <!-- King Vikram's health, in the corner (the Health component, bound
+             to this view model). -->
+        <NestedArtboard artboardId="7:1" isStateful="true" x="28" y="64" name="Health" id="5:950">
+            <ViewModelInstance viewModelId="7:500" exports="true" name="Game Health" id="5:951">
+                <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="7:501" id="5:952">
+                    <DataBindContext sourcePathIds="5:500-5:518" propertyKey="575" id="5:953"/>
+                </ViewModelInstanceNumber>
+                <ViewModelInstanceString propertyValue="Struck  0 of 6" viewModelPropertyId="7:502" id="5:954">
+                    <DataBindContext sourcePathIds="5:500-5:519" propertyKey="561" id="5:955"/>
+                </ViewModelInstanceString>
+            </ViewModelInstance>
+        </NestedArtboard>
+        <!-- The map, in the corner (the Map component, bound to this view
+             model). -->
+        <NestedArtboard artboardId="6:1" isStateful="true" x="1038" y="64" name="Map" id="5:700">
+            <ViewModelInstance viewModelId="6:500" exports="true" name="Game Map" id="5:701">
+                <ViewModelInstanceNumber propertyValue="-14.71" viewModelPropertyId="6:501" id="5:702">
+                    <DataBindContext sourcePathIds="5:500-5:512" propertyKey="575" id="5:703"/>
+                </ViewModelInstanceNumber>
+                <ViewModelInstanceNumber propertyValue="13.35" viewModelPropertyId="6:502" id="5:704">
+                    <DataBindContext sourcePathIds="5:500-5:513" propertyKey="575" id="5:705"/>
+                </ViewModelInstanceNumber>
+                <ViewModelInstanceNumber propertyValue="65" viewModelPropertyId="6:503" id="5:706">
+                    <DataBindContext sourcePathIds="5:500-5:514" propertyKey="575" id="5:707"/>
+                </ViewModelInstanceNumber>
+                <ViewModelInstanceString propertyValue="The peepal" viewModelPropertyId="6:504" id="5:708">
+                    <DataBindContext sourcePathIds="5:500-5:515" propertyKey="561" id="5:709"/>
+                </ViewModelInstanceString>
+                <ViewModelInstanceString propertyValue="Spirits felled  0" viewModelPropertyId="6:505" id="5:710">
+                    <DataBindContext sourcePathIds="5:500-5:516" propertyKey="561" id="5:711"/>
+                </ViewModelInstanceString>
+            </ViewModelInstance>
+        </NestedArtboard>
         <ScriptedDrawable scriptAssetId="0:902" x="640" y="360" name="World" id="5:10">
             <ScriptInputString propertyValue="world" name="asset" id="5:100"/>
             <ScriptInputNumber propertyValue="1280" name="width" id="5:101"/>
@@ -124,6 +261,14 @@
             <ScriptInputNumber name="lookLeft" id="5:307">
                 <DataBindContext sourcePathIds="5:500-5:507" propertyKey="243" id="5:317"/>
             </ScriptInputNumber>
+            <!-- Chapter I's goal: the column of light near the peepal, where
+                 the path ends. -->
+            <ScriptInputNumber propertyValue="-0.42" name="goalX" id="5:323"/>
+            <ScriptInputNumber propertyValue="-0.53" name="goalZ" id="5:324"/>
+            <ScriptInputNumber propertyValue="1.1" name="goalRadius" id="5:325"/>
+            <!-- How many ghost lights come at him; more than half upon him,
+                 he falls. -->
+            <ScriptInputNumber propertyValue="12" name="ghostWave" id="5:326"/>
             <ScriptInputNumber name="fire" id="5:321">
                 <DataBindContext sourcePathIds="5:500-5:511" propertyKey="243" id="5:322"/>
             </ScriptInputNumber>
@@ -148,203 +293,259 @@
                     <StateTransition stateToId="5:205" id="5:206"/>
                 </EntryState>
                 <AnimationState x="200" animationId="5:210" id="5:205">
-                    <FocusActionTarget targetId="5:20"/>
+                    <FocusActionTarget targetId="5:20" id="0:190122"/>
+                </AnimationState>
+            </StateMachineLayer>
+            <!-- Chapter I (chapterState, set by the script): playing; he
+                 reaches the goal (1), the end card; he falls (2), the fallen
+                 card. Played again (0), back. -->
+            <StateMachineLayer name="Chapter" id="5:800">
+                <AnyState x="200" y="-120" id="5:801"/>
+                <ExitState x="400" y="-120" id="5:802"/>
+                <EntryState id="5:803">
+                    <StateTransition stateToId="5:804" id="5:805"/>
+                </EntryState>
+                <AnimationState x="200" animationId="5:820" id="5:804">
+                    <StateTransition stateToId="5:806" id="5:807">
+                        <TransitionViewModelCondition opValue="equal" id="5:5810">
+                            <TransitionPropertyViewModelComparator id="5:5811">
+                                <BindablePropertyNumber id="5:5812">
+                                    <DataBindContext sourcePathIds="5:500-5:517" propertyKey="636" id="5:5813"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1" id="5:5814"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="5:830" id="5:831">
+                        <TransitionViewModelCondition opValue="equal" id="5:5832">
+                            <TransitionPropertyViewModelComparator id="5:5833">
+                                <BindablePropertyNumber id="5:5834">
+                                    <DataBindContext sourcePathIds="5:500-5:517" propertyKey="636" id="5:5835"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2" id="5:5836"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="400" animationId="5:821" id="5:806">
+                    <StateTransition stateToId="5:804" duration="300" id="5:808">
+                        <TransitionViewModelCondition opValue="equal" id="5:5815">
+                            <TransitionPropertyViewModelComparator id="5:5816">
+                                <BindablePropertyNumber id="5:5817">
+                                    <DataBindContext sourcePathIds="5:500-5:517" propertyKey="636" id="5:5818"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="5:5819"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="400" y="120" animationId="5:822" id="5:830">
+                    <StateTransition stateToId="5:804" duration="300" id="5:837">
+                        <TransitionViewModelCondition opValue="equal" id="5:5838">
+                            <TransitionPropertyViewModelComparator id="5:5839">
+                                <BindablePropertyNumber id="5:5840">
+                                    <DataBindContext sourcePathIds="5:500-5:517" propertyKey="636" id="5:5841"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0" id="5:5842"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
                 </AnimationState>
             </StateMachineLayer>
             <!-- Each key: held, its number is 1; let go, 0. -->
-            <StateMachineListener targetId="5:20" name="keyUp down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="up" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="keyUp down" id="0:190123">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190124">
+                    <KeyboardInput keyType="up" keyPhase="1" id="0:190125"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190126">
+                    <BindablePropertyNumber propertyValue="1" id="0:190127">
+                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true" id="0:190128"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyUp up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="up" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="keyUp up" id="0:190129">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190130">
+                    <KeyboardInput keyType="up" keyPhase="4" id="0:190131"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190132">
+                    <BindablePropertyNumber propertyValue="0" id="0:190133">
+                        <DataBindContext sourcePathIds="5:500-5:501" propertyKey="636" direction="true" id="0:190134"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyDown down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="down" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="keyDown down" id="0:190135">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190136">
+                    <KeyboardInput keyType="down" keyPhase="1" id="0:190137"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190138">
+                    <BindablePropertyNumber propertyValue="1" id="0:190139">
+                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true" id="0:190140"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyDown up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="down" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="keyDown up" id="0:190141">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190142">
+                    <KeyboardInput keyType="down" keyPhase="4" id="0:190143"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190144">
+                    <BindablePropertyNumber propertyValue="0" id="0:190145">
+                        <DataBindContext sourcePathIds="5:500-5:502" propertyKey="636" direction="true" id="0:190146"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyLeft down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="left" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="keyLeft down" id="0:190147">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190148">
+                    <KeyboardInput keyType="left" keyPhase="1" id="0:190149"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190150">
+                    <BindablePropertyNumber propertyValue="1" id="0:190151">
+                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true" id="0:190152"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyLeft up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="left" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="keyLeft up" id="0:190153">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190154">
+                    <KeyboardInput keyType="left" keyPhase="4" id="0:190155"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190156">
+                    <BindablePropertyNumber propertyValue="0" id="0:190157">
+                        <DataBindContext sourcePathIds="5:500-5:503" propertyKey="636" direction="true" id="0:190158"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyRight down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="right" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="keyRight down" id="0:190159">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190160">
+                    <KeyboardInput keyType="right" keyPhase="1" id="0:190161"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190162">
+                    <BindablePropertyNumber propertyValue="1" id="0:190163">
+                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true" id="0:190164"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="keyRight up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="right" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="keyRight up" id="0:190165">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190166">
+                    <KeyboardInput keyType="right" keyPhase="4" id="0:190167"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190168">
+                    <BindablePropertyNumber propertyValue="0" id="0:190169">
+                        <DataBindContext sourcePathIds="5:500-5:504" propertyKey="636" direction="true" id="0:190170"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookUp down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp8" keyPhase="1"/>
-                    <KeyboardInput keyType="key8" keyPhase="1"/>
-                    <KeyboardInput keyType="w" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="lookUp down" id="0:190171">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190172">
+                    <KeyboardInput keyType="kp8" keyPhase="1" id="0:190173"/>
+                    <KeyboardInput keyType="key8" keyPhase="1" id="0:190174"/>
+                    <KeyboardInput keyType="w" keyPhase="1" id="0:190175"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190176">
+                    <BindablePropertyNumber propertyValue="1" id="0:190177">
+                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true" id="0:190178"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookUp up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp8" keyPhase="4"/>
-                    <KeyboardInput keyType="key8" keyPhase="4"/>
-                    <KeyboardInput keyType="w" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="lookUp up" id="0:190179">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190180">
+                    <KeyboardInput keyType="kp8" keyPhase="4" id="0:190181"/>
+                    <KeyboardInput keyType="key8" keyPhase="4" id="0:190182"/>
+                    <KeyboardInput keyType="w" keyPhase="4" id="0:190183"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190184">
+                    <BindablePropertyNumber propertyValue="0" id="0:190185">
+                        <DataBindContext sourcePathIds="5:500-5:505" propertyKey="636" direction="true" id="0:190186"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookDown down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp2" keyPhase="1"/>
-                    <KeyboardInput keyType="key2" keyPhase="1"/>
-                    <KeyboardInput keyType="s" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="lookDown down" id="0:190187">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190188">
+                    <KeyboardInput keyType="kp2" keyPhase="1" id="0:190189"/>
+                    <KeyboardInput keyType="key2" keyPhase="1" id="0:190190"/>
+                    <KeyboardInput keyType="s" keyPhase="1" id="0:190191"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190192">
+                    <BindablePropertyNumber propertyValue="1" id="0:190193">
+                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true" id="0:190194"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookDown up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp2" keyPhase="4"/>
-                    <KeyboardInput keyType="key2" keyPhase="4"/>
-                    <KeyboardInput keyType="s" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="lookDown up" id="0:190195">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190196">
+                    <KeyboardInput keyType="kp2" keyPhase="4" id="0:190197"/>
+                    <KeyboardInput keyType="key2" keyPhase="4" id="0:190198"/>
+                    <KeyboardInput keyType="s" keyPhase="4" id="0:190199"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190200">
+                    <BindablePropertyNumber propertyValue="0" id="0:190201">
+                        <DataBindContext sourcePathIds="5:500-5:506" propertyKey="636" direction="true" id="0:190202"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookLeft down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp4" keyPhase="1"/>
-                    <KeyboardInput keyType="key4" keyPhase="1"/>
-                    <KeyboardInput keyType="a" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="lookLeft down" id="0:190203">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190204">
+                    <KeyboardInput keyType="kp4" keyPhase="1" id="0:190205"/>
+                    <KeyboardInput keyType="key4" keyPhase="1" id="0:190206"/>
+                    <KeyboardInput keyType="a" keyPhase="1" id="0:190207"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190208">
+                    <BindablePropertyNumber propertyValue="1" id="0:190209">
+                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true" id="0:190210"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookLeft up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp4" keyPhase="4"/>
-                    <KeyboardInput keyType="key4" keyPhase="4"/>
-                    <KeyboardInput keyType="a" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="lookLeft up" id="0:190211">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190212">
+                    <KeyboardInput keyType="kp4" keyPhase="4" id="0:190213"/>
+                    <KeyboardInput keyType="key4" keyPhase="4" id="0:190214"/>
+                    <KeyboardInput keyType="a" keyPhase="4" id="0:190215"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190216">
+                    <BindablePropertyNumber propertyValue="0" id="0:190217">
+                        <DataBindContext sourcePathIds="5:500-5:507" propertyKey="636" direction="true" id="0:190218"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookRight down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp6" keyPhase="1"/>
-                    <KeyboardInput keyType="key6" keyPhase="1"/>
-                    <KeyboardInput keyType="d" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="lookRight down" id="0:190219">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190220">
+                    <KeyboardInput keyType="kp6" keyPhase="1" id="0:190221"/>
+                    <KeyboardInput keyType="key6" keyPhase="1" id="0:190222"/>
+                    <KeyboardInput keyType="d" keyPhase="1" id="0:190223"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190224">
+                    <BindablePropertyNumber propertyValue="1" id="0:190225">
+                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true" id="0:190226"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="lookRight up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="kp6" keyPhase="4"/>
-                    <KeyboardInput keyType="key6" keyPhase="4"/>
-                    <KeyboardInput keyType="d" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="lookRight up" id="0:190227">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190228">
+                    <KeyboardInput keyType="kp6" keyPhase="4" id="0:190229"/>
+                    <KeyboardInput keyType="key6" keyPhase="4" id="0:190230"/>
+                    <KeyboardInput keyType="d" keyPhase="4" id="0:190231"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190232">
+                    <BindablePropertyNumber propertyValue="0" id="0:190233">
+                        <DataBindContext sourcePathIds="5:500-5:508" propertyKey="636" direction="true" id="0:190234"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="fire down">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="space" keyPhase="1"/>
+            <StateMachineListener targetId="5:20" name="fire down" id="0:190235">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190236">
+                    <KeyboardInput keyType="space" keyPhase="1" id="0:190237"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="1">
-                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190238">
+                    <BindablePropertyNumber propertyValue="1" id="0:190239">
+                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true" id="0:190240"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
-            <StateMachineListener targetId="5:20" name="fire up">
-                <ListenerInputTypeKeyboard listenerTypeValue="keyboard">
-                    <KeyboardInput keyType="space" keyPhase="4"/>
+            <StateMachineListener targetId="5:20" name="fire up" id="0:190241">
+                <ListenerInputTypeKeyboard listenerTypeValue="keyboard" id="0:190242">
+                    <KeyboardInput keyType="space" keyPhase="4" id="0:190243"/>
                 </ListenerInputTypeKeyboard>
-                <ListenerViewModelChange>
-                    <BindablePropertyNumber propertyValue="0">
-                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true"/>
+                <ListenerViewModelChange id="0:190244">
+                    <BindablePropertyNumber propertyValue="0" id="0:190245">
+                        <DataBindContext sourcePathIds="5:500-5:511" propertyKey="636" direction="true" id="0:190246"/>
                     </BindablePropertyNumber>
                 </ListenerViewModelChange>
             </StateMachineListener>
@@ -352,6 +553,73 @@
         <!-- The game animates itself; this loop keeps the state machine
              (and the view model binds) running. -->
         <LinearAnimation duration="60" loopValue="1" name="Play" id="5:210"/>
+        <!-- Playing: the map shown, no card. -->
+        <LinearAnimation duration="1" name="Chapter Playing" id="5:820">
+            <KeyedObject objectId="5:900">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:950">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:600">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:700">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Fallen: the map and the health fade, and the fallen card. -->
+        <LinearAnimation duration="130" name="Chapter Fallen" id="5:822">
+            <KeyedObject objectId="5:900">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="linear"/>
+                    <KeyFrameDouble value="1" frame="130" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:700">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:950">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <!-- Done: the map and the health fade, and after a breath the card. -->
+        <LinearAnimation duration="150" name="Chapter Done" id="5:821">
+            <KeyedObject objectId="5:950">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:600">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="0" frame="60" interpolationType="linear"/>
+                    <KeyFrameDouble value="1" frame="150" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="5:700">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="1" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="0" frame="40" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
     </Artboard>
 
     <!-- The keys held (1) or not (0): the arrows walk him, the keypad looks. -->
@@ -370,6 +638,18 @@
         <ViewModelPropertyNumber name="dragY" id="5:510"/>
         <!-- Space: held 1 (drawing, aiming), let go 0 (it looses). -->
         <ViewModelPropertyNumber name="fire" id="5:511"/>
+        <!-- Written by the World node for the map and the end card: where he
+             is (metres) and faces (degrees on the map), the two lines under
+             the map, his health (0-1) and the line under it, and chapter I
+             (0 playing, 1 reached, 2 fallen). -->
+        <ViewModelPropertyNumber name="playerX" id="5:512"/>
+        <ViewModelPropertyNumber name="playerZ" id="5:513"/>
+        <ViewModelPropertyNumber name="playerHeading" id="5:514"/>
+        <ViewModelPropertyString name="goalLabel" id="5:515"/>
+        <ViewModelPropertyString name="statusLabel" id="5:516"/>
+        <ViewModelPropertyNumber name="chapterState" id="5:517"/>
+        <ViewModelPropertyNumber name="health" id="5:518"/>
+        <ViewModelPropertyString name="healthLabel" id="5:519"/>
         <ViewModelInstance exports="true" name="Default" id="5:520">
             <ViewModelInstanceNumber viewModelPropertyId="5:501" id="5:1501"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:502" id="5:1502"/>
@@ -382,6 +662,14 @@
             <ViewModelInstanceNumber viewModelPropertyId="5:509" id="5:1509"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:510" id="5:1510"/>
             <ViewModelInstanceNumber viewModelPropertyId="5:511" id="5:1511"/>
+            <ViewModelInstanceNumber propertyValue="-14.71" viewModelPropertyId="5:512" id="5:1512"/>
+            <ViewModelInstanceNumber propertyValue="13.35" viewModelPropertyId="5:513" id="5:1513"/>
+            <ViewModelInstanceNumber propertyValue="65" viewModelPropertyId="5:514" id="5:1514"/>
+            <ViewModelInstanceString propertyValue="The peepal" viewModelPropertyId="5:515" id="5:1515"/>
+            <ViewModelInstanceString propertyValue="Spirits felled  0" viewModelPropertyId="5:516" id="5:1516"/>
+            <ViewModelInstanceNumber viewModelPropertyId="5:517" id="5:1517"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="5:518" id="5:1518"/>
+            <ViewModelInstanceString propertyValue="Struck  0 of 6" viewModelPropertyId="5:519" id="5:1519"/>
         </ViewModelInstance>
     </ViewModel>
 </Rive>

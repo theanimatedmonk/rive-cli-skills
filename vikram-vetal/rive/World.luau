@@ -199,6 +199,10 @@ export type World = {
 	lookLeft: Input<number>,
 	lookRight: Input<number>,
 	fire: Input<number>,
+	goalX: Input<number>,
+	goalZ: Input<number>,
+	goalRadius: Input<number>,
+	ghostWave: Input<number>,
 
 	context: Context?,
 	-- King Vikram, when there is one: the Hero module's state, his shader,
@@ -268,6 +272,27 @@ export type World = {
 	reticle: Path,
 	reticlePaint: Paint,
 	reticleDot: Paint,
+	-- The chapter: its ghost lights (the script flies them in the game),
+	-- the next attack (scene time), how many he has felled and been struck
+	-- by, a shove and a shake from a strike, whether he has reached the
+	-- goal, and the view model the map and the end card read.
+	ghosts: { Ghost },
+	nextAttack: number,
+	felled: number,
+	struck: number,
+	pushX: number,
+	pushZ: number,
+	shake: number,
+	chapterDone: boolean,
+	fallen: boolean,
+	doneAt: number,
+	waveLeft: number,
+	-- Until when (scene time) the astra has them slowed.
+	slowUntil: number,
+	aimGhost: number,
+	hud: { [string]: any },
+	ghostSound: AudioSource?,
+	strikeSound: AudioSource?,
 	-- Where one may walk: an N x N grid over lo..hi (x, z), 1 on the path.
 	walkable: buffer?,
 	walkN: number,
@@ -336,6 +361,8 @@ export type World = {
 	instPipeline: GPUPipeline?,
 	skyPipeline: GPUPipeline?,
 	pollenPipeline: GPUPipeline?,
+	markerPipeline: GPUPipeline?,
+	markerBindings: GPUBindGroup?,
 	staticShadowPipeline: GPUPipeline?,
 	instShadowPipeline: GPUPipeline?,
 	shadowTexture: GPUTexture?,
@@ -402,6 +429,23 @@ type Arrow = {
 	age: number,
 }
 
+-- A ghost light in the game: what it is doing ('orbit' round the peepal,
+-- 'attack' at him, 'burst' (shot, or striking him), 'gone' until it comes
+-- back, 'flee' at the chapter's end), for how long, where it is and how it
+-- moves, how bright and how big.
+type Ghost = {
+	mode: string,
+	t: number,
+	x: number,
+	y: number,
+	z: number,
+	vx: number,
+	vy: number,
+	vz: number,
+	glow: number,
+	size: number,
+}
+
 type Draw = {
 	material: number,
 	instanced: boolean,
@@ -432,7 +476,7 @@ type Camera = {
 	tanX: number, tanY: number,
 }
 
-local UNIFORM_SIZE = 1568
+local UNIFORM_SIZE = 1856
 -- Ghost lights round the hero tree: at most, and how many instances each
 -- (a head and its trail; world.wgsl).
 local MAX_GHOSTS = 16
@@ -491,6 +535,22 @@ local DRAW_SPEED = 1.6
 -- faces that far off the circle so the bow is on it.
 local BOW_OFFSET = -34
 local ARROW_OFFSET = -19
+-- The chapter's ghost lights: how fast they come at him (metres a second),
+-- how often one breaks off to (seconds), how many at once, how near an
+-- arrow must pass to fell one and one must come to strike him (metres),
+-- how long a felled one is gone, and how far a strike shoves him.
+local GHOST_SPEED = 2.8
+local ATTACK_GAP = 2.6
+local MAX_ATTACKERS = 3
+local GHOST_HIT = 0.6
+local GHOST_REACH = 0.75
+local GHOST_RESPAWN = 4
+local SHOVE = 2.2
+-- The astra's string, letting go, slows the ghost lights coming at him to
+-- this share of their speed, for this long (seconds).
+local ASTRA_SLOW, ASTRA_SLOW_TIME = 0.5, 5
+-- The goal's column of light: how tall (metres).
+local MARKER_HEIGHT = 3.4
 -- The shots: none, an arrow (Space), the astra (a click).
 local SHOT_NONE, SHOT_ARROW, SHOT_ASTRA = 0, 1, 2
 -- The astra's golden wave crosses the scene in this long (seconds).
@@ -524,6 +584,25 @@ local RAMPS: { [number]: { { number } } } = {
 	[15] = { { 0.02, 0.1, 0.05 }, { 0.08, 0.26, 0.1 }, { 0.22, 0.44, 0.16 } },
 	[16] = { { 0.06, 0.14, 0.05 }, { 0.2, 0.34, 0.12 }, { 0.44, 0.54, 0.22 } },
 }
+
+-- The ghost lights' orbits round the hero tree: each one's radius, height,
+-- starting angle and speed (radians a second; some go the other way), as
+-- frameUniforms deals them.
+local ORBITS: { { number } } = {}
+do
+	local gseed = 11
+	local function grnd(): number
+		gseed = (gseed * 16807) % 2147483647
+		return gseed / 2147483647
+	end
+	for i = 1, 16 do
+		local radius = 2.8 + grnd() * 4.2
+		local height = 0.8 + grnd() * 5.5
+		local phase = grnd() * 6.283
+		local speed = (0.16 + grnd() * 0.22) * (if grnd() < 0.3 then -1 else 1)
+		ORBITS[i] = { radius, height, phase, speed }
+	end
+end
 
 local function clamp(x: number, lo: number, hi: number): number
 	return math.max(lo, math.min(hi, x))
@@ -768,6 +847,19 @@ function init(self: World, context: Context): boolean
 	self.looseSound = context:audio('bowRelease')
 	self.arrowSound = context:audio('arrowLoose')
 	self.hitSound = context:audio('arrowHit')
+	self.ghostSound = context:audio('ghostFell')
+	self.strikeSound = context:audio('ghostStrike')
+	-- The view model the game's map and end card read (init runs twice;
+	-- the view model is there the second time).
+	local vm = context:viewModel()
+	if vm then
+		for _, name in { 'playerX', 'playerZ', 'playerHeading', 'health', 'chapterState' } do
+			self.hud[name] = vm:getNumber(name)
+		end
+		for _, name in { 'goalLabel', 'statusLabel', 'healthLabel' } do
+			self.hud[name] = vm:getString(name)
+		end
+	end
 	self.shader = context:shader('world')
 	self.postShader = context:shader('post')
 	self.blurShader = context:shader('blur')
@@ -983,6 +1075,196 @@ local function aimRay(self: World): (number, number, number)
 	return dx / l, dy / l, dz / l
 end
 
+-- Where ghost light i (1-based) circles the peepal at `time`.
+local function orbitAt(self: World, i: number, time: number): (number, number, number)
+	local o = ORBITS[i]
+	local a = o[3] + time * o[4]
+	local bob = math.sin(time * 0.9 + o[3] * 3) * 0.35 + math.sin(time * 2.3 + o[3]) * 0.08
+	return self.heroX + math.cos(a) * o[1], self.heroY + o[2] + bob, self.heroZ + math.sin(a) * o[1]
+end
+
+-- The chapter begins (or begins again): the ghost lights circle the
+-- peepal, the arrows are gone, nothing felled.
+local function startChapter(self: World)
+	table.clear(self.ghosts)
+	for i = 1, MAX_GHOSTS do
+		local x, y, z = orbitAt(self, i, self.time)
+		table.insert(self.ghosts, { mode = 'orbit', t = 0, x = x, y = y, z = z, vx = 0, vy = 0, vz = 0, glow = 0.8, size = 1 })
+	end
+	table.clear(self.arrows)
+	self.nextAttack = self.time + 4
+	self.slowUntil = 0
+	self.felled, self.struck = 0, 0
+	self.pushX, self.pushZ, self.shake = 0, 0, 0
+	self.chapterDone, self.fallen = false, false
+	self.waveLeft = math.max(math.floor(self.ghostWave + 0.5), 0)
+end
+
+-- How many strikes he can bear: half the wave (one more, and he falls).
+local function bearable(self: World): number
+	return math.floor(math.max(math.floor(self.ghostWave + 0.5), 1) / 2)
+end
+
+-- The chapter is over (reached, or fallen): the ghost lights flee.
+local function endChapter(self: World, reached: boolean)
+	self.chapterDone, self.fallen, self.doneAt = reached, not reached, self.time
+	for _, g in self.ghosts do
+		if g.mode == 'orbit' or g.mode == 'attack' then
+			g.mode, g.t = 'flee', 0
+		end
+	end
+end
+
+-- A ghost light bursts: shot, it scatters; striking him, it breaks on him.
+local function burst(g: Ghost)
+	g.mode, g.t = 'burst', 0
+end
+
+-- His chest, where the ghost lights come for.
+local function chest(self: World): (number, number, number)
+	return self.kx, groundAt(self, self.kx, self.kz) + 1.35, self.kz
+end
+
+-- The ghost lights, as the chapter plays: they circle the peepal, and
+-- every so often one breaks off and comes for him, weaving, faster as it
+-- nears, until the wave (`ghostWave` of them) is spent; one he does not
+-- shoot down bursts on him (a shove, a shake, a strike), and more than half
+-- the wave upon him, he falls. Shot or burst, one is gone a while, then
+-- circles again; at the chapter's end they flee.
+local function flyGhosts(self: World, dt: number)
+	local count = clamp(math.floor(self.ghostLights + 0.5), 0, MAX_GHOSTS)
+	local cx, cy, cz = chest(self)
+	local attacking = 0
+	for i, g in self.ghosts do
+		if g.mode == 'attack' and i <= count then
+			attacking += 1
+		end
+	end
+	-- One breaks off (while the wave lasts): the one nearest him of those
+	-- circling.
+	local over = self.chapterDone or self.fallen
+	if not over and self.waveLeft > 0 and self.time >= self.nextAttack and attacking < MAX_ATTACKERS then
+		local best, bestD = nil, math.huge
+		for i, g in self.ghosts do
+			if i <= count and g.mode == 'orbit' then
+				local d = (g.x - cx) ^ 2 + (g.z - cz) ^ 2
+				if d < bestD then
+					best, bestD = g, d
+				end
+			end
+		end
+		if best then
+			best.mode, best.t = 'attack', 0
+			self.waveLeft -= 1
+		end
+		self.nextAttack = self.time + ATTACK_GAP * (0.7 + 0.6 * math.random())
+	end
+	for i, g in self.ghosts do
+		g.t += dt
+		local px, py, pz = g.x, g.y, g.z
+		if g.mode == 'orbit' then
+			g.x, g.y, g.z = orbitAt(self, i, self.time)
+			-- Back from gone, it kindles again.
+			g.glow = math.min(g.glow + dt, 0.8 + 0.12 * math.sin(self.time * 7.3 + i * 1.7))
+			g.size = 1
+		elseif g.mode == 'attack' then
+			local dx, dy, dz = cx - g.x, cy - g.y, cz - g.z
+			local d = math.max(math.sqrt(dx * dx + dy * dy + dz * dz), 1e-4)
+			-- Weaving: side to side across its line, and up and down.
+			local sx, sz = -dz / d, dx / d
+			local weave = math.sin(self.time * 2.6 + i * 1.9) * 1.6 * math.min(d / 4, 1) * (if self.time < self.slowUntil then ASTRA_SLOW else 1)
+			-- The astra's wave slows them.
+			local slow = if self.time < self.slowUntil then ASTRA_SLOW else 1
+			local speed = GHOST_SPEED * (1 + 0.6 * math.exp(-d / 3)) * slow
+			local wx = dx / d * speed + sx * weave
+			local wy = dy / d * speed + math.sin(self.time * 3.4 + i) * 0.7
+			local wz = dz / d * speed + sz * weave
+			local k = 1 - math.exp(-dt * 2.5)
+			g.vx += (wx - g.vx) * k
+			g.vy += (wy - g.vy) * k
+			g.vz += (wz - g.vz) * k
+			g.x += g.vx * dt
+			g.y += g.vy * dt
+			g.z += g.vz * dt
+			g.glow = 1.1 + 0.35 * math.sin(self.time * 21 + i * 3.1)
+			g.size = 1.35
+			if d < GHOST_REACH then
+				-- It breaks on him: a shove away from it, and a shake.
+				burst(g)
+				self.struck += 1
+				local hx, hz = cx - px, cz - pz
+				local hl = math.max(math.sqrt(hx * hx + hz * hz), 1e-4)
+				self.pushX, self.pushZ = hx / hl * SHOVE, hz / hl * SHOVE
+				self.shake = 1
+				local strike = self.strikeSound
+				if strike then
+					Audio.play(strike)
+				end
+				-- More than half the wave upon him, and he falls.
+				if self.struck > bearable(self) and not over then
+					endChapter(self, false)
+					over = true
+				end
+			end
+		elseif g.mode == 'burst' then
+			-- A flash, then scattering up and out as it fades.
+			local k = math.exp(-dt * 3)
+			g.vx, g.vy, g.vz = g.vx * k, g.vy * k + 1.2 * dt, g.vz * k
+			g.x += g.vx * dt
+			g.y += g.vy * dt
+			g.z += g.vz * dt
+			g.glow = 3 * math.exp(-g.t * 5)
+			g.size = 1.4 + g.t * 4
+			if g.t > 0.7 then
+				g.mode, g.t, g.glow = 'gone', 0, 0
+			end
+		elseif g.mode == 'gone' then
+			g.glow = 0
+			if g.t > GHOST_RESPAWN and not over then
+				g.mode, g.t = 'orbit', 0
+				g.x, g.y, g.z = orbitAt(self, i, self.time)
+			end
+		elseif g.mode == 'flee' then
+			-- Out from the tree and up, faster, fading into the jungle.
+			local ox, oz = g.x - self.heroX, g.z - self.heroZ
+			local ol = math.max(math.sqrt(ox * ox + oz * oz), 1e-4)
+			local sp = 2 + g.t * 4
+			g.vx, g.vy, g.vz = ox / ol * sp, 1 + g.t, oz / ol * sp
+			g.x += g.vx * dt
+			g.y += g.vy * dt
+			g.z += g.vz * dt
+			g.glow = math.max(0.9 - g.t * 0.4, 0) * (0.75 + 0.25 * math.sin(self.time * 23 + i * 3.1))
+			g.size = 1
+		end
+		if g.mode == 'orbit' then
+			g.vx, g.vy, g.vz = (g.x - px) / math.max(dt, 1e-4), (g.y - py) / math.max(dt, 1e-4), (g.z - pz) / math.max(dt, 1e-4)
+		end
+	end
+end
+
+-- Which ghost light (1-based) the ray from the camera through the circle
+-- passes nearest, within reach of an arrow; 0 for none.
+local function ghostOnAim(self: World): number
+	local cam = self.camera
+	local dx, dy, dz = aimRay(self)
+	local best, bestD = 0, GHOST_HIT * 1.6
+	local count = clamp(math.floor(self.ghostLights + 0.5), 0, MAX_GHOSTS)
+	for i, g in self.ghosts do
+		if i <= count and (g.mode == 'orbit' or g.mode == 'attack') then
+			local vx, vy, vz = g.x - cam.x, g.y - cam.y, g.z - cam.z
+			local t = vx * dx + vy * dy + vz * dz
+			if t > 0 and t < ARROW_RANGE then
+				local ex, ey, ez = vx - dx * t, vy - dy * t, vz - dz * t
+				local d = math.sqrt(ex * ex + ey * ey + ez * ez)
+				if d < bestD then
+					best, bestD = i, d
+				end
+			end
+		end
+	end
+	return best
+end
+
 -- A point along his bow, as last drawn (king.wgsl's bow points, in the
 -- uniforms Hero writes: the grip is the 7th, the nock, the string's middle
 -- and its own bone, the 14th).
@@ -1013,6 +1295,12 @@ end
 -- What the circle is on: the wood it meets, or a point far off.
 local function aimPoint(self: World): (number, number, number)
 	local cam = self.camera
+	-- On a ghost light, where it will be when the arrow gets there.
+	local g = self.ghosts[self.aimGhost]
+	if g then
+		local lead = math.sqrt((g.x - self.kx) ^ 2 + (g.z - self.kz) ^ 2) / ARROW_SPEED
+		return g.x + g.vx * lead, g.y + g.vy * lead, g.z + g.vz * lead
+	end
 	local dx, dy, dz = aimRay(self)
 	local t = rayWood(self, cam.x, cam.y, cam.z, dx, dy, dz, ARROW_RANGE) or ARROW_RANGE
 	return cam.x + dx * t, cam.y + dy * t, cam.z + dz * t
@@ -1071,8 +1359,9 @@ local function loose(self: World)
 	})
 end
 
--- The astra's string lets go, with no arrow: the twang, and the golden wave
--- rolls out from his bow over the whole scene.
+-- The astra's string lets go, with no arrow: the twang, the golden wave
+-- rolls out from his bow over the whole scene, and the ghost lights coming
+-- at him slow to half their speed for a while.
 local function looseAstra(self: World)
 	local tx, _, tz = aimPoint(self)
 	self.loosed = true
@@ -1080,6 +1369,7 @@ local function looseAstra(self: World)
 	self.shotYaw = math.deg(math.atan2(tx - self.kx, tz - self.kz))
 	play(self.looseSound)
 	self.gameBlast = 0.0001
+	self.slowUntil = self.time + ASTRA_SLOW_TIME
 end
 
 -- In a shot. He turns so his drawn bow is on the circle (an arrow's also
@@ -1158,8 +1448,28 @@ local function flyArrows(self: World, dt: number)
 		local a = arrows[i]
 		a.age += dt
 		if not a.stuck then
+			local from = a.tip
 			a.tip += ARROW_SPEED * dt
-			if a.stopAt >= 0 and a.tip >= a.stopAt then
+			-- A ghost light it passes through bursts, and the arrow is spent.
+			local felled = false
+			for _, g in self.ghosts do
+				if g.mode == 'orbit' or g.mode == 'attack' then
+					local vx, vy, vz = g.x - a.ox, g.y - a.oy, g.z - a.oz
+					local t = clamp(vx * a.dx + vy * a.dy + vz * a.dz, from - ARROW_LENGTH, a.tip)
+					local ex, ey, ez = vx - a.dx * t, vy - a.dy * t, vz - a.dz * t
+					if ex * ex + ey * ey + ez * ez < GHOST_HIT * GHOST_HIT then
+						burst(g)
+						g.vx, g.vy, g.vz = a.dx * 4, a.dy * 4, a.dz * 4
+						self.felled += 1
+						play(self.ghostSound)
+						felled = true
+						break
+					end
+				end
+			end
+			if felled then
+				table.remove(arrows, i)
+			elseif a.stopAt >= 0 and a.tip >= a.stopAt then
 				a.tip, a.stuck, a.age = a.stopAt, true, 0
 				play(self.hitSound)
 			else
@@ -1235,6 +1545,37 @@ local function arrowRibbons(self: World): number
 	return count
 end
 
+-- What the map and the end card read off the view model (when the
+-- artboard's has them): where he is and faces (the map's degrees,
+-- clockwise from its up, which is -Z), how far the peepal is, the felled,
+-- his health (1 whole, 0 fallen) and strikes, and the chapter (0 playing,
+-- 1 reached, 2 fallen).
+local function writeHud(self: World)
+	local hud = self.hud
+	local function number(name: string, v: number)
+		local prop = hud[name]
+		if prop and math.abs(prop.value - v) > 1e-3 then
+			prop.value = v
+		end
+	end
+	local function text(name: string, v: string)
+		local prop = hud[name]
+		if prop and prop.value ~= v then
+			prop.value = v
+		end
+	end
+	number('playerX', self.kx)
+	number('playerZ', self.kz)
+	number('playerHeading', (180 - self.kingFacing) % 360)
+	local d = math.sqrt((self.goalX - self.kx) ^ 2 + (self.goalZ - self.kz) ^ 2)
+	text('goalLabel', if self.chapterDone then 'The peepal' else string.format('The peepal  ·  %d m', math.floor(d + 0.5)))
+	text('statusLabel', string.format('Spirits felled  %d', self.felled))
+	local bear = bearable(self)
+	number('health', clamp(1 - self.struck / (bear + 1), 0, 1))
+	text('healthLabel', if self.fallen then 'Fallen' else string.format('Struck  %d of %d', self.struck, bear))
+	number('chapterState', if self.chapterDone then 1 elseif self.fallen then 2 else 0)
+end
+
 -- Set below, with the navigation.
 local hostDrag: (self: World, dx: number, dy: number) -> () = function() end
 
@@ -1284,13 +1625,15 @@ function advance(self: World, seconds: number): boolean
 	if self.play then
 		if not self.gameOn then
 			startGame(self)
+			startChapter(self)
 		end
 		-- The bow: Space (`fire`) held draws an arrow and holds it; let go,
-		-- it looses.
+		-- it looses. Once the chapter is done the keys rest.
 		self.holding = self.fire ~= 0
+		local over = self.chapterDone or self.fallen
 		if self.fire ~= self.lastFire then
 			self.lastFire = self.fire
-			if self.fire ~= 0 then
+			if self.fire ~= 0 and not over then
 				startShot(self, SHOT_ARROW)
 			end
 		end
@@ -1304,13 +1647,41 @@ function advance(self: World, seconds: number): boolean
 				Hero.advance(hero, dt, pose, self.kingSpeed)
 			end
 		end
-		walk(self, hero, dt)
+		if not over then
+			walk(self, hero, dt)
+		end
+		-- A strike's shove, along the path, dying away.
+		if self.pushX ~= 0 or self.pushZ ~= 0 then
+			local nx, nz = self.kx + self.pushX * dt, self.kz + self.pushZ * dt
+			if onPath(self, nx, nz) then
+				self.kx, self.kz = nx, nz
+			elseif onPath(self, nx, self.kz) then
+				self.kx = nx
+			elseif onPath(self, self.kx, nz) then
+				self.kz = nz
+			end
+			local k = math.exp(-dt * 6)
+			self.pushX, self.pushZ = self.pushX * k, self.pushZ * k
+			if math.abs(self.pushX) + math.abs(self.pushZ) < 0.01 then
+				self.pushX, self.pushZ = 0, 0
+			end
+		end
+		self.shake = math.max(self.shake - dt * 2.5, 0)
 		chase(self, dt)
-		-- The circle shows when it is on the wood, and settles after a kick.
+		flyGhosts(self, dt)
+		-- The goal: inside its column of light, the chapter is done, and
+		-- the ghost lights flee.
+		if not (self.chapterDone or self.fallen) and (self.kx - self.goalX) ^ 2 + (self.kz - self.goalZ) ^ 2 < self.goalRadius ^ 2 then
+			endChapter(self, true)
+		end
+		-- The circle: red on a ghost light, gold on the wood; it settles
+		-- after a kick.
 		local cam = self.camera
+		self.aimGhost = if self.chapterDone or self.fallen then 0 else ghostOnAim(self)
 		local ax, ay, az = aimRay(self)
-		self.aimOnWood = rayWood(self, cam.x, cam.y, cam.z, ax, ay, az, ARROW_RANGE) ~= nil
+		self.aimOnWood = self.aimGhost == 0 and rayWood(self, cam.x, cam.y, cam.z, ax, ay, az, ARROW_RANGE) ~= nil
 		self.aimKick = math.max(self.aimKick - dt * 5, 0)
+		writeHud(self)
 	else
 		self.gameOn = false
 		self.kx, self.kz = self.kingX, self.kingZ
@@ -1487,6 +1858,27 @@ local function ensureTargets(self: World): boolean
 			depthStencil = { format = DEPTH_FORMAT, compare = 'greater', write = false },
 			sampleCount = samples,
 		})
+		self.markerPipeline = GPUPipeline.new({
+			vertex = { module = shader, entryPoint = 'vs_marker' },
+			fragment = { module = shader, entryPoint = 'fs_marker' },
+			vertexLayout = {},
+			colorTargets = {
+				{
+					format = scene.format,
+					blend = {
+						srcColor = 'one',
+						dstColor = 'one',
+						colorOp = 'add',
+						srcAlpha = 'zero',
+						dstAlpha = 'one',
+						alphaOp = 'add',
+					},
+				},
+			},
+			depthStencil = { format = DEPTH_FORMAT, compare = 'greater', write = false },
+			cullMode = 'none',
+			sampleCount = samples,
+		})
 		self.arrowPipeline = GPUPipeline.new({
 			vertex = { module = shader, entryPoint = 'vs_arrow' },
 			fragment = { module = shader, entryPoint = 'fs_arrow' },
@@ -1580,6 +1972,7 @@ local function ensureTargets(self: World): boolean
 		self.skyBindings = nil
 		self.pollenBindings = nil
 		self.arrowBindings = nil
+		self.markerBindings = nil
 		local hero, kingShader = self.hero, self.kingShader
 		if hero and kingShader then
 			Hero.pipelines(hero, kingShader, scene.format, samples)
@@ -1657,6 +2050,11 @@ local function frameUniforms(self: World)
 		ex, ey, ez = tx - fx * d, ty - fy * d, tz - fz * d
 		ey = math.max(ey, groundAt(self, ex, ez) + 0.3)
 		focus = d
+		-- A strike shakes it.
+		local sh = self.shake * self.shake * 0.12
+		ex += math.sin(t * 61) * sh
+		ey += math.sin(t * 47 + 1) * sh
+		ez += math.cos(t * 53) * sh
 	end
 	-- Never under the meadow.
 	ey = math.max(ey, 0.35)
@@ -1769,7 +2167,8 @@ local function frameUniforms(self: World)
 		self.fleeStart = nil
 	end
 	local fleeStart = self.fleeStart
-	write4(u, 1552, fleeStart or 0, if fleeStart then 1 else 0, 0, 0)
+	local scripted = self.play and #self.ghosts > 0
+	write4(u, 1552, fleeStart or 0, if fleeStart then 1 else 0, if scripted then 1 else 0, 0)
 	local fled = if fleeStart then math.max(self.time - fleeStart, 0) else 0
 	for i = 0, MAX_GHOSTS - 1 do
 		local radius = 2.8 + grnd() * 4.2
@@ -1788,6 +2187,22 @@ local function frameUniforms(self: World)
 		local wild = 0.75 + 0.25 * math.sin(now * 23 + i * 3.1)
 		local flicker = (calm + (calm * wild - calm) * math.min(f * 2, 1)) * math.exp(-f * 0.75)
 		write4(u, 1232 + i * 16, self.heroX + math.cos(a) * r, self.heroY + height + bob + f * (0.8 + f * 0.5), self.heroZ + math.sin(a) * r, flicker)
+		-- In the game the script flies them.
+		local gh = self.ghosts[i + 1]
+		if scripted and gh then
+			write4(u, 1232 + i * 16, gh.x, gh.y, gh.z, gh.glow)
+			write4(u, 1568 + i * 16, gh.vx, gh.vy, gh.vz, gh.size)
+		else
+			write4(u, 1568 + i * 16, 0, 0, 0, 1)
+		end
+	end
+	-- The game's goal, a column of light; it fades once reached.
+	if self.play then
+		local shown = if self.chapterDone or self.fallen then math.max(1 - (self.time - self.doneAt) / 1.5, 0) else 0.85 + 0.15 * math.sin(self.time * 2.2)
+		write4(u, 1824, self.goalX, groundAt(self, self.goalX, self.goalZ), self.goalZ, math.max(self.goalRadius, 0.2))
+		write4(u, 1840, MARKER_HEIGHT, shown, 0, 0)
+	else
+		write4(u, 1840, 0, 0, 0, 0)
 	end
 	do
 		local hr, hg, hb = linear(self.horizonColor)
@@ -2136,6 +2551,11 @@ local function render(self: World): Image?
 		local ok, b = pcall(plain, pollenPipeline, pollenUbo)
 		self.pollenBindings = if ok then b else withShadow(pollenPipeline, pollenUbo)
 	end
+	local markerPipeline = self.markerPipeline
+	if self.markerBindings == nil and markerPipeline then
+		local ok, b = pcall(plain, markerPipeline, pollenUbo)
+		self.markerBindings = if ok then b else withShadow(markerPipeline, pollenUbo)
+	end
 	local arrowPipeline, arrowBuffer = self.arrowPipeline, self.arrowBuffer
 	if self.arrowBindings == nil and arrowPipeline then
 		local ok, b = pcall(plain, arrowPipeline, pollenUbo)
@@ -2231,6 +2651,12 @@ local function render(self: World): Image?
 		pass:setBindGroup(0, arrowBindings)
 		pass:setVertexBuffer(0, arrowBuffer)
 		pass:draw(arrowCount * ARROW_VERTS)
+	end
+	local markerBindings = self.markerBindings
+	if self.play and markerPipeline and markerBindings then
+		pass:setPipeline(markerPipeline)
+		pass:setBindGroup(0, markerBindings)
+		pass:draw(48 * 6)
 	end
 	local pollen = math.ceil(clamp(self.fireflies, 0, MAX_POLLEN))
 	local pollenBindings = self.pollenBindings
@@ -2427,9 +2853,17 @@ end
 
 local function pointerUp(self: World, event: PointerEvent)
 	-- In the game a tap (not a drag) looses an arrow.
+	-- Once the chapter is done, a tap plays it again.
 	if self.play and self.pointers[event.id] ~= nil and self.pointerCount == 1 and self.tapMoved < 8 then
 		self.aimX, self.aimY = event.position.x, event.position.y
-		startShot(self, SHOT_ASTRA)
+		if self.chapterDone or self.fallen then
+			if self.time - self.doneAt > 1.5 then
+				startGame(self)
+				startChapter(self)
+			end
+		else
+			startShot(self, SHOT_ASTRA)
+		end
 	end
 	if self.pointers[event.id] ~= nil then
 		self.pointers[event.id] = nil
@@ -2462,9 +2896,10 @@ function draw(self: World, renderer: Renderer)
 		renderer:drawImage(image, self.drawSampler, 'srcOver', 1)
 		renderer:restore()
 	end
-	-- The target circle: a ring and a dot, gold over the peepal's wood; it
-	-- opens as he looses.
-	if self.play then
+	-- The target circle: a ring and a dot, gold over the peepal's wood, red
+	-- on a ghost light; it opens as he looses, and is gone once the chapter
+	-- is over.
+	if self.play and not (self.chapterDone or self.fallen) then
 		local path = self.reticle
 		local x, y = self.aimX, self.aimY
 		local function circle(r: number)
@@ -2476,7 +2911,10 @@ function draw(self: World, renderer: Renderer)
 			path:cubicTo(Vector.xy(x + k, y - r), Vector.xy(x + r, y - k), Vector.xy(x + r, y))
 			path:close()
 		end
-		local color = if self.aimOnWood then Color.rgba(255, 196, 92, 235) else Color.rgba(240, 240, 255, 200)
+		local color = if self.aimGhost > 0
+			then Color.rgba(255, 90, 80, 240)
+			elseif self.aimOnWood then Color.rgba(255, 196, 92, 235)
+			else Color.rgba(240, 240, 255, 200)
 		path:reset()
 		circle(15 + 9 * self.aimKick)
 		self.reticlePaint.color = color
@@ -2590,6 +3028,10 @@ return function(): Node<World>
 		lookLeft = 0,
 		lookRight = 0,
 		fire = 0,
+		goalX = -0.5,
+		goalZ = -0.4,
+		goalRadius = 1,
+		ghostWave = 12,
 
 		context = nil,
 		hero = nil,
@@ -2691,6 +3133,22 @@ return function(): Node<World>
 		reticle = Path.new(),
 		reticlePaint = Paint.with({ style = 'stroke', thickness = 1.8, color = Color.rgba(240, 240, 255, 200) }),
 		reticleDot = Paint.with({ style = 'fill', color = Color.rgba(240, 240, 255, 200) }),
+		ghosts = {},
+		nextAttack = 0,
+		felled = 0,
+		struck = 0,
+		pushX = 0,
+		pushZ = 0,
+		shake = 0,
+		chapterDone = false,
+		fallen = false,
+		doneAt = 0,
+		waveLeft = 0,
+		slowUntil = 0,
+		aimGhost = 0,
+		hud = {},
+		ghostSound = nil,
+		strikeSound = nil,
 		walkable = nil,
 		walkN = 0,
 		walkLo = { 0, 0 },
@@ -2750,6 +3208,8 @@ return function(): Node<World>
 		instPipeline = nil,
 		skyPipeline = nil,
 		pollenPipeline = nil,
+		markerPipeline = nil,
+		markerBindings = nil,
 		staticShadowPipeline = nil,
 		instShadowPipeline = nil,
 		shadowTexture = nil,

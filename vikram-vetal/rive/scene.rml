@@ -173,23 +173,23 @@
     </ViewModel>
 
     <!-- King Vikram (shared with ../king; tools/sync_hero.sh copies these). -->
-    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
-    <ScriptAsset file="Spirit.luau" isModule="true" name="Spirit" id="0:911"/>
-    <ScriptAsset file="World.luau" scriptProtocolValue="1" name="World" id="0:902"/>
+    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901" codeFileId="0:190247"/>
+    <ScriptAsset file="Spirit.luau" isModule="true" name="Spirit" id="0:911" codeFileId="0:218816"/>
+    <ScriptAsset file="World.luau" scriptProtocolValue="1" name="World" id="0:902" codeFileId="0:234625"/>
     <!-- The components' scripts (components.rml): King Vikram's and the
          Vetal's pages' (../king, ../vetal; tools/sync_hero.sh copies them). -->
-    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:915"/>
-    <ScriptAsset file="Vetal.luau" scriptProtocolValue="1" name="Vetal" id="0:916"/>
-    <ShaderAsset file="world.wgsl" name="world" id="0:903"/>
-    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
-    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:915" codeFileId="0:333499"/>
+    <ScriptAsset file="Vetal.luau" scriptProtocolValue="1" name="Vetal" id="0:916" codeFileId="0:363471"/>
+    <ShaderAsset file="world.wgsl" name="world" id="0:903" codeFileId="0:392079"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904" codeFileId="0:446312"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906" codeFileId="0:451383"/>
     <!-- Written by ../tools/export_world.py from VikramVetal_Scene.glb. -->
     <BlobAsset file="../world.bin" name="world" id="0:905"/>
-    <ShaderAsset file="king.wgsl" name="king" id="0:907"/>
+    <ShaderAsset file="king.wgsl" name="king" id="0:907" codeFileId="0:454255"/>
     <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
     <BlobAsset file="../king.bin" name="vikram" id="0:908"/>
     <!-- The Vetal (shared with ../vetal; tools/sync_hero.sh copies these). -->
-    <ShaderAsset file="vetal.wgsl" name="vetal" id="0:912"/>
+    <ShaderAsset file="vetal.wgsl" name="vetal" id="0:912" codeFileId="0:491803"/>
     <!-- Written by ../tools/export_vetal.py from Vetal.glb. -->
     <BlobAsset file="../vetal.bin" name="vetal" id="0:913"/>
     <!-- The bow (from ../pinaka-bow): bow-sound.mp3 with its 0.17 s lead-in
@@ -201,4 +201,10 @@
          shaft's whoosh) and one striking wood. -->
     <AudioAsset file="../arrow-loose.wav" name="arrowLoose" id="0:921"/>
     <AudioAsset file="../arrow-hit.wav" name="arrowHit" id="0:922"/>
+    <!-- The game's ghost lights (made by hand for it): one felled by an
+         arrow (a glassy shatter, falling bell tones), one striking him. -->
+    <AudioAsset file="../ghost-fell.wav" name="ghostFell" id="0:923"/>
+    <AudioAsset file="../ghost-strike.wav" name="ghostStrike" id="0:924"/>
+    <!-- The game's lettering (Cormorant Garamond, SIL OFL; fonts/OFL.txt). -->
+    <FontAsset file="../fonts/CormorantGaramond-SemiBold.ttf" name="Cormorant" id="0:925"/>
 </Rive>

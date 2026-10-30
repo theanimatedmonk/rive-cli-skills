@@ -67,8 +67,17 @@ struct Uniforms {
     kingLight: vec4<f32>,
     kingLightColor: vec4<f32>,
     // The ghost lights fleeing the hero tree: x when they took flight (the
-    // scene's time), y 1 while they flee (0 circling).
+    // scene's time), y 1 while they flee (0 circling); z 1 when the script
+    // flies them (the game): each is then where ghostNow says, its trail
+    // behind it along ghostVel.
     ghostFlee: vec4<f32>,
+    // The game's ghost lights: each one's velocity (metres a second) and
+    // size (1 as they circle).
+    ghostVel: array<vec4<f32>, 16>,
+    // The game's goal, a column of light: its base xyz and radius; its
+    // height, how much of it shows (0-1), 0, 0.
+    marker: vec4<f32>,
+    markerB: vec4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
@@ -1141,12 +1150,18 @@ fn vs_pollen(@builtin(vertex_index) vi: u32, @location(0) mote: f32) -> PollenOu
         gi = gid / GHOST_TRAIL;
         gk = f32(gid % GHOST_TRAIL);
         p = ghostPos(gi, t - gk * 0.16);
+        if (u.ghostFlee.z > 0.5) {
+            p = u.ghostNow[gi].xyz - u.ghostVel[gi].xyz * gk * 0.06;
+        }
     }
 
     let petal = select(0.0, 1.0, r4 < u.petals.x && !ghost);
     var radius = u.pollen.y * (0.5 + r3 * r3 * 1.2);
     if (ghost) {
         radius = 0.24 * (1.0 - gk * 0.2);
+        if (u.ghostFlee.z > 0.5) {
+            radius *= u.ghostVel[gi].w;
+        }
     }
     if (petal > 0.5) {
         radius = u.petals.y * (0.7 + 0.6 * r1);
@@ -1190,6 +1205,9 @@ fn vs_pollen(@builtin(vertex_index) vi: u32, @location(0) mote: f32) -> PollenOu
     }
     if (ghost) {
         pulse = ghostFlicker(gi, t) * pow(1.0 - gk * 0.24, 2.0);
+        if (u.ghostFlee.z > 0.5) {
+            pulse = u.ghostNow[gi].w * pow(1.0 - gk * 0.24, 2.0);
+        }
     }
     let twinkle = 0.06 + pulse;
     // Spread over the bigger disc, the same light is fainter.
@@ -1266,5 +1284,55 @@ fn fs_arrow(in: ArrowOut) -> FragOut {
     let c = in.color.rgb * (moon + vec3<f32>(0.12, 0.09, 0.07)) + glow;
     let hz = haze(c, in.world);
     out.color = encode(hz.rgb, hz.w);
+    return out;
+}
+
+// ---------------------------------------------------------------------------
+// The game's goal: a column of golden light standing on the ground (as in
+// San Andreas), brightest at its base and its rim, fading up into the
+// night, with a slow shimmer climbing it. Built from the vertex index (a
+// ring of quads); added over the scene, depth-tested but never hiding
+// anything.
+
+const MARKER_SEGMENTS = 48u;
+
+struct MarkerOut {
+    @builtin(position) clip: vec4<f32>,
+    @location(0) uv: vec2<f32>,  // around (0-1), up (0-1)
+    @location(1) rim: f32,       // 1 where the wall is seen edge-on
+};
+
+@vertex
+fn vs_marker(@builtin(vertex_index) vi: u32) -> MarkerOut {
+    var out: MarkerOut;
+    let quad = vi / 6u;
+    let corner = array<vec2<f32>, 6>(
+        vec2<f32>(0.0, 0.0), vec2<f32>(1.0, 0.0), vec2<f32>(1.0, 1.0),
+        vec2<f32>(0.0, 0.0), vec2<f32>(1.0, 1.0), vec2<f32>(0.0, 1.0));
+    let c = corner[vi % 6u];
+    let around = (f32(quad) + c.x) / f32(MARKER_SEGMENTS);
+    let a = around * 6.2831853;
+    let n = vec3<f32>(cos(a), 0.0, sin(a));
+    let world = u.marker.xyz + n * u.marker.w + vec3<f32>(0.0, c.y * u.markerB.x, 0.0);
+    out.clip = u.viewProj * vec4<f32>(world, 1.0);
+    out.uv = vec2<f32>(around, c.y);
+    let view = normalize(u.camPos.xyz - world);
+    out.rim = 1.0 - abs(dot(normalize(vec3<f32>(view.x, 0.0, view.z)), n));
+    return out;
+}
+
+@fragment
+fn fs_marker(in: MarkerOut) -> FragOut {
+    var out: FragOut;
+    let t = u.camPos.w;
+    let up = in.uv.y;
+    let fade = pow(1.0 - up, 1.6);
+    let shimmer = 0.75 + 0.25 * sin(up * 18.0 - t * 3.0 + sin(in.uv.x * 6.2831853 * 3.0) * 0.6);
+    let base = exp(-up * 22.0) * 1.4;
+    let a = clamp((fade * (0.22 + 0.6 * in.rim * in.rim) * shimmer + base) * u.markerB.y, 0.0, 1.0);
+    let c = vec3<f32>(1.0, 0.62, 0.08) * 1.3;
+    // Premultiplied, as the motes; the alpha channel (depth of field) is
+    // left alone by the blend.
+    out.color = vec4<f32>(sqrt(c / (1.0 + c)) * a, a);
     return out;
 }

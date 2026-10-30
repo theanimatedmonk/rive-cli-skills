@@ -174,6 +174,7 @@
                  twang where its clip pulls and lets go (1.0 s, 2.71 s), and a
                  twang when the drawn string is loosed. -->
             <StateMachineLayer name="Bow sounds" id="0:812">
+                <ExitState x="-180" y="-240" id="0:190120"/>
                 <AnyState x="-300" y="-120" id="0:810"/>
                 <EntryState x="-300" y="0" id="0:811">
                     <StateTransition stateToId="0:806" id="0:813"/>
@@ -390,11 +391,11 @@
         </ViewModelInstance>
     </ViewModel>
 
-    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901"/>
-    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:902"/>
-    <ShaderAsset file="king.wgsl" name="king" id="0:903"/>
-    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
-    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <ScriptAsset file="Hero.luau" isModule="true" name="Hero" id="0:901" codeFileId="0:190122"/>
+    <ScriptAsset file="King.luau" scriptProtocolValue="1" name="King" id="0:902" codeFileId="0:218691"/>
+    <ShaderAsset file="king.wgsl" name="king" id="0:903" codeFileId="0:248663"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904" codeFileId="0:286210"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906" codeFileId="0:291281"/>
     <!-- Written by ../tools/export_king.py from Vikram_King.glb. -->
     <BlobAsset file="../king.bin" name="king" id="0:905"/>
     <!-- The bow (from ../pinaka-bow): bow-sound.mp3 with its 0.17 s lead-in
