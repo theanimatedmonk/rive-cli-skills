@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vikram &amp; Vetal · the game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="game">
+    <main class="stage">
+      <canvas id="scene" width="1280" height="720" tabindex="0"></canvas>
+      <p class="status" id="status">Loading…</p>
+    </main>
+
+    <!-- Turning the view, and the controls: a panel folded into its button. -->
+    <nav class="story-menu game-menu is-open" id="game-menu" aria-label="Controls">
+      <div class="story-menu__panel" id="game-menu-panel">
+        <p class="story-menu__label">Turn the view</p>
+        <div class="game-turn">
+          <button type="button" class="game-turn__button" data-look="lookLeft" aria-label="Turn left">◀ Left</button>
+          <button type="button" class="game-turn__button" data-look="lookRight" aria-label="Turn right">Right ▶</button>
+        </div>
+        <p class="story-menu__label">Controls</p>
+        <dl class="game-controls">
+          <dt><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></dt>
+          <dd>Walk</dd>
+          <dt><kbd>4</kbd><kbd>6</kbd> · <kbd>A</kbd><kbd>D</kbd></dt>
+          <dd>Turn the view</dd>
+          <dt><kbd>8</kbd><kbd>2</kbd> · <kbd>W</kbd><kbd>S</kbd></dt>
+          <dd>Look up, down</dd>
+          <dt>Swipe</dt>
+          <dd>Look round (touchpad)</dd>
+          <dt>Hold <kbd>Space</kbd></dt>
+          <dd>Draw and aim at the circle</dd>
+          <dt>Let go</dt>
+          <dd>Loose the arrow</dd>
+          <dt>Click</dt>
+          <dd>The astra: a golden wave that slows the spirits</dd>
+          <dt>Rings</dt>
+          <dd>Inner: the draw, then reloading · dotted: the astra recharging</dd>
+        </dl>
+      </div>
+      <button type="button" class="story-menu__toggle" id="game-menu-toggle" aria-expanded="true" aria-controls="game-menu-panel">Controls <span class="story-menu__caret" aria-hidden="true">▴</span></button>
+    </nav>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
