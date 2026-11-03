@@ -568,9 +568,9 @@
         </ViewModelInstance>
     </ViewModel>
 
-    <ScriptAsset file="Studio.luau" scriptProtocolValue="1" name="Studio" id="0:902"/>
-    <ShaderAsset file="studio.wgsl" name="studio" id="0:903"/>
-    <ShaderAsset file="post.wgsl" name="post" id="0:904"/>
-    <ShaderAsset file="blur.wgsl" name="blur" id="0:906"/>
+    <ScriptAsset file="Studio.luau" scriptProtocolValue="1" name="Studio" id="0:902" codeFileId="0:3241"/>
+    <ShaderAsset file="studio.wgsl" name="studio" id="0:903" codeFileId="0:37505"/>
+    <ShaderAsset file="post.wgsl" name="post" id="0:904" codeFileId="0:56470"/>
+    <ShaderAsset file="blur.wgsl" name="blur" id="0:906" codeFileId="0:61541"/>
     <BlobAsset file="../birdie.bin" name="birdie" id="0:905"/>
 </Rive>
