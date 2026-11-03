@@ -174,6 +174,7 @@
                  twang where its clip pulls and lets go (1.0 s, 2.71 s), and a
                  twang when the drawn string is loosed. -->
             <StateMachineLayer name="Bow sounds" id="3:812">
+                <ExitState x="-180" y="-240" id="0:190120"/>
                 <AnyState x="-300" y="-120" id="3:810"/>
                 <EntryState x="-300" y="0" id="3:811">
                     <StateTransition stateToId="3:806" id="3:813"/>

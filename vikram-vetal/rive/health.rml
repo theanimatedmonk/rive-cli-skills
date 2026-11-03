@@ -1,0 +1,83 @@
+<Rive version="1" kind="fragment">
+    <!-- The health bar: a 2D component for the game's corner. King Vikram's
+         name, how much life he has left (the bar, 1 whole, 0 fallen) and a
+         line under it (the strikes he has taken of those he can bear). The
+         Game artboard binds it to its own view model. -->
+    <Artboard isComponent="true" defaultStateMachineId="7:200" viewModelId="7:500" viewModelInstanceId="7:520" x="1800" y="1800" width="252" height="74" styleId="7:2" name="Health" id="7:1">
+        <LayoutComponentStyle name="Health Style" id="7:2"/>
+        <Text x="20" y="20" originX="0" originY="0.5" sizingValue="autoWidth" name="Name" id="7:10">
+            <TextStylePaint fontSize="17" fontAssetId="0:925" name="Name Style" id="7:11">
+                <Fill name="Fill" id="7:12">
+                    <SolidColor colorValue="FFF1D9A6" name="Color" id="7:13"/>
+                </Fill>
+            </TextStylePaint>
+            <TextValueRun styleId="7:11" text="King Vikram" name="Run" id="7:14"/>
+        </Text>
+        <Text x="20" y="59" originX="0" originY="0.5" sizingValue="autoWidth" name="Strikes" id="7:16">
+            <TextStylePaint fontSize="13" fontAssetId="0:925" name="Strikes Style" id="7:17">
+                <Fill name="Fill" id="7:18">
+                    <SolidColor colorValue="FF9FB0D8" name="Color" id="7:19"/>
+                </Fill>
+            </TextStylePaint>
+            <TextValueRun styleId="7:17" text="Struck  0 of 6" name="Run" id="7:20">
+                <DataBindContext sourcePathIds="7:500-7:502" propertyKey="268" id="7:21"/>
+            </TextValueRun>
+        </Text>
+        <!-- The life left: a saffron bar from the left, its width the health. -->
+        <Shape x="20" y="38" name="Life" id="7:30">
+            <Rectangle width="212" height="10" originX="0" cornerRadiusTL="5" cornerRadiusTR="5" cornerRadiusBL="5" cornerRadiusBR="5" name="Path" id="7:31">
+                <DataBindContext sourcePathIds="7:500-7:501" propertyKey="20" converterId="7:60" id="7:32"/>
+            </Rectangle>
+            <Fill name="Fill" id="7:33">
+                <LinearGradient startX="0" endX="212" name="Gradient" id="7:34">
+                    <GradientStop colorValue="FFC0362A" position="0" name="Stop" id="7:35"/>
+                    <GradientStop colorValue="FFF0A040" position="0.5" name="Stop" id="7:36"/>
+                    <GradientStop colorValue="FFF6D27A" position="1" name="Stop" id="7:37"/>
+                </LinearGradient>
+            </Fill>
+        </Shape>
+        <Shape x="20" y="38" name="Track" id="7:40">
+            <Rectangle width="212" height="10" originX="0" cornerRadiusTL="5" cornerRadiusTR="5" cornerRadiusBL="5" cornerRadiusBR="5" name="Path" id="7:41"/>
+            <Fill name="Fill" id="7:42">
+                <SolidColor colorValue="FF1A1F38" name="Color" id="7:43"/>
+            </Fill>
+            <Stroke thickness="1" name="Edge" id="7:44">
+                <SolidColor colorValue="55D8B070" name="Color" id="7:45"/>
+            </Stroke>
+        </Shape>
+        <Shape x="126.0" y="37.0" name="Card" id="7:50">
+            <Rectangle width="252" height="74" cornerRadiusTL="16" cornerRadiusTR="16" cornerRadiusBL="16" cornerRadiusBR="16" name="Path" id="7:51"/>
+            <Fill name="Fill" id="7:52">
+                <SolidColor colorValue="C80A0E20" name="Color" id="7:53"/>
+            </Fill>
+            <Stroke thickness="1.5" name="Edge" id="7:54">
+                <SolidColor colorValue="66D8B070" name="Color" id="7:55"/>
+            </Stroke>
+        </Shape>
+        <StateMachine name="Health" id="7:200">
+            <StateMachineLayer name="Health" id="7:201">
+                <AnyState x="200" y="-120" id="7:202"/>
+                <ExitState x="400" y="-120" id="7:203"/>
+                <EntryState id="7:204">
+                    <StateTransition stateToId="7:205" id="7:206"/>
+                </EntryState>
+                <AnimationState x="200" animationId="7:210" id="7:205"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation duration="60" loopValue="1" name="Idle" id="7:210"/>
+    </Artboard>
+
+    <!-- Health (0-1) to the bar's width. -->
+    <DataConverterRangeMapper minInput="0" maxInput="1" minOutput="0" maxOutput="212" clampLower="true" clampUpper="true" name="Life Width" id="7:60"/>
+
+    <!-- How much life he has (0-1), and the line under the bar. -->
+    <ViewModel name="Health" id="7:500">
+        <ViewModelPropertyNumber componentProps="1" name="health" id="7:501"/>
+        <ViewModelPropertyString componentProps="1" name="label" id="7:502"/>
+        <ViewModelInstance exports="true" name="Default" id="7:520">
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="7:501" id="7:1501"/>
+            <ViewModelInstanceString propertyValue="Struck  0 of 6" viewModelPropertyId="7:502" id="7:1502"/>
+        </ViewModelInstance>
+    </ViewModel>
+    <ComponentAsset artboardId="7:1" name="Health" id="0:927"/>
+</Rive>

@@ -25,6 +25,11 @@
 # Templates (kinds 20-24) and instances (30-38) as in sheesupalgarh.
 # Kind 50 is the ground's height: count = N, an N x N grid of f32 heights
 # (row-major, z then x) over lo..hi (x, z), for whatever walks on it.
+# Kind 51 is where one may walk (the path): count = N, an N x N grid of u8
+# (1 on the path, 0 off it), laid out as kind 50.
+# Kind 52 is the peepal's wood (its trunk and branches), for arrows to strike:
+# a grid of cells over lo..hi, u32 x3 its size (nx, ny, nz) then a u8 a cell
+# (x fastest, then y, then z), 1 where the bark passes through.
 
 import json, math, struct, sys
 import numpy as np
@@ -207,6 +212,8 @@ def classify(name, tc, wp, idx):
 
 merged = {}  # material -> list of chunks [vbs, ibs, verts, tris]
 ground_tris = []  # the terrain's level triangles (world space), for heights
+path_tris = []  # the path's triangles (world space), for where one may walk
+wood_tris = []  # the peepal's trunk and branches (world space), for arrows
 surfaces = {}  # material -> list of (positions, normals, triangles) for growing
 for name, mi, M in placed:
     R = M[:3, :3]
@@ -257,6 +264,9 @@ for name, mi, M in placed:
             cr = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
             up = np.abs(cr[:, 1]) / (np.linalg.norm(cr, axis=1) + 1e-12)
             ground_tris.append(tri[up > 0.5])
+            path_tris.append(wp[idx[tri_mat == ASH]])
+        if name.startswith('Peepal_Trunk'):
+            wood_tris.append(wp[idx])
         for mat in np.unique(tri_mat):
             sub = idx[tri_mat == mat]
             used = np.unique(sub)
@@ -415,6 +425,27 @@ for (kind, _, _), (rows, lo, hi) in sorted(cells.items()):
 # The ground's height, on a grid: the highest level terrain at each point
 # (its top, not the slab's underside), holes filled from their neighbours.
 
+
+def cover(a, b, c, glo, step):
+    """The grid points (z, x) a triangle covers, seen from above, with its
+    height there: as one batch, or none."""
+    xs = (np.array([a[0], b[0], c[0]]) - glo[0]) / step[0]
+    zs = (np.array([a[2], b[2], c[2]]) - glo[1]) / step[1]
+    i0, i1 = int(np.ceil(xs.min())), int(np.floor(xs.max()))
+    k0, k1 = int(np.ceil(zs.min())), int(np.floor(zs.max()))
+    if i1 < i0 or k1 < k0:
+        return
+    gx, gz = np.meshgrid(np.arange(i0, i1 + 1), np.arange(k0, k1 + 1))
+    den = (zs[1] - zs[2]) * (xs[0] - xs[2]) + (xs[2] - xs[1]) * (zs[0] - zs[2])
+    if abs(den) < 1e-12:
+        return
+    wa = ((zs[1] - zs[2]) * (gx - xs[2]) + (xs[2] - xs[1]) * (gz - zs[2])) / den
+    wb = ((zs[2] - zs[0]) * (gx - xs[2]) + (xs[0] - xs[2]) * (gz - zs[2])) / den
+    wc = 1 - wa - wb
+    m = (wa >= -1e-6) & (wb >= -1e-6) & (wc >= -1e-6)
+    y = wa * a[1] + wb * b[1] + wc * c[1]
+    yield gz[m], gx[m], y[m]
+
 HN = 128
 if ground_tris:
     gt = np.concatenate(ground_tris)
@@ -423,23 +454,8 @@ if ground_tris:
     step = (ghi - glo) / (HN - 1)
     H = np.full((HN, HN), -np.inf)
     for a, b, c in gt:
-        xs = (np.array([a[0], b[0], c[0]]) - glo[0]) / step[0]
-        zs = (np.array([a[2], b[2], c[2]]) - glo[1]) / step[1]
-        i0, i1 = int(np.ceil(xs.min())), int(np.floor(xs.max()))
-        k0, k1 = int(np.ceil(zs.min())), int(np.floor(zs.max()))
-        if i1 < i0 or k1 < k0:
-            continue
-        gx, gz = np.meshgrid(np.arange(i0, i1 + 1), np.arange(k0, k1 + 1))
-        den = (zs[1] - zs[2]) * (xs[0] - xs[2]) + (xs[2] - xs[1]) * (zs[0] - zs[2])
-        if abs(den) < 1e-12:
-            continue
-        wa = ((zs[1] - zs[2]) * (gx - xs[2]) + (xs[2] - xs[1]) * (gz - zs[2])) / den
-        wb = ((zs[2] - zs[0]) * (gx - xs[2]) + (xs[0] - xs[2]) * (gz - zs[2])) / den
-        wc = 1 - wa - wb
-        m = (wa >= -1e-6) & (wb >= -1e-6) & (wc >= -1e-6)
-        y = wa * a[1] + wb * b[1] + wc * c[1]
-        zz, xx = gz[m], gx[m]
-        H[zz, xx] = np.maximum(H[zz, xx], y[m])
+        for zz, xx, y in cover(a, b, c, glo, step):
+            H[zz, xx] = np.maximum(H[zz, xx], y)
     for _ in range(HN):
         hole = ~np.isfinite(H)
         if not hole.any():
@@ -453,6 +469,48 @@ if ground_tris:
     H[~np.isfinite(H)] = 0
     section(50, HN, 0, H.astype('<f4').tobytes(), lo=(glo[0], 0, glo[1]), hi=(ghi[0], 0, ghi[1]))
     print(f'ground heights: {HN}x{HN} over x {glo[0]:.1f}..{ghi[0]:.1f}, z {glo[1]:.1f}..{ghi[1]:.1f}, y {H.min():.2f}..{H.max():.2f}')
+
+# Where one may walk: the path, on a finer grid over the same ground (1 on
+# it, 0 off it), with its specks of green inside closed up.
+PN = 256
+pt = np.concatenate(path_tris) if path_tris else np.zeros((0, 3, 3))
+if ground_tris and len(pt):
+    pstep = (ghi - glo) / (PN - 1)
+    P = np.zeros((PN, PN), bool)
+    for a, b, c in pt:
+        for zz, xx, _ in cover(a, b, c, glo, pstep):
+            P[zz, xx] = True
+    def grow(m, by):
+        for _ in range(by):
+            pad = np.pad(m, 1)
+            m = m | pad[:-2, 1:-1] | pad[2:, 1:-1] | pad[1:-1, :-2] | pad[1:-1, 2:]
+        return m
+    P = ~grow(~grow(P, 2), 2)
+    section(51, PN, 0, P.astype('u1').tobytes(), lo=(glo[0], 0, glo[1]), hi=(ghi[0], 0, ghi[1]))
+    print(f'walkable path: {PN}x{PN}, {P.mean() * 100:.1f}% of the ground')
+
+# The peepal's wood, in cells of WOOD_CELL metres: each cell its bark passes
+# through (sampled over every triangle finer than a cell).
+WOOD_CELL = 0.2
+if wood_tris:
+    wt = np.concatenate(wood_tris)
+    wlo = wt.reshape(-1, 3).min(0) - WOOD_CELL
+    whi = wt.reshape(-1, 3).max(0) + WOOD_CELL
+    dims = np.ceil((whi - wlo) / WOOD_CELL).astype(int)
+    whi = wlo + dims * WOOD_CELL
+    W = np.zeros(dims[::-1], np.uint8)  # z, y, x
+    a, b, c = wt[:, 0], wt[:, 1], wt[:, 2]
+    span = np.maximum(np.linalg.norm(b - a, axis=1), np.linalg.norm(c - a, axis=1))
+    for steps in np.unique(np.ceil(span / (WOOD_CELL * 0.4)).astype(int) + 1):
+        sel = np.ceil(span / (WOOD_CELL * 0.4)).astype(int) + 1 == steps
+        i, j = np.meshgrid(np.arange(steps + 1), np.arange(steps + 1))
+        keep = i + j <= steps
+        u_, v_ = (i[keep] / steps)[None, :, None], (j[keep] / steps)[None, :, None]
+        pts = a[sel][:, None] + (b[sel] - a[sel])[:, None] * u_ + (c[sel] - a[sel])[:, None] * v_
+        cell = np.clip(((pts.reshape(-1, 3) - wlo) / WOOD_CELL).astype(int), 0, dims - 1)
+        W[cell[:, 2], cell[:, 1], cell[:, 0]] = 1
+    section(52, int(W.sum()), 0, struct.pack('<3I', *dims) + W.tobytes(), lo=tuple(wlo), hi=tuple(whi))
+    print(f'peepal wood: {dims[0]}x{dims[1]}x{dims[2]} cells of {WOOD_CELL} m, {int(W.sum())} with bark, x {wlo[0]:.1f}..{whi[0]:.1f} y {wlo[1]:.1f}..{whi[1]:.1f} z {wlo[2]:.1f}..{whi[2]:.1f}')
 
 # ---------------------------------------------------------------------------
 # Write

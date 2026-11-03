@@ -2,7 +2,7 @@
 // artboard's state machine, one keyed timeline per chapter); this page lets
 // the viewer jump to a chapter, from a folded menu, by firing the Story view
 // model's triggers, and marks the chapter playing.
-const SRC = "vikram-vetal.riv?v=50";
+const SRC = "vikram-vetal.riv?v=54";
 
 // The chapters, by their state's (timeline's) name in the state machine.
 const CHAPTERS = ["Peepal", "Vikram", "Astra"];
