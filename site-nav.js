@@ -13,6 +13,7 @@
   const PAGES = [
     { label: "Bow", path: "pinaka-bow/web/" },
     { label: "Ruins", path: "sheesupalgarh/web/" },
+    { label: "Lake", path: "pampa-lake/web/" },
     { label: "Tarot flow", path: "tarot-frontend-demo/" },
     { label: "10 Rings", path: "ten-rings/web/" },
   ];
