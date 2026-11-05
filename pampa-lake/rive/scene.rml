@@ -10,13 +10,13 @@
             <ScriptInputNumber propertyValue="720" name="height" id="0:14"/>
             <ScriptInputNumber propertyValue="1" name="resolution" id="0:16"/>
             <ScriptInputNumber propertyValue="4" name="msaa" id="0:18"/>
-            <ScriptInputNumber name="cameraX" id="0:20">
+            <ScriptInputNumber propertyValue="-6.6" name="cameraX" id="0:20">
                 <DataBindContext sourcePathIds="0:500-0:501" propertyKey="243" id="0:21"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="2.4" name="cameraY" id="0:22">
+            <ScriptInputNumber propertyValue="4.1" name="cameraY" id="0:22">
                 <DataBindContext sourcePathIds="0:500-0:502" propertyKey="243" id="0:23"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="6" name="cameraZ" id="0:24">
+            <ScriptInputNumber propertyValue="-36.7" name="cameraZ" id="0:24">
                 <DataBindContext sourcePathIds="0:500-0:503" propertyKey="243" id="0:25"/>
             </ScriptInputNumber>
             <ScriptInputNumber propertyValue="4.05" name="rotationX" id="0:26">
@@ -37,7 +37,7 @@
             <ScriptInputNumber propertyValue="11" name="focusDistance" id="0:36">
                 <DataBindContext sourcePathIds="0:500-0:509" propertyKey="243" id="0:37"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="0.25" name="depthOfField" id="0:38">
+            <ScriptInputNumber propertyValue="0.26" name="depthOfField" id="0:38">
                 <DataBindContext sourcePathIds="0:500-0:510" propertyKey="243" id="0:39"/>
             </ScriptInputNumber>
             <ScriptInputBoolean propertyValue="true" name="navigation" id="0:40"/>
@@ -89,7 +89,7 @@
             <ScriptInputNumber propertyValue="0.7" name="rings" id="0:80"/>
             <ScriptInputNumber propertyValue="1" name="swans" id="0:82"/>
             <ScriptInputNumber propertyValue="1" name="lotusBob" id="0:84"/>
-            <ScriptInputNumber propertyValue="0.6" name="mist" id="0:86">
+            <ScriptInputNumber propertyValue="0.35" name="mist" id="0:86">
                 <DataBindContext sourcePathIds="0:500-0:524" propertyKey="243" id="0:87"/>
             </ScriptInputNumber>
             <ScriptInputNumber propertyValue="3" name="mistHeight" id="0:88"/>
@@ -111,16 +111,16 @@
             <ScriptInputNumber propertyValue="0.15" name="petals" id="0:104"/>
             <ScriptInputNumber propertyValue="0.35" name="bloom" id="0:106"/>
             <ScriptInputNumber propertyValue="0.1" name="glow" id="0:108"/>
-            <ScriptInputNumber propertyValue="0.83" name="exposure" id="0:110">
+            <ScriptInputNumber propertyValue="0.54" name="exposure" id="0:110">
                 <DataBindContext sourcePathIds="0:500-0:529" propertyKey="243" id="0:111"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="1" name="paint" id="0:112">
+            <ScriptInputNumber propertyValue="0.59" name="paint" id="0:112">
                 <DataBindContext sourcePathIds="0:500-0:530" propertyKey="243" id="0:113"/>
             </ScriptInputNumber>
             <ScriptInputNumber propertyValue="1.7" name="paper" id="0:114">
                 <DataBindContext sourcePathIds="0:500-0:531" propertyKey="243" id="0:115"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="2.5" name="brush" id="0:116">
+            <ScriptInputNumber propertyValue="12" name="brush" id="0:116">
                 <DataBindContext sourcePathIds="0:500-0:532" propertyKey="243" id="0:117"/>
             </ScriptInputNumber>
             <ScriptInputNumber name="edges" id="0:118">
@@ -133,16 +133,16 @@
             <ScriptInputColor propertyValue="FFFCE4C4" name="horizonColor" id="0:128"/>
             <ScriptInputColor propertyValue="FFD6BEDE" name="mistColor" id="0:130"/>
             <ScriptInputColor propertyValue="FF7892A8" name="shadowColor" id="0:132"/>
-            <ScriptInputNumber propertyValue="1" name="shading" id="0:134">
+            <ScriptInputNumber propertyValue="0.36" name="shading" id="0:134">
                 <DataBindContext sourcePathIds="0:500-0:534" propertyKey="243" id="0:135"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="0.51" name="greens" id="0:136">
+            <ScriptInputNumber propertyValue="0.42" name="greens" id="0:136">
                 <DataBindContext sourcePathIds="0:500-0:535" propertyKey="243" id="0:137"/>
             </ScriptInputNumber>
             <ScriptInputNumber propertyValue="1" name="plants" id="0:138">
                 <DataBindContext sourcePathIds="0:500-0:536" propertyKey="243" id="0:139"/>
             </ScriptInputNumber>
-            <ScriptInputNumber propertyValue="0.27" name="clouds" id="0:140">
+            <ScriptInputNumber name="clouds" id="0:140">
                 <DataBindContext sourcePathIds="0:500-0:537" propertyKey="243" id="0:141"/>
             </ScriptInputNumber>
             <ScriptInputColor propertyValue="FFF6E2D2" name="skyMidColor" id="0:142"/>
@@ -214,16 +214,16 @@
         <ViewModelPropertyNumber name="tour" id="0:538"/>
         <ViewModelPropertyNumber name="tourSpeed" id="0:539"/>
         <ViewModelInstance exports="true" name="Default" id="0:499">
-            <ViewModelInstanceNumber viewModelPropertyId="0:501" id="0:701"/>
-            <ViewModelInstanceNumber propertyValue="2.4" viewModelPropertyId="0:502" id="0:702"/>
-            <ViewModelInstanceNumber propertyValue="6" viewModelPropertyId="0:503" id="0:703"/>
+            <ViewModelInstanceNumber propertyValue="-6.6" viewModelPropertyId="0:501" id="0:701"/>
+            <ViewModelInstanceNumber propertyValue="4.1" viewModelPropertyId="0:502" id="0:702"/>
+            <ViewModelInstanceNumber propertyValue="-36.7" viewModelPropertyId="0:503" id="0:703"/>
             <ViewModelInstanceNumber propertyValue="4.05" viewModelPropertyId="0:504" id="0:704"/>
             <ViewModelInstanceNumber propertyValue="-3.06" viewModelPropertyId="0:505" id="0:705"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:506" id="0:706"/>
             <ViewModelInstanceNumber propertyValue="42.55" viewModelPropertyId="0:507" id="0:707"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:508" id="0:708"/>
             <ViewModelInstanceNumber propertyValue="11" viewModelPropertyId="0:509" id="0:709"/>
-            <ViewModelInstanceNumber propertyValue="0.25" viewModelPropertyId="0:510" id="0:710"/>
+            <ViewModelInstanceNumber propertyValue="0.26" viewModelPropertyId="0:510" id="0:710"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:511" id="0:711"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:512" id="0:712"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:513" id="0:713"/>
@@ -237,20 +237,20 @@
             <ViewModelInstanceNumber propertyValue="200" viewModelPropertyId="0:521" id="0:721"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:522" id="0:722"/>
             <ViewModelInstanceNumber propertyValue="2.45" viewModelPropertyId="0:523" id="0:723"/>
-            <ViewModelInstanceNumber propertyValue="0.6" viewModelPropertyId="0:524" id="0:724"/>
+            <ViewModelInstanceNumber propertyValue="0.35" viewModelPropertyId="0:524" id="0:724"/>
             <ViewModelInstanceNumber propertyValue="14" viewModelPropertyId="0:525" id="0:725"/>
             <ViewModelInstanceNumber propertyValue="0.23" viewModelPropertyId="0:526" id="0:726"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:527" id="0:727"/>
             <ViewModelInstanceNumber propertyValue="1600" viewModelPropertyId="0:528" id="0:728"/>
-            <ViewModelInstanceNumber propertyValue="0.83" viewModelPropertyId="0:529" id="0:729"/>
-            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:530" id="0:730"/>
+            <ViewModelInstanceNumber propertyValue="0.54" viewModelPropertyId="0:529" id="0:729"/>
+            <ViewModelInstanceNumber propertyValue="0.59" viewModelPropertyId="0:530" id="0:730"/>
             <ViewModelInstanceNumber propertyValue="1.7" viewModelPropertyId="0:531" id="0:731"/>
-            <ViewModelInstanceNumber propertyValue="2.5" viewModelPropertyId="0:532" id="0:732"/>
+            <ViewModelInstanceNumber propertyValue="12" viewModelPropertyId="0:532" id="0:732"/>
             <ViewModelInstanceNumber viewModelPropertyId="0:533" id="0:733"/>
-            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:534" id="0:734"/>
-            <ViewModelInstanceNumber propertyValue="0.51" viewModelPropertyId="0:535" id="0:735"/>
+            <ViewModelInstanceNumber propertyValue="0.36" viewModelPropertyId="0:534" id="0:734"/>
+            <ViewModelInstanceNumber propertyValue="0.42" viewModelPropertyId="0:535" id="0:735"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:536" id="0:736"/>
-            <ViewModelInstanceNumber propertyValue="0.27" viewModelPropertyId="0:537" id="0:737"/>
+            <ViewModelInstanceNumber viewModelPropertyId="0:537" id="0:737"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:538" id="0:738"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:539" id="0:739"/>
         </ViewModelInstance>
