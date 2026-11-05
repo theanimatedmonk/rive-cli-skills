@@ -86,6 +86,10 @@ INPUTS = [
     ('skyMidColor', 'Color', 'FFF6E2D2', False),
     ('mountainColor', 'Color', 'FF9684AC', False),
     ('waterColor', 'Color', 'FF96E4CD', False),
+    # The camera move: a slow loop through the lake from Cam_Hero (1), or
+    # the camera inputs (0); tourSpeed scales its 110 s.
+    ('tour', 'Number', 1, True),
+    ('tourSpeed', 'Number', 1, True),
 ]
 
 

@@ -148,6 +148,12 @@
             <ScriptInputColor propertyValue="FFF6E2D2" name="skyMidColor" id="0:142"/>
             <ScriptInputColor propertyValue="FF9684AC" name="mountainColor" id="0:144"/>
             <ScriptInputColor propertyValue="FF96E4CD" name="waterColor" id="0:146"/>
+            <ScriptInputNumber propertyValue="1" name="tour" id="0:148">
+                <DataBindContext sourcePathIds="0:500-0:538" propertyKey="243" id="0:149"/>
+            </ScriptInputNumber>
+            <ScriptInputNumber propertyValue="1" name="tourSpeed" id="0:150">
+                <DataBindContext sourcePathIds="0:500-0:539" propertyKey="243" id="0:151"/>
+            </ScriptInputNumber>
         </ScriptedDrawable>
         <Fill name="Mist" id="0:3">
             <SolidColor colorValue="FFF7ECD0" name="Color" id="0:4"/>
@@ -205,6 +211,8 @@
         <ViewModelPropertyNumber name="greens" id="0:535"/>
         <ViewModelPropertyNumber name="plants" id="0:536"/>
         <ViewModelPropertyNumber name="clouds" id="0:537"/>
+        <ViewModelPropertyNumber name="tour" id="0:538"/>
+        <ViewModelPropertyNumber name="tourSpeed" id="0:539"/>
         <ViewModelInstance exports="true" name="Default" id="0:499">
             <ViewModelInstanceNumber viewModelPropertyId="0:501" id="0:701"/>
             <ViewModelInstanceNumber propertyValue="2.4" viewModelPropertyId="0:502" id="0:702"/>
@@ -243,6 +251,8 @@
             <ViewModelInstanceNumber propertyValue="0.51" viewModelPropertyId="0:535" id="0:735"/>
             <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:536" id="0:736"/>
             <ViewModelInstanceNumber propertyValue="0.27" viewModelPropertyId="0:537" id="0:737"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:538" id="0:738"/>
+            <ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:539" id="0:739"/>
         </ViewModelInstance>
     </ViewModel>
 

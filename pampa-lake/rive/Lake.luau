@@ -31,6 +31,15 @@
 -- scroll. The inputs stay the camera's home. The scene is built for the
 -- hero view: far from it, it shows gaps.
 --
+-- The camera move (`tour` 1): a looping flight through the lake, from
+-- Cam_Hero and back. A low skim down the lake's centre past the hamsas,
+-- leaning one way then the other; once round the lotus beds, a full 360
+-- facing in, banked into the turn; a rising crane onto the valley gap, a
+-- held breath; and a long, gliding pull-back home. 106 s at `tourSpeed`
+-- 1; the navigation still works on top. The camera
+-- inputs are used while it is off (0), and turning it on or off glides
+-- between the two over three seconds.
+--
 -- Sun: `sunAzimuth` (degrees around Y, 0 = +X, 90 = +Z), `sunElevation`,
 -- `sunIntensity`, `sunColor`; `lightLeak` is its glow on screen, `shafts`
 -- its light shafts through the mist. The GLB's Sun_Key is azimuth -64,
@@ -89,6 +98,8 @@ export type Lake = {
 	rotationZ: Input<number>,
 	fov: Input<number>,
 	drift: Input<number>,
+	tour: Input<number>,
+	tourSpeed: Input<number>,
 	navigation: Input<boolean>,
 	navMode: Input<number>,
 	zoom: Input<number>,
@@ -161,6 +172,8 @@ export type Lake = {
 	camera: Camera,
 	-- Navigation, on top of the camera inputs: orbit (degrees), pan (metres,
 	-- moving the pivot) and zoom (times the orbit distance).
+	tourTime: number,
+	tourRamp: number,
 	navYaw: number,
 	navPitch: number,
 	navPanX: number,
@@ -265,6 +278,83 @@ local NOT_REFLECTED = { [22] = true, [23] = true }
 
 local function clamp(x: number, lo: number, hi: number): number
 	return math.max(lo, math.min(hi, x))
+end
+
+-- The camera move: keys of time (s), position (glTF metres), turn, tilt
+-- and roll (degrees, as rotationY / rotationX / rotationZ) and fov. The
+-- turn is unwound (it runs a full -360 round the lotus beds). `still` keys
+-- are held with no speed, so the move eases out of and into them; between
+-- them it is a Catmull-Rom glide. On top, the camera banks into its turns.
+type TourKey = { t: number, p: { number }, still: boolean? }
+local HERO = { 0, 2.4, 6, -3.06, 4.05, 42.55, 0 }
+local TOUR: { TourKey } = {
+	-- Cam_Hero: the still lake, mirroring the sky and the ridges.
+	{ t = 0, p = HERO, still = true },
+	{ t = 3, p = HERO, still = true },
+	-- A low skim down the lake's centre, a Dutch lean to the left.
+	{ t = 13, p = { 3, 1.7, -16, -6, 1, 47, -5 } },
+	-- Past the hamsas on the right, leaning back the other way.
+	{ t = 22, p = { 5, 2.3, -47, -14, -2, 48, 4 } },
+}
+-- Then once round the lotus beds, clockwise, facing in: the turn is the
+-- angle round the circle. In at -60 degrees, out at -420. Facing back
+-- toward the start (about -120 to -270) the gimbal dips onto the lotuses,
+-- so the bare ridge behind Cam_Hero (no trees on it) stays out of frame.
+local ORBIT_X, ORBIT_Z, ORBIT_R = 22, -88, 16
+local ORBIT_TILT = { -8, -11, -18, -30, -34, -32, -26, -14, -8, -8, -8, -8, -8 }
+for n = 0, 12 do
+	local a = -60 - n * 30
+	local r = math.rad(a)
+	table.insert(TOUR, {
+		t = 30 + n * 2.5,
+		p = { ORBIT_X + ORBIT_R * math.sin(r), 3 + 1.2 * math.sin(n / 12 * math.pi), ORBIT_Z + ORBIT_R * math.cos(r), a, ORBIT_TILT[n + 1], 46, 0 },
+	})
+end
+-- Out of the circle, a rising crane onto the valley gap (11, 17, -200).
+table.insert(TOUR, { t = 73, p = { 10, 12, -112, -360.6, 3, 48, 0 }, still = true })
+table.insert(TOUR, { t = 79, p = { 10, 12, -112, -360.6, 3, 48, 0 }, still = true })
+-- And a long, gliding pull-back home, settling as it lands.
+table.insert(TOUR, { t = 93, p = { 4, 6, -48, -362, 4.5, 45, -3 } })
+table.insert(TOUR, { t = 106, p = { HERO[1], HERO[2], HERO[3], HERO[4] - 360, HERO[5], HERO[6], HERO[7] }, still = true })
+local TOUR_LENGTH = 106
+local CHANNELS = 7
+
+-- A key's slope for one channel: the Catmull-Rom tangent, 0 on still keys.
+local function tourSlope(i: number, c: number): number
+	local k = TOUR[i]
+	if k.still or i == 1 or i == #TOUR then
+		return 0
+	end
+	local a, b = TOUR[i - 1], TOUR[i + 1]
+	return (b.p[c] - a.p[c]) / (b.t - a.t)
+end
+
+local function tourSample(t: number): { number }
+	t = clamp(t, 0, TOUR_LENGTH)
+	local i = 1
+	while i < #TOUR - 1 and TOUR[i + 1].t <= t do
+		i += 1
+	end
+	local a, b = TOUR[i], TOUR[i + 1]
+	local h = b.t - a.t
+	local s = clamp((t - a.t) / h, 0, 1)
+	local s2, s3 = s * s, s * s * s
+	local h00, h10, h01, h11 = 2 * s3 - 3 * s2 + 1, s3 - 2 * s2 + s, -2 * s3 + 3 * s2, s3 - s2
+	local out = {}
+	for c = 1, CHANNELS do
+		out[c] = h00 * a.p[c] + h10 * h * tourSlope(i, c) + h01 * b.p[c] + h11 * h * tourSlope(i + 1, c)
+	end
+	return out
+end
+
+-- The pose at time t: x, y, z, turn, tilt, fov, roll, with the bank: the
+-- camera leans into a turn by 0.75 degree per degree a second of it.
+local function tourPose(t: number): { number }
+	t = t % TOUR_LENGTH
+	local out = tourSample(t)
+	local rate = (tourSample(t + 0.25)[4] - tourSample(t - 0.25)[4]) / 0.5
+	out[7] += clamp(rate * 0.75, -14, 14)
+	return out
 end
 
 local function linear(c: Color): (number, number, number)
@@ -435,6 +525,16 @@ function advance(self: Lake, seconds: number): boolean
 	end
 	local dt = math.min(seconds, 0.1)
 	self.time += dt
+	-- The camera move's clock runs only while it is on.
+	local on = self.tour > 0.5
+	if self.tourRamp < 0 then
+		-- The first frame starts where the input says, with no glide.
+		self.tourRamp = if on then 1 else 0
+	end
+	if on then
+		self.tourTime = (self.tourTime + dt * clamp(self.tourSpeed, 0, 4)) % TOUR_LENGTH
+	end
+	self.tourRamp = clamp(self.tourRamp + (if on then dt else -dt) / 3, 0, 1)
 	-- Phases run at their speeds, so changing a speed never jumps.
 	self.windPhase += dt * math.max(self.windSpeed, 0)
 	self.mistPhase += dt * math.max(self.mistSpeed, 0)
@@ -663,13 +763,27 @@ local function frameUniforms(self: Lake)
 	local u = self.frame
 	local t = self.time
 	local drift = clamp(self.drift, 0, 2)
-	-- The camera, with a slow floating sway.
-	local ex = self.cameraX + math.sin(t * 0.13) * 0.12 * drift
-	local ey = self.cameraY + math.sin(t * 0.17 + 1) * 0.06 * drift
-	local ez = self.cameraZ + math.cos(t * 0.11) * 0.12 * drift
-	local yaw = math.rad(self.rotationY + math.sin(t * 0.09) * 0.6 * drift)
-	local pitch = math.rad(self.rotationX + math.sin(t * 0.12 + 2) * 0.3 * drift)
-	local roll = math.rad(self.rotationZ + math.sin(t * 0.07) * 0.2 * drift)
+	-- The camera: the inputs, or the camera move, or between the two.
+	local cx, cy, cz = self.cameraX, self.cameraY, self.cameraZ
+	local turn, tilt, fov = self.rotationY, self.rotationX, self.fov
+	local roll = self.rotationZ
+	local r = self.tourRamp
+	if r > 0 then
+		local k = r * r * (3 - 2 * r)
+		local pose = tourPose(self.tourTime)
+		-- The move's turn is unwound; blend to it the short way round.
+		pose[4] = turn + ((pose[4] - turn + 180) % 360 - 180)
+		cx, cy, cz = cx + (pose[1] - cx) * k, cy + (pose[2] - cy) * k, cz + (pose[3] - cz) * k
+		turn, tilt, fov = turn + (pose[4] - turn) * k, tilt + (pose[5] - tilt) * k, fov + (pose[6] - fov) * k
+		roll += (pose[7] - roll) * k
+	end
+	-- With a slow floating sway.
+	local ex = cx + math.sin(t * 0.13) * 0.12 * drift
+	local ey = cy + math.sin(t * 0.17 + 1) * 0.06 * drift
+	local ez = cz + math.cos(t * 0.11) * 0.12 * drift
+	local yaw = math.rad(turn + math.sin(t * 0.09) * 0.6 * drift)
+	local pitch = math.rad(tilt + math.sin(t * 0.12 + 2) * 0.3 * drift)
+	local bank = math.rad(roll + math.sin(t * 0.07) * 0.2 * drift)
 	-- Navigation: orbit the eye about a pivot `focusDistance` ahead (moved
 	-- by the pan), at that distance times the zoom.
 	local cp = math.cos(pitch)
@@ -693,12 +807,12 @@ local function frameUniforms(self: Lake)
 	local ux = ry * fz - rz * fy
 	local uy = rz * fx - rx * fz
 	local uz = rx * fy - ry * fx
-	local cr, sr = math.cos(roll), math.sin(roll)
+	local cr, sr = math.cos(bank), math.sin(bank)
 	local Rx, Ry, Rz = rx * cr + ux * sr, ry * cr + uy * sr, rz * cr + uz * sr
 	local Ux, Uy, Uz = ux * cr - rx * sr, uy * cr - ry * sr, uz * cr - rz * sr
 
 	local aspect = self.targetW / math.max(self.targetH, 1)
-	local fovY = math.rad(clamp(self.fov, 10, 120))
+	local fovY = math.rad(clamp(fov, 10, 120))
 	local tanY = math.tan(fovY / 2)
 	local proj = Mat4.perspectiveReverseZ(fovY, aspect, 0.1)
 	local view = Mat4.lookAt(Vector.xyz(ex, ey, ez), Vector.xyz(ex + fx, ey + fy, ez + fz), Vector.xyz(Ux, Uy, Uz))
@@ -1127,6 +1241,10 @@ return function(): Node<Lake>
 		rotationZ = 0,
 		fov = 42.55,
 		drift = 1,
+		tour = 1,
+		tourSpeed = 1,
+		tourTime = 0,
+		tourRamp = -1,
 		navigation = true,
 		navMode = 0,
 		zoom = 1,
