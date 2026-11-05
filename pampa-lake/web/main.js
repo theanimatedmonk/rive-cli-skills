@@ -2,7 +2,7 @@
 // camera (position, axes, lens), the sun, the meadow, the wind, the water,
 // the air and the pollen. Each slider sets a number on the Scene view model, which is
 // bound to the Lake node's inputs.
-const SRC = "pampa_lake.riv?v=12";
+const SRC = "pampa_lake.riv?v=16";
 
 // The file's defaults (the Scene view model's Default instance); the camera
 // is the GLB's Cam_Hero.
@@ -15,6 +15,8 @@ const DEFAULTS = {
   rotationZ: 0,
   fov: 42.55,
   drift: 1,
+  tour: 1,
+  tourSpeed: 1,
   focusDistance: 11,
   depthOfField: 0.26,
   exposure: 0.54,
@@ -135,8 +137,26 @@ document.getElementById("reset").addEventListener("click", () => {
   } catch (error) {
     // Nothing stored.
   }
+  values.tour = DEFAULTS.tour;
+  setNumber("tour", values.tour);
+  showTour();
   resetView();
 });
+
+// The camera move: play or pause (the camera sliders take over).
+const tourButton = document.getElementById("tour");
+function showTour() {
+  const on = values.tour > 0.5;
+  tourButton.textContent = on ? "Pause the camera move" : "Play the camera move";
+  tourButton.setAttribute("aria-pressed", String(on));
+}
+tourButton.addEventListener("click", () => {
+  values.tour = values.tour > 0.5 ? 0 : 1;
+  setNumber("tour", values.tour);
+  showTour();
+  remember();
+});
+showTour();
 
 // Copy the sliders' values, as JSON, to paste anywhere. Where the page
 // can't reach the clipboard (opened as a file, or permission denied), the

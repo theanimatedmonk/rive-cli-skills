@@ -29,6 +29,12 @@
           <button type="button" class="reset" id="reset-view">Back to the hero view</button>
         </section>
         <section>
+          <h2>Camera move</h2>
+          <p class="hint">A flight through the lake from the hero view: a low skim past the hamsas, once round the lotus beds, a crane up to the valley gap, and home. The camera sliders below take over while it is paused.</p>
+          <button type="button" class="reset" id="tour" aria-pressed="true">Pause the camera move</button>
+          <div data-slider="tourSpeed" data-label="Speed" data-min="0.25" data-max="2" data-step="0.05"></div>
+        </section>
+        <section>
           <h2>Camera position</h2>
           <div data-slider="cameraX" data-label="X" data-min="-40" data-max="80" data-step="0.1"></div>
           <div data-slider="cameraY" data-label="Y (height)" data-min="0.4" data-max="40" data-step="0.1"></div>
