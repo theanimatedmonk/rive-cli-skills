@@ -990,3 +990,36 @@ body {
     animation: none;
   }
 }
+
+/* ?embed=1: the app alone, full screen, for a device frame drawn outside
+   it (mockup-devices' <device-stage>). The 360x780 design is zoomed to the
+   window (main.js). */
+body.embed {
+  padding: 0;
+  display: block;
+  min-height: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0811;
+}
+body.embed .frame-switch,
+body.embed .site-nav,
+body.embed .device::before,
+body.embed .device::after,
+body.embed .device__camera,
+body.embed .device__island,
+body.embed .device__key {
+  display: none !important;
+}
+body.embed .device,
+body.embed .device.is-iphone {
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+}
+body.embed .phone,
+body.embed .device.is-iphone .phone {
+  border-radius: 0;
+  transform-origin: 0 0;
+}
