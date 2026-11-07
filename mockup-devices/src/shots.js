@@ -52,7 +52,7 @@ export const SHOTS = [
       const e = inOut(p);
       return {
         items: [{ slot: 0, pos: [0, 0, 0], rot: [-0.24, lerp(-1.0, -0.38, e), 0.1] }],
-        cam: { pos: mix([-15, -7.5, 31], [-9.5, -6, 27], e), target: [0, 1.4, 0], fov: 30, roll: lerp(0.09, 0.03, e) },
+        cam: { pos: mix([-17, -7, 38], [-12.5, -5.5, 33], e), target: [0.4, 0.2, 0], fov: 30, roll: lerp(0.09, 0.03, e) },
       };
     },
   },
@@ -85,7 +85,7 @@ export const SHOTS = [
       const [mx, my] = spec.module;
       const target = onDevice(pos, rot, [-mx, my, -spec.d / 2 - 0.25]);
       const normal = onDevice([0, 0, 0], rot, [0, 0, -1]);
-      const dist = lerp(12, 8.5, e);
+      const dist = lerp(17, 12, e);
       return {
         items: [{ slot: 0, pos, rot }],
         cam: {
@@ -152,8 +152,8 @@ export const SHOTS = [
           { slot: 0, pos: [0, 0.3 * Math.sin(a), 1.5], rot: [0.03, 0.04 * Math.sin(a), 0] },
           { slot: 2, pos: [9.8, 0.3 * Math.sin(a + 4), -1], rot: [0.03, -0.38, 0] },
         ],
-        cam: { pos: [x, 2, 60], target: [x * 0.5, 0, 0], fov: 30 },
-        fitWidth: 36,
+        cam: { pos: [x, 2, 54], target: [x * 0.5, 0, 0], fov: 30 },
+        fitWidth: 33,
       };
     },
   },
