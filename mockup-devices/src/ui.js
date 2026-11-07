@@ -97,6 +97,8 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
   body.append(
     section(
       "shot", "Shot",
+      el("div", { class: "field" }, el("span", {}, "Pointer (L)"), segmented("interact", [["screen", "Use the app"], ["device", "Move the device"]])),
+      el("p", { class: "hint" }, "Use the app: taps reach the screen and the 3D view is locked. Move the device: drag to orbit, scroll to zoom. Scripts can always do both."),
       select("shot", "Camera move", api.shots.map((s) => [s.id, s.devices > 1 ? `${s.name} · ${s.devices} devices` : s.name])),
       layoutRow,
       slider("duration", "Length", 2, 30, 0.5, { unit: " s" }),
@@ -105,6 +107,14 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
   );
 
   // --- Devices --------------------------------------------------------------
+  // Any page (or video, or image) on a screen, by URL.
+  const urlField = (i) => {
+    const input = el("input", { type: "url", placeholder: "Page URL, e.g. ../my-flow/", class: "url" });
+    const go = () => input.value.trim() && api.set(patchFor(`slots.${i}.screen`, input.value.trim()));
+    input.addEventListener("keydown", (e) => e.key === "Enter" && go());
+    return el("div", { class: "row" }, input, el("button", { type: "button", class: "btn small", onclick: go }, "Load"));
+  };
+
   const deviceCard = (i, title) => {
     const model = select(`slots.${i}.model`, "Model", Object.entries(DEVICES).map(([id, d]) => [id, d.name]), (v) => {
       api.set(patchFor(`slots.${i}`, { model: v, finish: Object.keys(DEVICES[v].finishes)[0] }));
@@ -133,7 +143,7 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
     const screenName = el("span", { class: "hint ellipsis" });
     binds.push((s) => {
       const src = s.slots[i].screen;
-      screenName.textContent = src ? decodeURIComponent(src.split("/").pop()).replace(/^[0-9a-f-]{36}$/, "your file") : "Demo app";
+      screenName.textContent = src === "tarot" ? "Tarot flow (live)" : src === "dom" ? "Your elements (live)" : src ? decodeURIComponent(src.split("/").pop()).replace(/^[0-9a-f-]{36}$/, "your file") : "Demo app";
     });
     return el(
       "div", { class: "card" },
@@ -143,10 +153,12 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
       el(
         "div", { class: "row" },
         el("button", { type: "button", class: "btn small", onclick: () => file.click() }, "Screen video / image"),
+        el("button", { type: "button", class: "btn small ghost", onclick: () => api.set(patchFor(`slots.${i}.screen`, "tarot")) }, "Tarot"),
         el("button", { type: "button", class: "btn small ghost", onclick: () => api.setScreen(i, "") }, "Demo"),
         file,
       ),
       screenName,
+      urlField(i),
     );
   };
   body.append(
@@ -264,7 +276,7 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
       segmented("output.aspect", Object.keys(ASPECTS).map((a) => [a, a])),
       el("div", { class: "row" }, segmented("output.height", [["1080", "1080p"], ["1440", "1440p"], ["2160", "4K"]], Number), segmented("output.fps", [["30", "30"], ["60", "60 fps"]], Number)),
       size,
-      el("div", { class: "row" }, exportBtn, el("button", { type: "button", class: "btn", onclick: () => api.snapshot({ transparent: alpha.checked }) }, "Save PNG")),
+      el("div", { class: "row" }, exportBtn, el("button", { type: "button", class: "btn", onclick: () => api.snapshot({ transparent: alpha.checked }).catch((e) => api.toast(e.message)) }, "Save PNG")),
       el("label", { class: "check" }, alpha, el("span", {}, "Transparent PNG (no backdrop)")),
       progress,
     ),
@@ -287,7 +299,7 @@ export function buildUI(api, state, { DEVICES, BACKDROPS, ASPECTS, loadFile }) {
         "div", { class: "row wrap" },
         el("button", { type: "button", class: "btn small", onclick: () => copy(JSON.stringify(api.get(), null, 2), "state") }, "Copy state"),
         el("button", { type: "button", class: "btn small", onclick: () => copy(api.stateUrl(), "link") }, "Copy link"),
-        el("button", { type: "button", class: "btn small ghost", onclick: () => api.set(JSON.parse(JSON.stringify(window.mockupDefaults))) }, "Reset all"),
+        el("button", { type: "button", class: "btn small ghost", onclick: () => api.set(JSON.parse(JSON.stringify(api.defaults))) }, "Reset all"),
       ),
     ),
   );
