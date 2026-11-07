@@ -322,10 +322,19 @@ export class DemoScreen {
 
 // Your own media on a screen: a video (looped, silent) or an image.
 export class MediaScreen {
-  constructor(file) {
-    this.name = file.name;
-    this.url = URL.createObjectURL(file);
-    this.isVideo = file.type.startsWith("video/");
+  // From a dropped File, or from a URL (a script's screen recording).
+  constructor(source) {
+    if (typeof source === "string") {
+      this.name = source.split("/").pop();
+      this.url = source;
+      this.owned = false;
+      this.isVideo = /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(source);
+    } else {
+      this.name = source.name;
+      this.url = URL.createObjectURL(source);
+      this.owned = true;
+      this.isVideo = source.type.startsWith("video/");
+    }
     this.texture = null;
   }
 
@@ -347,6 +356,7 @@ export class MediaScreen {
       this.aspect = v.videoWidth / v.videoHeight;
     } else {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.src = this.url;
       await img.decode();
       this.texture = new THREE.Texture(img);
@@ -387,7 +397,7 @@ export class MediaScreen {
   dispose() {
     this.video?.pause();
     this.texture?.dispose();
-    URL.revokeObjectURL(this.url);
+    if (this.owned) URL.revokeObjectURL(this.url);
   }
 }
 
