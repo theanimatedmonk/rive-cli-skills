@@ -1,60 +1,135 @@
-# Mockup Devices
+# device-stage
 
-Phones in an Apple-style studio, for shooting app flows: iPhone 17 Pro, iPhone Air and Galaxy S25 Ultra, built in code at their real sizes. Each screen shows a built-in demo app or your own screen recording. A library of camera moves exports frame-perfect MP4 at up to 4K 60 fps.
+Real 3D phones in an Apple-style studio, with **your live UI running on their screens**. The models are iPhone 17 Pro, iPhone Air and Galaxy S25 Ultra, built in code at their real sizes.
 
-Serve the folder and open it (the page uses ES modules):
+The screen isn't a picture of your app. It's your app: real HTML, CSS, JS and Rive canvases, running and tappable, with the phone's glass, Dynamic Island and studio reflections drawn over it.
 
-```sh
-python3 -m http.server 8765   # from the repo root
-open http://localhost:8765/mockup-devices/
+```html
+<device-stage device="iphone17pro" finish="Deep Blue" shot="float">
+  <my-app></my-app>
+</device-stage>
+
+<device-stage device="s25ultra" src="../my-flow/" shot="tilt"></device-stage>
 ```
 
-- **Drag** on the view to orbit and **scroll** to dolly. Either one switches the camera to Manual.
-- Press **Space** to play or pause, and **H** to hide the controls.
-- **Drop** a video or image anywhere on the page to put it on device 1's screen.
-- **Export MP4** renders every frame on its own, so the video never stutters. Exports come out at the Output panel's size, frame rate and the shot's length. It needs WebCodecs, which Chrome, Edge and Safari have.
+How it works:
+- Each phone's screen is a DOM element at the phone's real CSS viewport, placed in 3D with three.js's `CSS3DRenderer`.
+- A WebGL canvas on top draws the phones and the studio, and leaves a clear hole where each screen is.
+- Both layers share one camera, so the UI stays locked to the glass however the phone moves.
 
-## One state drives everything
+## Install
 
-The page draws from a single JSON state. The control panel edits it, and a script can set the same state. In the panel, **For scripts → Copy state** copies the current state, ready to paste into a script.
+The package depends on `three` (peer, version 0.165 or later) and `mp4-muxer`.
+
+```sh
+npm i three ./path/to/mockup-devices        # from this repo, as a local package
+```
+
+```js
+import { defineDeviceStage } from "@theanimatedmonk/device-stage";
+defineDeviceStage(); // registers <device-stage>
+```
+
+Without a bundler, use an import map, as in `examples/element.html`. It maps:
+- `three` and `three/addons/` to the jsDelivr builds,
+- `mp4-muxer` to its jsDelivr ESM build.
+
+Then import `src/index.js`.
+
+## Your UI on the screen
+
+| Model | Viewport (CSS px) | Safe top / bottom |
+|---|---|---|
+| `iphone17pro` | 402 × 874 | 62 / 34 |
+| `iphoneAir` | 420 × 912 | 68 / 34 |
+| `s25ultra` | 412 × 892 | 36 / 24 |
+
+- **Children** of `<device-stage>` go on device 1's screen. A child with `screen="2"` or `screen="3"` goes on that device, for the duo and line-up shots.
+  - Size your UI with `100%` or the container units `cqw` and `cqh`. `vh` and `vw` are the page's, not the phone's.
+  - Pad it with `var(--ds-safe-top)` and `var(--ds-safe-bottom)`.
+- **A whole page** goes in with `src="…"`: an `<iframe>` at the phone's viewport, where `100vh` is the phone. This is the right choice for full apps with their own global CSS and JS.
+- **A video or image URL** in `src` plays as a texture, and so does a dropped file. With no `src` and no children, the screen shows a built-in demo app.
+
+## The pointer: use the app, or move the device
+
+A toggle on the stage switches what your pointer does:
+- **Use the app:** taps and scrolls go to the UI, and the 3D view is locked.
+- **Move the device:** the UI is locked; drag to orbit, scroll to zoom.
+
+The state has the same switch as `interact: "screen" | "device"`, and the studio page also binds it to the **L** key.
+
+It only filters the pointer. A script can always do both: set the camera with `set()` / `seek()`, and drive the UI with the DOM, or `frameWindow(i)` for a page.
+
+## Attributes
+
+| Attribute | Sets |
+|---|---|
+| `device`, `finish` | Device 1's model and finish |
+| `src` | Device 1's screen |
+| `shot`, `duration` | The camera move and its length |
+| `paused` | Holds the clock |
+| `backdrop` | Studio, White, Blush, Graphite, Black, Midnight |
+| `interact` | `screen` or `device` |
+| `aspect` | `fill` (default), `16:9`, `9:16`, `1:1`, `4:5` |
+| `state` | JSON for any part of the state |
+| `lock-toggle="off"` | Hides the toggle |
+
+The element's `.stage` is the `DeviceStage`.
+
+## The stage from script
+
+```js
+import { DeviceStage } from "@theanimatedmonk/device-stage";
+const stage = new DeviceStage(container, { state: { shot: "tilt" }, screens: { checkout: (model) => `/flows/checkout/?platform=${model}` } });
+
+stage.screen(0).append(myAppElement);            // live elements on device 1
+stage.set({ slots: [{ screen: "checkout" }] });  // a named screen (resolved per model), or any URL
+stage.set({ shot: "manual", camera: { azimuth: 30, elevation: 8, roll: -6, distance: 38 }, device: { rotY: -20 } });
+await stage.seek(2.5);                           // render exactly the frame at 2.5 s
+stage.get();                                     // the state
+stage.setInteract("device");
+stage.frameWindow(0);                            // the iframe's window, to drive the page
+stage.on((state) => { /* after each change */ });
+```
+
+**The state** (`DEFAULTS` in `src/stage.js`):
 
 ```jsonc
 {
-  "shot": "tilt",            // a shot id (below), or "manual"
-  "time": 0,                 // seconds into the shot
-  "duration": 7,             // the shot's length (s); set to the shot's own when the shot changes
-  "playing": true,
-  "speed": 1,
-  "layout": 1,               // devices shown in "manual": 1, 2 or 3
-  "slots": [                 // device 1 (hero), 2 (duo, line-up), 3 (line-up)
-    { "model": "iphone17pro", "finish": "Cosmic Orange", "screen": "flows/onboarding.mp4" },
-    { "model": "s25ultra", "finish": "Titanium Black", "screen": "" },
-    { "model": "iphoneAir", "finish": "Sky Blue", "screen": "" }
+  "shot": "float", "time": 0, "duration": 8, "playing": true, "speed": 1,
+  "interact": "screen",                      // or "device"
+  "layout": 1,                               // devices shown in "manual"
+  "slots": [                                 // device 1, 2, 3
+    { "model": "iphone17pro", "finish": "Deep Blue", "screen": "" }  // "", "dom", a URL, or a named screen
   ],
-  "camera": {                // used in "manual": an orbit round the target
-    "azimuth": -6,           // degrees about the Y axis
-    "elevation": 3,          // degrees up (X axis)
-    "roll": 0,               // degrees about the view (Z axis)
-    "distance": 44,          // cm
-    "fov": 28,               // vertical field of view, degrees
-    "targetX": 0, "targetY": 0
-  },
-  "device": {                // added on top of every shot; in "manual" it is the pose
-    "rotX": 0, "rotY": 0, "rotZ": 0,   // degrees
-    "x": 0, "y": 0, "z": 0,            // cm
-    "float": 1                         // the bob and sway in "manual"
-  },
-  "move": { "a": { /* camera */ }, "b": { /* camera */ } },   // the "custom" shot glides A → B
-  "look": {
-    "backdrop": "Studio",    // Studio, White, Blush, Graphite, Black, Midnight, or Custom
-    "inner": "#fbfbfd", "outer": "#e3e4e9",                // Custom's colours
-    "shadow": 0.55, "reflections": 1, "exposure": 1, "glare": 1, "screen": 1
-  },
-  "output": { "aspect": "16:9", "height": 1080, "fps": 60 }  // aspect: 16:9, 9:16, 1:1, 4:5; height is the short side
+  "camera": { "azimuth": -6, "elevation": 3, "roll": 0, "distance": 44, "fov": 28, "targetX": 0, "targetY": 0 },
+  "device": { "rotX": 0, "rotY": 0, "rotZ": 0, "x": 0, "y": 0, "z": 0, "float": 1 },
+  "move": { "a": { /* camera */ }, "b": { /* camera */ } },
+  "look": { "backdrop": "Studio", "inner": "#fbfbfd", "outer": "#e3e4e9", "shadow": 0.55, "reflections": 1, "exposure": 1, "glare": 1, "screen": 1 },
+  "output": { "aspect": "fill", "height": 1080, "fps": 60 }
 }
 ```
 
-**Models and finishes**
+**Shots:**
+
+| Shot | Devices | Shape |
+|---|---|---|
+| `tarot` | 1 | Timed to the tarot flow |
+| `reveal` | 1 | |
+| `float` | 1 | Loops |
+| `tilt` | 1 | |
+| `turntable` | 1 | Loops, 360° |
+| `flip` | 1 | Loops |
+| `macro` | 1 | Camera module close-up |
+| `screen` | 1 | Loops; the screen fills the frame |
+| `spin` | 1 | |
+| `orbit` | 1 | |
+| `duo` | 2 | Loops |
+| `lineup` | 3 | Loops |
+| `custom` | 1 | Camera A to B |
+| `manual` | 1–3 | No set move |
+
+**Finishes:**
 
 | Model | Finishes |
 |---|---|
@@ -62,74 +137,46 @@ The page draws from a single JSON state. The control panel edits it, and a scrip
 | `iphoneAir` | Sky Blue, Light Gold, Cloud White, Space Black |
 | `s25ultra` | Titanium Silverblue, Titanium Black, Titanium Gray, Titanium Whitesilver |
 
-**Shots**
+## Video
 
-| Id | Devices | Shape |
-|---|---|---|
-| `reveal` | 1 | Turns from side-on to the front |
-| `float` | 1 | Loops |
-| `tilt` | 1 | Low side angle, the phone leaning back |
-| `turntable` | 1 | Loops, a full 360° |
-| `flip` | 1 | Loops: screen, then back, then screen |
-| `macro` | 1 | The camera module, close up |
-| `screen` | 1 | Loops; the screen fills the frame, for app flows |
-| `spin` | 1 | Spins in from above |
-| `orbit` | 1 | Orbits from high to low |
-| `duo` | 2 | Loops |
-| `lineup` | 3 | Loops |
-| `custom` | 1 | Glides from camera A to camera B |
-| `manual` | 1–3 | No set move: the camera and pose come from the state |
+The live UI is real web content, so record the **page**, not the canvas:
+- HyperFrames renders the page frame by frame,
+- or Playwright, or a screen recorder.
 
-`window.mockup.shots` and `window.mockup.devices` list the same at run time.
+The camera is deterministic: `seek(t)` puts every device and the camera exactly where they are at `t`. The UI inside runs on the page's own clock, so a renderer that controls page time steps both together.
 
-## Setting it from a script
+`exportVideo()` and `snapshot()` encode the canvas alone, which is frame-perfect MP4 or PNG. They only work when no live screen is in view, i.e. when the screens show videos, images or the demo.
 
-**From the URL.** These parameters work in any combination:
-- `?state=<URL-encoded JSON>`: any part of the state; anything missing keeps its default.
-- `?ui=0`: only the stage, edge to edge.
-- `?play=0`: holds the clock, for a script to drive.
-- `?shot=` and `?t=`: shortcuts for the shot and the time.
+## The studio (this folder's `index.html`)
 
-```
-index.html?ui=0&play=0&state={"shot":"tilt","slots":[{"model":"s25ultra","finish":"Titanium Black"}],"look":{"backdrop":"Black"}}
-```
+The studio is a control panel over one stage, for designing shots. Its sections:
+- Shot.
+- Pointer.
+- Devices: model, finish, and screen (Tarot, Demo, a page URL, a dropped file).
+- Camera: orbit (Y axis), height (X), roll (Z), distance, lens, aim, and saving A and B for a move.
+- Device rotation.
+- Look.
+- Output.
+- For scripts: copy the state or a link.
 
-**In the page** (Playwright, or the console):
+By default, every phone runs the live tarot flow from `../tarot-frontend-demo/?embed=1&auto=1`. It plays itself and tells the stage when each run starts, so the `tarot` shot's camera moves follow it.
 
-```js
-await mockup.ready;
-mockup.set({ shot: "manual", camera: { azimuth: 30, elevation: 8, roll: -6, distance: 38 }, device: { rotY: -20 } });
-await mockup.seek(2.5);            // render exactly the frame at 2.5 s (videos on screens seek too)
-mockup.get();                      // the state now
-mockup.setScreen(0, "flows/checkout.mp4");
-const png = await mockup.snapshot({ transparent: true, save: false });   // a Blob
-const mp4 = await mockup.exportVideo();                                   // a Blob, and a download
+Serve the repo root and open it:
+
+```sh
+python3 -m http.server 8765
+open http://localhost:8765/mockup-devices/
 ```
 
-**From a parent page** (the page embedded in a frame):
+The studio's other entry points:
+- **URL:** `?state=<JSON>`, `?ui=0` (the stage alone), `?play=0`.
+- **Console:** `window.mockup` (the stage).
+- **`postMessage` from a parent page:** `{ mockup: "set" | "seek" | "get" }`.
 
-```js
-frame.contentWindow.postMessage({ mockup: "set", id: 1, state: { shot: "flip" } }, "*");
-frame.contentWindow.postMessage({ mockup: "seek", id: 2, time: 3.2 }, "*");
-// The page answers { mockup: "reply", id, state | time }. On load it posts { mockup: "ready" }.
-```
+**Keys:**
 
-## With Claude Code and HyperFrames
-
-There are two ways in.
-
-1. **Render the clip here, then cut it into the composition.**
-   - Claude Code opens the page with Playwright.
-   - It sets the state (devices, finishes, screen recordings, camera, backdrop, size) and calls `exportVideo()`.
-   - That gives a frame-perfect MP4, which goes into the HyperFrames timeline like any other clip.
-
-   This is the most robust route, and it keeps the 3D rendering out of the composition's own render.
-
-2. **Embed the page live in a composition.**
-   - Load it in an iframe with `?ui=0&play=0` at the composition's size.
-   - Drive it from the composition's timeline: on each frame, post `{ mockup: "seek", time }` and wait for the reply before the frame is captured.
-   - Post `set` on cues to cut between camera moves, devices or screens.
-
-Either way, design the shot in the panel first, then use **Copy state** or **Copy link**. The JSON it copies is exactly what the script sets.
-
-Screen recordings referenced by `screen` URLs must be served from the same origin (or allow CORS), so the GPU can read them.
+| Key | Action |
+|---|---|
+| Space | Play or pause |
+| L | The pointer lock |
+| H | Hide the panel |
