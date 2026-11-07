@@ -86,9 +86,10 @@ function slab(shapeW, shapeH, rTop, rBottom, depth, bevel) {
 const MAT = {
   black: new THREE.MeshPhysicalMaterial({ color: "#050506", roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.04 }),
   lensGlass: new THREE.MeshPhysicalMaterial({
-    color: "#06070b", roughness: 0.05, metalness: 0.2, clearcoat: 1, clearcoatRoughness: 0.02,
-    iridescence: 0.85, iridescenceIOR: 1.6, iridescenceThicknessRange: [180, 520],
+    color: "#020204", roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02,
+    iridescence: 0.45, iridescenceIOR: 1.5, iridescenceThicknessRange: [200, 480],
   }),
+  pupil: new THREE.MeshPhysicalMaterial({ color: "#000000", roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.01, iridescence: 0.7, iridescenceIOR: 1.7 }),
   lensInner: new THREE.MeshPhysicalMaterial({ color: "#020203", roughness: 0.2, metalness: 0.6 }),
   sapphire: new THREE.MeshPhysicalMaterial({ color: "#0d0e12", roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05 }),
   port: new THREE.MeshStandardMaterial({ color: "#0a0a0b", roughness: 0.6 }),
@@ -96,12 +97,17 @@ const MAT = {
   flash: new THREE.MeshPhysicalMaterial({ color: "#f3ead6", roughness: 0.25, transmission: 0.2, clearcoat: 1 }),
 };
 
-// The glass over the screen: it only adds reflections (black, additive),
-// strong at grazing angles as real glass is.
+// The glass over the screen: it only adds reflections (black, added on),
+// strong at grazing angles as real glass is. It leaves alpha alone, so over
+// a live DOM screen (a clear hole in the canvas) the reflections lie on the
+// page below.
 export function glassMaterial() {
   return new THREE.MeshPhysicalMaterial({
     color: "#000000", roughness: 0.03, metalness: 0, ior: 1.52, specularIntensity: 1,
-    transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    transparent: true, depthWrite: false,
+    blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
+    blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
+    blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
   });
 }
 
@@ -117,17 +123,17 @@ function lens(r, rise, frameMat, kind = "lens") {
   g.add(lip);
   if (kind === "lens") {
     const glass = new THREE.Mesh(new THREE.CircleGeometry(r * 0.88, 64), MAT.lensGlass);
-    glass.position.z = rise + 0.003;
+    glass.position.z = rise + 0.008;
     g.add(glass);
-    const inner = new THREE.Mesh(new THREE.RingGeometry(r * 0.32, r * 0.5, 64), MAT.lensInner);
-    inner.position.z = rise + 0.006;
+    const inner = new THREE.Mesh(new THREE.RingGeometry(r * 0.4, r * 0.47, 64), MAT.lensInner);
+    inner.position.z = rise + 0.016;
     g.add(inner);
-    const pupil = new THREE.Mesh(new THREE.CircleGeometry(r * 0.3, 48), MAT.lensGlass);
-    pupil.position.z = rise + 0.004;
+    const pupil = new THREE.Mesh(new THREE.CircleGeometry(r * 0.4, 48), MAT.pupil);
+    pupil.position.z = rise + 0.012;
     g.add(pupil);
   } else {
     const face = new THREE.Mesh(new THREE.CircleGeometry(r * 0.86, 48), kind === "flash" ? MAT.flash : MAT.sapphire);
-    face.position.z = rise + 0.003;
+    face.position.z = rise + 0.008;
     g.add(face);
   }
   return g;
@@ -162,23 +168,23 @@ export function buildDevice(id, finishName) {
   const sh = h - 2 * glassInset - 2 * bezel;
   const screenMat = new THREE.MeshBasicMaterial({ color: "#ffffff", toneMapped: false });
   const screen = new THREE.Mesh(flatPanel(sw, sh, corner - glassInset - bezel * 0.6, 32), screenMat);
-  screen.position.z = front + 0.006;
+  screen.position.z = front + 0.012;
   screen.userData.aspect = sw / sh;
   group.add(screen);
 
   if (spec.cutout === "island") {
     const iw = 1.26, ih = 0.37;
     const island = new THREE.Mesh(new THREE.ShapeGeometry(roundedRect(iw, ih, ih / 2), 16), MAT.black);
-    island.position.set(0, sh / 2 - 0.12 - ih / 2, front + 0.008);
+    island.position.set(0, sh / 2 - 0.12 - ih / 2, front + 0.02);
     group.add(island);
   } else {
     const hole = new THREE.Mesh(new THREE.CircleGeometry(0.16, 32), MAT.black);
-    hole.position.set(0, sh / 2 - 0.36, front + 0.008);
+    hole.position.set(0, sh / 2 - 0.36, front + 0.02);
     group.add(hole);
   }
 
   const glass = new THREE.Mesh(new THREE.ShapeGeometry(roundedRect(w - 2 * glassInset, h - 2 * glassInset, corner - glassInset), 32), glassMaterial());
-  glass.position.z = front + 0.012;
+  glass.position.z = front + 0.03;
   glass.renderOrder = 2;
   group.add(glass);
 
@@ -188,7 +194,7 @@ export function buildDevice(id, finishName) {
   back.position.z = -d / 2;
   group.add(back);
   const backPanel = new THREE.Mesh(new THREE.ShapeGeometry(roundedRect(w - 2 * glassInset, h - 2 * glassInset, corner - glassInset), 32), backMat);
-  backPanel.position.z = 0.004;
+  backPanel.position.z = 0.01;
   back.add(backPanel);
 
   const top = h / 2, left = -w / 2, right = w / 2;

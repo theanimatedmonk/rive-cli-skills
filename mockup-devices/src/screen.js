@@ -322,10 +322,19 @@ export class DemoScreen {
 
 // Your own media on a screen: a video (looped, silent) or an image.
 export class MediaScreen {
-  constructor(file) {
-    this.name = file.name;
-    this.url = URL.createObjectURL(file);
-    this.isVideo = file.type.startsWith("video/");
+  // From a dropped File, or from a URL (a script's screen recording).
+  constructor(source) {
+    if (typeof source === "string") {
+      this.name = source.split("/").pop();
+      this.url = source;
+      this.owned = false;
+      this.isVideo = /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(source);
+    } else {
+      this.name = source.name;
+      this.url = URL.createObjectURL(source);
+      this.owned = true;
+      this.isVideo = source.type.startsWith("video/");
+    }
     this.texture = null;
   }
 
@@ -347,6 +356,7 @@ export class MediaScreen {
       this.aspect = v.videoWidth / v.videoHeight;
     } else {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.src = this.url;
       await img.decode();
       this.texture = new THREE.Texture(img);
@@ -360,9 +370,17 @@ export class MediaScreen {
     return this;
   }
 
-  // Live preview: take the video's newest frame.
-  update() {
-    if (this.video && this.video.readyState >= 2) this.texture.needsUpdate = true;
+  // Live preview: keep the video on the shot's clock (t, seconds), and
+  // take its newest frame.
+  update(t, rate = 1) {
+    const v = this.video;
+    if (!v) return;
+    if (v.duration) {
+      const target = Math.min(t, v.duration * 64) % v.duration;
+      if (!v.seeking && Math.abs(v.currentTime - target) > 0.2) v.currentTime = target;
+      if (v.playbackRate !== rate) v.playbackRate = rate;
+    }
+    if (v.readyState >= 2) this.texture.needsUpdate = true;
   }
 
   // Export: show exactly the frame at time t.
@@ -370,7 +388,7 @@ export class MediaScreen {
     if (!this.video) return;
     const v = this.video;
     v.pause();
-    const target = v.duration ? t % v.duration : 0;
+    const target = v.duration ? Math.min(t % v.duration, v.duration - 0.001) : 0;
     if (Math.abs(v.currentTime - target) > 1e-4) {
       await new Promise((ok) => {
         v.addEventListener("seeked", ok, { once: true });
@@ -387,7 +405,7 @@ export class MediaScreen {
   dispose() {
     this.video?.pause();
     this.texture?.dispose();
-    URL.revokeObjectURL(this.url);
+    if (this.owned) URL.revokeObjectURL(this.url);
   }
 }
 

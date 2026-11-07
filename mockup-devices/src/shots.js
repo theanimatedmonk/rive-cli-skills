@@ -15,6 +15,19 @@ const outQuart = (t) => 1 - Math.pow(1 - t, 4);
 const outCubic = (t) => 1 - Math.pow(1 - t, 3);
 const inOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
 const seg = (p, a, b) => inOut(clamp01((p - a) / (b - a)));
+// A value through timed keys [[t, v], ...], eased between each pair.
+function track(t, keys) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    const [t1, v1] = keys[i];
+    if (t <= t1) {
+      const [t0, v0] = keys[i - 1];
+      const e = inOut((t - t0) / (t1 - t0));
+      return Array.isArray(v0) ? mix(v0, v1, e) : lerp(v0, v1, e);
+    }
+  }
+  return keys[keys.length - 1][1];
+}
 
 // A point on a device (its own coordinates) in the world.
 const _e = new THREE.Euler(0, 0, 0, "YXZ");
@@ -25,7 +38,29 @@ function onDevice(pos, rot, local) {
   return [_v.x + pos[0], _v.y + pos[1], _v.z + pos[2]];
 }
 
+// The tarot flow's beats (../tarot-frontend-demo with ?auto=1, which tells
+// the stage when it starts): home until 1.4 s, the fan from 2.5 s, the pick
+// at 3.4 s, the reveal to 9 s, the throw, the reading from about 11 s,
+// scrolled through Love, Career and Money.
+export const TAROT_LENGTH = 22;
+
 export const SHOTS = [
+  {
+    id: "tarot", name: "Tarot flow: pick to reading", count: 1, dur: TAROT_LENGTH, loop: false,
+    fn(p) {
+      const t = p * TAROT_LENGTH;
+      const turn = track(t, [[0, -0.55], [3, -0.12], [9, -0.05], [9.6, -0.11], [11, 0.1], [TAROT_LENGTH, 0.24]]);
+      const tilt = track(t, [[0, 0.1], [3, 0.03], [9, 0.02], [9.35, -0.07], [10.2, 0.03], [TAROT_LENGTH, 0.05]]);
+      const roll = track(t, [[0, 0.06], [3, 0], [11, 0], [TAROT_LENGTH, -0.02]]);
+      const lift = track(t, [[0, -0.8], [3, 0], [TAROT_LENGTH, 0.3]]);
+      const cam = track(t, [[0, [9, 2.5, 50]], [3, [3.5, 1.2, 42]], [9, [1.5, 1.6, 31]], [9.6, [2.2, 1.4, 36]], [11, [-2, 1.2, 36]], [TAROT_LENGTH, [-5.5, 0.4, 31]]]);
+      const aim = track(t, [[0, [0, 0, 0]], [3, [0, 0.2, 0]], [9, [0, 1.2, 0]], [11, [0, 0.4, 0]], [TAROT_LENGTH, [0, -0.6, 0]]]);
+      return {
+        items: [{ slot: 0, pos: [0, lift, 0], rot: [tilt, turn, roll] }],
+        cam: { pos: cam, target: aim, fov: 28 },
+      };
+    },
+  },
   {
     id: "reveal", name: "Reveal: side to front", count: 1, dur: 7, loop: false,
     fn(p) {
@@ -52,7 +87,7 @@ export const SHOTS = [
       const e = inOut(p);
       return {
         items: [{ slot: 0, pos: [0, 0, 0], rot: [-0.24, lerp(-1.0, -0.38, e), 0.1] }],
-        cam: { pos: mix([-15, -7.5, 31], [-9.5, -6, 27], e), target: [0, 1.4, 0], fov: 30, roll: lerp(0.09, 0.03, e) },
+        cam: { pos: mix([-17, -7, 38], [-12.5, -5.5, 33], e), target: [0.4, 0.2, 0], fov: 30, roll: lerp(0.09, 0.03, e) },
       };
     },
   },
@@ -85,7 +120,7 @@ export const SHOTS = [
       const [mx, my] = spec.module;
       const target = onDevice(pos, rot, [-mx, my, -spec.d / 2 - 0.25]);
       const normal = onDevice([0, 0, 0], rot, [0, 0, -1]);
-      const dist = lerp(12, 8.5, e);
+      const dist = lerp(17, 12, e);
       return {
         items: [{ slot: 0, pos, rot }],
         cam: {
@@ -152,8 +187,8 @@ export const SHOTS = [
           { slot: 0, pos: [0, 0.3 * Math.sin(a), 1.5], rot: [0.03, 0.04 * Math.sin(a), 0] },
           { slot: 2, pos: [9.8, 0.3 * Math.sin(a + 4), -1], rot: [0.03, -0.38, 0] },
         ],
-        cam: { pos: [x, 2, 60], target: [x * 0.5, 0, 0], fov: 30 },
-        fitWidth: 36,
+        cam: { pos: [x, 2, 54], target: [x * 0.5, 0, 0], fov: 30 },
+        fitWidth: 33,
       };
     },
   },

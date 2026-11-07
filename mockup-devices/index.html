@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mockup Devices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+          "mp4-muxer": "https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/+esm"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <main class="viewport">
+        <div class="stage-wrap" id="stage-wrap"></div>
+        <div class="timeline">
+          <button type="button" class="btn" id="play">Pause</button>
+          <input type="range" id="scrub" min="0" max="1000" step="1" value="0" aria-label="Time in the shot" />
+          <span class="clock" id="clock">0.0 s</span>
+        </div>
+      </main>
+
+      <aside class="panel" id="panel" aria-label="Controls">
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">Studio</p>
+            <h1>Mockup Devices</h1>
+          </div>
+          <button type="button" class="icon-btn" id="collapse" aria-expanded="true" aria-controls="panel-body" title="Hide the controls (H)">
+            <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7 4l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+        </header>
+        <div class="panel__body" id="panel-body"></div>
+      </aside>
+      <button type="button" class="expand" id="expand" title="Show the controls (H)">Controls</button>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

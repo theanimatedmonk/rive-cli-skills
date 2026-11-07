@@ -356,3 +356,69 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
   setFrame(new URLSearchParams(location.search).get("frame") || saved || "android");
   buttons.forEach((b) => b.addEventListener("click", () => setFrame(b.dataset.frame)));
 })();
+
+// ?embed=1: the app alone, filling the window (inside a 3D device, say).
+// ?auto=1: it plays itself, for filming: tap home, pick the middle card,
+// let the reveal and the reading run, scroll the reading, start again.
+// A parent page hears { tarot: "start" } as each run begins.
+(() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get("embed") === "1") {
+    document.body.classList.add("embed");
+    const fit = () => {
+      const k = Math.min(innerWidth / 360, innerHeight / 780);
+      phoneEl.style.zoom = String(k);
+      riveInstance.resizeDrawingSurfaceToCanvas();
+    };
+    fit();
+    addEventListener("resize", fit);
+  }
+  if (params.get("auto") !== "1") {
+    return;
+  }
+  const until = async (test, every = 50) => {
+    while (!test()) {
+      await wait(every);
+    }
+  };
+  const tapAt = (target, x, y) => {
+    const r = target.getBoundingClientRect();
+    const opts = { bubbles: true, cancelable: true, clientX: r.left + x * (r.width / 360), clientY: r.top + y * (r.height / 780), pointerId: 1, pointerType: "mouse", isPrimary: true, button: 0 };
+    for (const type of ["pointermove", "pointerdown", "mousedown", "pointerup", "mouseup", "click"]) {
+      const E = type.startsWith("pointer") ? PointerEvent : MouseEvent;
+      target.dispatchEvent(new E(type, opts));
+    }
+  };
+  const scrollTo = (top, ms) =>
+    new Promise((done) => {
+      const from = scrollEl.scrollTop;
+      const start = performance.now();
+      const step = (now) => {
+        const s = Math.min((now - start) / ms, 1);
+        scrollEl.scrollTop = from + (top - from) * s * s * (3 - 2 * s);
+        if (s < 1) requestAnimationFrame(step);
+        else done();
+      };
+      requestAnimationFrame(step);
+    });
+  (async () => {
+    await until(() => riveLoaded);
+    window.parent.postMessage({ tarot: "start" }, "*");
+    await wait(1400);
+    homeEl.click();
+    await until(() => canvas.classList.contains("is-ready"));
+    await wait(900);
+    // The middle card of the fan.
+    tapAt(canvas, 180, 400);
+    await until(() => !readingEl.hidden && !readingEl.classList.contains("is-entering"));
+    await wait(1400);
+    const max = scrollEl.scrollHeight - scrollEl.clientHeight;
+    for (const p of [...scrollEl.querySelectorAll(".reading__section p")].slice(1)) {
+      await scrollTo(Math.min(p.offsetTop - 4, max), 1500);
+      await wait(1300);
+    }
+    await scrollTo(max, 1200);
+    await wait(2500);
+    location.reload();
+  })();
+})();

@@ -1,0 +1,21 @@
+{
+  "name": "@theanimatedmonk/device-stage",
+  "version": "0.1.0",
+  "description": "Real 3D phones (iPhone 17 Pro, iPhone Air, Galaxy S25 Ultra) in an Apple-style studio, with your live UI running on their screens. A web component and a three.js stage, scriptable for video.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./element": "./src/element.js",
+    "./stage": "./src/stage.js"
+  },
+  "files": ["src", "README.md"],
+  "keywords": ["three", "mockup", "device", "iphone", "android", "web-component", "css3d", "video"],
+  "license": "MIT",
+  "peerDependencies": {
+    "three": ">=0.165.0"
+  },
+  "dependencies": {
+    "mp4-muxer": "^5.2.2"
+  }
+}
