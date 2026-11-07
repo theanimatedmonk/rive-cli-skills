@@ -370,9 +370,17 @@ export class MediaScreen {
     return this;
   }
 
-  // Live preview: take the video's newest frame.
-  update() {
-    if (this.video && this.video.readyState >= 2) this.texture.needsUpdate = true;
+  // Live preview: keep the video on the shot's clock (t, seconds), and
+  // take its newest frame.
+  update(t, rate = 1) {
+    const v = this.video;
+    if (!v) return;
+    if (v.duration) {
+      const target = Math.min(t, v.duration * 64) % v.duration;
+      if (!v.seeking && Math.abs(v.currentTime - target) > 0.2) v.currentTime = target;
+      if (v.playbackRate !== rate) v.playbackRate = rate;
+    }
+    if (v.readyState >= 2) this.texture.needsUpdate = true;
   }
 
   // Export: show exactly the frame at time t.
@@ -380,7 +388,7 @@ export class MediaScreen {
     if (!this.video) return;
     const v = this.video;
     v.pause();
-    const target = v.duration ? t % v.duration : 0;
+    const target = v.duration ? Math.min(t % v.duration, v.duration - 0.001) : 0;
     if (Math.abs(v.currentTime - target) > 1e-4) {
       await new Promise((ok) => {
         v.addEventListener("seeked", ok, { once: true });

@@ -21,8 +21,8 @@ export async function pickCodec(width, height, fps, bitrate) {
 }
 
 // drawFrame(t) renders the frame at time t (seconds) into `canvas`.
-export async function exportMp4({ canvas, width, height, fps, duration, drawFrame, onProgress, isCancelled }) {
-  const bitrate = Math.min(Math.round(width * height * fps * 0.16), 90_000_000);
+export async function exportMp4({ canvas, width, height, fps, duration, drawFrame, onProgress, isCancelled, bitrate: wanted }) {
+  const bitrate = wanted || Math.min(Math.round(width * height * fps * 0.16), 90_000_000);
   const config = await pickCodec(width, height, fps, bitrate);
   if (!config) throw new Error("This browser can't encode H.264 video (try Chrome, Edge or Safari).");
 

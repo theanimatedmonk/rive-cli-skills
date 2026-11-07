@@ -97,12 +97,17 @@ const MAT = {
   flash: new THREE.MeshPhysicalMaterial({ color: "#f3ead6", roughness: 0.25, transmission: 0.2, clearcoat: 1 }),
 };
 
-// The glass over the screen: it only adds reflections (black, additive),
-// strong at grazing angles as real glass is.
+// The glass over the screen: it only adds reflections (black, added on),
+// strong at grazing angles as real glass is. It leaves alpha alone, so over
+// a live DOM screen (a clear hole in the canvas) the reflections lie on the
+// page below.
 export function glassMaterial() {
   return new THREE.MeshPhysicalMaterial({
     color: "#000000", roughness: 0.03, metalness: 0, ior: 1.52, specularIntensity: 1,
-    transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    transparent: true, depthWrite: false,
+    blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
+    blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
+    blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
   });
 }
 
