@@ -2,42 +2,44 @@
 // camera (position, axes, lens), the sun, the meadow, the wind, the water,
 // the air and the pollen. Each slider sets a number on the Scene view model, which is
 // bound to the Lake node's inputs.
-const SRC = "pampa_lake.riv?v=12";
+const SRC = "pampa_lake.riv?v=16";
 
 // The file's defaults (the Scene view model's Default instance); the camera
 // is the GLB's Cam_Hero.
 const DEFAULTS = {
-  cameraX: 0,
-  cameraY: 2.4,
-  cameraZ: 6,
+  cameraX: -6.6,
+  cameraY: 4.1,
+  cameraZ: -36.7,
   rotationX: 4.05,
   rotationY: -3.06,
   rotationZ: 0,
   fov: 42.55,
   drift: 1,
+  tour: 1,
+  tourSpeed: 1,
   focusDistance: 11,
-  depthOfField: 0.25,
-  exposure: 0.83,
-  paint: 1,
-  brush: 2.5,
+  depthOfField: 0.26,
+  exposure: 0.54,
+  paint: 0.59,
+  brush: 12,
   edges: 0,
   paper: 1.7,
   sunAzimuth: -81,
   sunElevation: 8,
   sunIntensity: 0.4,
-  shading: 1,
+  shading: 0.36,
   windStrength: 0.05,
   windSpeed: 0,
   windDirection: 200,
   reflection: 1,
   ripples: 2.45,
-  mist: 0.6,
+  mist: 0.35,
   wisps: 14,
   wispOpacity: 0.23,
   haze: 0,
-  clouds: 0.27,
+  clouds: 0,
   pollenAmount: 1600,
-  greens: 0.51,
+  greens: 0.42,
   plants: 1,
 };
 
@@ -135,8 +137,26 @@ document.getElementById("reset").addEventListener("click", () => {
   } catch (error) {
     // Nothing stored.
   }
+  values.tour = DEFAULTS.tour;
+  setNumber("tour", values.tour);
+  showTour();
   resetView();
 });
+
+// The camera move: play or pause (the camera sliders take over).
+const tourButton = document.getElementById("tour");
+function showTour() {
+  const on = values.tour > 0.5;
+  tourButton.textContent = on ? "Pause the camera move" : "Play the camera move";
+  tourButton.setAttribute("aria-pressed", String(on));
+}
+tourButton.addEventListener("click", () => {
+  values.tour = values.tour > 0.5 ? 0 : 1;
+  setNumber("tour", values.tour);
+  showTour();
+  remember();
+});
+showTour();
 
 // Copy the sliders' values, as JSON, to paste anywhere. Where the page
 // can't reach the clipboard (opened as a file, or permission denied), the
