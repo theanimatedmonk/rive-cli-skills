@@ -9,3 +9,5 @@ tarot-animation/build/
 tarot-frontend-demo/*.old.riv
 tarot-frontend-demo/*.editor-export.riv
 ten-rings/rive/build/
+blobs/rive/build/
+titan-ai/rive/build/
