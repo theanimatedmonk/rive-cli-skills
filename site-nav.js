@@ -17,6 +17,7 @@
     { label: "Tarot flow", path: "tarot-frontend-demo/" },
     { label: "10 Rings", path: "ten-rings/web/" },
     { label: "Blob", path: "blobs/web/" },
+    { label: "Titan AI", path: "titan-ai/web/" },
   ];
 
   const style = document.createElement("style");
