@@ -16,6 +16,7 @@
     { label: "Lake", path: "pampa-lake/web/" },
     { label: "Tarot flow", path: "tarot-frontend-demo/" },
     { label: "10 Rings", path: "ten-rings/web/" },
+    { label: "Blob", path: "blobs/web/" },
   ];
 
   const style = document.createElement("style");
