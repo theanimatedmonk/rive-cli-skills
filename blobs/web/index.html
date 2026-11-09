@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blob</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="intro">
+        <p class="eyebrow">An assistant, in jelly</p>
+        <h1>Blob</h1>
+        <p class="lede">A squishy companion for an AI app. Pick what it's doing, play a full run, or tap it.</p>
+      </header>
+
+      <section class="stage" aria-label="Blob">
+        <canvas id="blob" width="560" height="560"></canvas>
+        <p class="status" id="status">Waking Blob up…</p>
+        <p class="caption" id="caption" aria-live="polite">Hi! Ask me anything.</p>
+      </section>
+
+      <nav class="states" aria-label="States">
+        <div class="group">
+          <button type="button" data-state="0"><span class="key">1</span>Idle</button>
+        </div>
+        <div class="group group--thinking">
+          <span class="group__label">Thinking</span>
+          <div class="group__row">
+            <button type="button" data-state="1"><span class="key">2</span>Thinking</button>
+            <button type="button" data-state="2"><span class="key">3</span>Retrieving</button>
+            <button type="button" data-state="3"><span class="key">4</span>Executing</button>
+            <button type="button" data-state="4"><span class="key">5</span>Planning</button>
+          </div>
+        </div>
+        <div class="group">
+          <button type="button" data-state="5"><span class="key">6</span>Done</button>
+        </div>
+      </nav>
+
+      <div class="run">
+        <button type="button" class="play" id="play" aria-pressed="false">
+          <span class="play__icon" aria-hidden="true"></span><span id="play-label">Play a full run</span>
+        </button>
+        <ol class="steps" id="steps" aria-label="The run"></ol>
+      </div>
+
+      <footer class="notes">
+        <p>Drawn live in Rive: a bone-rigged body, jelly shading in WGSL on a GPU canvas, and spring physics in Luau. The page sets one number, <code>state</code>, on the <code>Blob</code> view model.</p>
+      </footer>
+    </main>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.44.2"></script>
+    <script src="main.js"></script>
+    <script src="../../site-nav.js"></script>
+  </body>
+</html>

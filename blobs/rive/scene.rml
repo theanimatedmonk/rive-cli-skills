@@ -1,0 +1,258 @@
+<Rive version="1" kind="fragment">
+<!-- The blob character. Written by ../tools/make_scene.py; edit that. -->
+<Artboard defaultStateMachineId="0:119" viewModelId="0:900" viewModelInstanceId="0:899" width="512" height="512" styleId="0:116" name="Blob" id="0:115">
+<LayoutComponentStyle name="Blob Style" id="0:116"/>
+<ScriptedDrawable scriptAssetId="0:143" x="256" y="256" name="Jelly" id="0:117">
+<ScriptInputArtboard artboardId="0:101" name="rig" id="0:122"/>
+<ScriptInputNumber propertyValue="0" name="state" id="0:123"><DataBindContext sourcePathIds="0:900-0:901" propertyKey="243" id="0:124"/></ScriptInputNumber>
+<ScriptInputNumber propertyValue="512" name="width" id="0:125"/>
+<ScriptInputNumber propertyValue="512" name="height" id="0:126"/>
+<ScriptInputNumber propertyValue="1" name="resolution" id="0:127"/>
+<ScriptInputColor propertyValue="FF4F9BFF" name="bodyColor" id="0:128"/>
+<ScriptInputColor propertyValue="FF1B4AA8" name="deepColor" id="0:129"/>
+<ScriptInputColor propertyValue="FF8EE3FF" name="glowColor" id="0:130"/>
+<ScriptInputColor propertyValue="FF0A1838" name="inkColor" id="0:131"/>
+<ScriptInputColor propertyValue="FFFF8DB5" name="blushColor" id="0:132"/>
+<ScriptInputColor propertyValue="FFF3F7FF" name="backdropColor" id="0:133"/>
+<ScriptInputNumber propertyValue="1" name="gloss" id="0:134"/>
+<ScriptInputNumber propertyValue="1" name="translucency" id="0:135"/>
+<ScriptInputNumber propertyValue="1" name="glow" id="0:136"/>
+<ScriptInputNumber propertyValue="1" name="rim" id="0:137"/>
+<ScriptInputNumber propertyValue="0.6" name="outline" id="0:138"/>
+<ScriptInputNumber propertyValue="0.3" name="paint" id="0:139"/>
+<ScriptInputNumber propertyValue="1" name="wobble" id="0:140"><DataBindContext sourcePathIds="0:900-0:902" propertyKey="243" id="0:141"/></ScriptInputNumber>
+<ScriptInputNumber propertyValue="1" name="shadow" id="0:142"/>
+</ScriptedDrawable>
+<Fill name="Backdrop"><RadialGradient startX="256.0" startY="215.04" endX="256.0" endY="588.8" name="G"><GradientStop colorValue="FFFBFDFF" position="0" name="Inner"/><GradientStop colorValue="FFE2EAF7" position="1" name="Outer"/></RadialGradient></Fill>
+<StateMachine name="Blob" id="0:119"><StateMachineLayer name="Base"><EntryState><StateTransition stateToId="0:121"/></EntryState><AnimationState x="200" animationId="0:120" id="0:121"/></StateMachineLayer></StateMachine>
+<LinearAnimation loopValue="loop" duration="60" name="Still" id="0:120"/>
+</Artboard>
+<Artboard defaultStateMachineId="0:111" isComponent="true" width="512" height="512" styleId="0:102" x="600" name="BlobRig" id="0:101">
+<LayoutComponentStyle name="BlobRig Style" id="0:102"/>
+<Node x="256" y="452" name="Blob" id="0:103">
+<Node name="Jelly" id="0:104">
+<RootBone rotation="-1.5708" length="92" name="Body" id="0:105">
+<Bone length="150" name="Crown" id="0:106">
+<Node rotation="1.5708" name="Head" id="0:107">
+<Node name="Look">
+<Node y="-2" name="Eyes" id="0:108">
+<Node name="Open">
+<Shape x="-73" y="-10" name="GlintL"><Ellipse width="14" height="12" name="Path"/><Fill><SolidColor colorValue="FF80FFFF" name="C"/></Fill></Shape>
+<Shape x="-61" y="-16" name="DotL"><Ellipse width="6" height="6" name="Path"/><Fill><SolidColor colorValue="FF80FFFF" name="C"/></Fill></Shape>
+<Shape x="-55" y="10" opacity="0.32" name="WetL"><Ellipse width="13" height="11" name="Path"/><Fill fillRule="clockwise" name="C"><SolidColor colorValue="FF80FFFF" name="C"/><Feather strength="3" name="Soft"/></Fill></Shape>
+<Shape x="-64" y="0" name="EyeL"><Ellipse width="46" height="46" name="Path"/><Fill><SolidColor colorValue="FF8000FF" name="C"/></Fill></Shape>
+<Shape x="55" y="-10" name="GlintR"><Ellipse width="14" height="12" name="Path"/><Fill><SolidColor colorValue="FF80FFFF" name="C"/></Fill></Shape>
+<Shape x="67" y="-16" name="DotR"><Ellipse width="6" height="6" name="Path"/><Fill><SolidColor colorValue="FF80FFFF" name="C"/></Fill></Shape>
+<Shape x="73" y="10" opacity="0.32" name="WetR"><Ellipse width="13" height="11" name="Path"/><Fill fillRule="clockwise" name="C"><SolidColor colorValue="FF80FFFF" name="C"/><Feather strength="3" name="Soft"/></Fill></Shape>
+<Shape x="64" y="0" name="EyeR"><Ellipse width="46" height="46" name="Path"/><Fill><SolidColor colorValue="FF8000FF" name="C"/></Fill></Shape>
+</Node>
+<Node scaleX="0" scaleY="0" name="Happy">
+<Shape x="-64.0" y="2" name="ArcL"><PointsPath name="Path">
+<StraightVertex x="-17" y="4"/>
+<StraightVertex x="-14.1667" y="0.8942"/>
+<StraightVertex x="-11.3333" y="-2"/>
+<StraightVertex x="-8.5" y="-4.4853"/>
+<StraightVertex x="-5.6667" y="-6.3923"/>
+<StraightVertex x="-2.8333" y="-7.5911"/>
+<StraightVertex x="0" y="-8"/>
+<StraightVertex x="2.8333" y="-7.5911"/>
+<StraightVertex x="5.6667" y="-6.3923"/>
+<StraightVertex x="8.5" y="-4.4853"/>
+<StraightVertex x="11.3333" y="-2"/>
+<StraightVertex x="14.1667" y="0.8942"/>
+<StraightVertex x="17" y="4"/>
+</PointsPath><Stroke thickness="5.5" cap="round" join="round" name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Stroke></Shape>
+<Shape x="64.0" y="2" name="ArcR"><PointsPath name="Path">
+<StraightVertex x="-17" y="4"/>
+<StraightVertex x="-14.1667" y="0.8942"/>
+<StraightVertex x="-11.3333" y="-2"/>
+<StraightVertex x="-8.5" y="-4.4853"/>
+<StraightVertex x="-5.6667" y="-6.3923"/>
+<StraightVertex x="-2.8333" y="-7.5911"/>
+<StraightVertex x="0" y="-8"/>
+<StraightVertex x="2.8333" y="-7.5911"/>
+<StraightVertex x="5.6667" y="-6.3923"/>
+<StraightVertex x="8.5" y="-4.4853"/>
+<StraightVertex x="11.3333" y="-2"/>
+<StraightVertex x="14.1667" y="0.8942"/>
+<StraightVertex x="17" y="4"/>
+</PointsPath><Stroke thickness="5.5" cap="round" join="round" name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Stroke></Shape>
+</Node>
+</Node>
+</Node>
+<Node name="Mouths">
+<Shape name="Smile"><PointsPath name="Path">
+<StraightVertex x="-17" y="24"/>
+<StraightVertex x="-14.875" y="25.875"/>
+<StraightVertex x="-12.75" y="27.5"/>
+<StraightVertex x="-10.625" y="28.875"/>
+<StraightVertex x="-8.5" y="30"/>
+<StraightVertex x="-6.375" y="30.875"/>
+<StraightVertex x="-4.25" y="31.5"/>
+<StraightVertex x="-2.125" y="31.875"/>
+<StraightVertex x="0" y="32"/>
+<StraightVertex x="2.125" y="31.875"/>
+<StraightVertex x="4.25" y="31.5"/>
+<StraightVertex x="6.375" y="30.875"/>
+<StraightVertex x="8.5" y="30"/>
+<StraightVertex x="10.625" y="28.875"/>
+<StraightVertex x="12.75" y="27.5"/>
+<StraightVertex x="14.875" y="25.875"/>
+<StraightVertex x="17" y="24"/>
+</PointsPath><Stroke thickness="4.5" cap="round" join="round" name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Stroke></Shape>
+<Shape x="0" y="32" scaleX="0" scaleY="0" name="Ooh"><Ellipse width="11" height="13" name="Path"/><Fill name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Fill></Shape>
+<Shape x="0" y="30" scaleX="0" scaleY="0" name="Flat"><PointsPath name="Path"><StraightVertex x="-8" y="0"/><StraightVertex x="0" y="1.2"/><StraightVertex x="8" y="0"/></PointsPath><Stroke thickness="4.5" cap="round" join="round" name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Stroke></Shape>
+<Node x="0" y="24" scaleX="0" scaleY="0" name="Grin">
+<Shape y="9" name="Tongue"><Ellipse width="16" height="9" name="Path"/><Fill name="Pink"><SolidColor colorValue="FFFF0000" name="C"/></Fill></Shape>
+<Shape name="Mouth"><PointsPath isClosed="true" name="Path">
+<StraightVertex x="-17" y="0"/>
+<StraightVertex x="-16.7907" y="2.3465"/>
+<StraightVertex x="-16.168" y="4.6353"/>
+<StraightVertex x="-15.1471" y="6.8099"/>
+<StraightVertex x="-13.7533" y="8.8168"/>
+<StraightVertex x="-12.0208" y="10.6066"/>
+<StraightVertex x="-9.9923" y="12.1353"/>
+<StraightVertex x="-7.7178" y="13.3651"/>
+<StraightVertex x="-5.2533" y="14.2658"/>
+<StraightVertex x="-2.6594" y="14.8153"/>
+<StraightVertex x="0" y="15"/>
+<StraightVertex x="2.6594" y="14.8153"/>
+<StraightVertex x="5.2533" y="14.2658"/>
+<StraightVertex x="7.7178" y="13.3651"/>
+<StraightVertex x="9.9923" y="12.1353"/>
+<StraightVertex x="12.0208" y="10.6066"/>
+<StraightVertex x="13.7533" y="8.8168"/>
+<StraightVertex x="15.1471" y="6.8099"/>
+<StraightVertex x="16.168" y="4.6353"/>
+<StraightVertex x="16.7907" y="2.3465"/>
+<StraightVertex x="17" y="0"/>
+</PointsPath><Fill name="Ink"><SolidColor colorValue="FF8000FF" name="C"/></Fill></Shape>
+</Node>
+</Node>
+<Node name="Blush">
+<Shape x="-100" y="30" name="BlushL"><Ellipse width="44" height="20" name="Path"/><Fill fillRule="clockwise"><SolidColor colorValue="FFFF0000" name="C"/><Feather strength="8" name="Soft"/></Fill></Shape>
+<Shape x="100" y="30" name="BlushR"><Ellipse width="44" height="20" name="Path"/><Fill fillRule="clockwise"><SolidColor colorValue="FFFF0000" name="C"/><Feather strength="8" name="Soft"/></Fill></Shape>
+</Node>
+</Node>
+</Bone></RootBone>
+<RootBone y="-92" rotation="3.1416" length="176" name="SideL" id="0:109"/>
+<RootBone y="-92" length="176" name="SideR" id="0:110"/>
+</Node></Node>
+<Shape name="Body"><PointsPath isClosed="true" name="Path">
+<StraightVertex x="436.5323" y="360"><Weight values="12519990" indices="262657"/></StraightVertex>
+<StraightVertex x="439.201" y="372.2026"><Weight values="12518715" indices="262657"/></StraightVertex>
+<StraightVertex x="440.3384" y="380.3587"><Weight values="12518205" indices="262657"/></StraightVertex>
+<StraightVertex x="440.3238" y="387.418"><Weight values="12517695" indices="262657"/></StraightVertex>
+<StraightVertex x="439.148" y="393.8042"><Weight values="12517440" indices="262657"/></StraightVertex>
+<StraightVertex x="436.8447" y="399.6895"><Weight values="12517440" indices="262657"/></StraightVertex>
+<StraightVertex x="433.4976" y="405.1627"><Weight values="48960" indices="1025"/></StraightVertex>
+<StraightVertex x="429.2225" y="410.2745"><Weight values="48960" indices="1025"/></StraightVertex>
+<StraightVertex x="424.145" y="415.0557"><Weight values="48450" indices="1025"/></StraightVertex>
+<StraightVertex x="418.3824" y="419.5258"><Weight values="47430" indices="1025"/></StraightVertex>
+<StraightVertex x="412.0322" y="423.697"><Weight values="45645" indices="1025"/></StraightVertex>
+<StraightVertex x="405.1668" y="427.5768"><Weight values="43095" indices="1025"/></StraightVertex>
+<StraightVertex x="397.8335" y="431.1697"><Weight values="39780" indices="1025"/></StraightVertex>
+<StraightVertex x="390.0568" y="434.4781"><Weight values="35955" indices="1025"/></StraightVertex>
+<StraightVertex x="381.8424" y="437.503"><Weight values="31365" indices="1025"/></StraightVertex>
+<StraightVertex x="373.1807" y="440.2444"><Weight values="26265" indices="1025"/></StraightVertex>
+<StraightVertex x="364.0492" y="442.7017"><Weight values="20910" indices="1025"/></StraightVertex>
+<StraightVertex x="354.4123" y="444.8738"><Weight values="15300" indices="1025"/></StraightVertex>
+<StraightVertex x="344.2191" y="446.7596"><Weight values="9945" indices="1025"/></StraightVertex>
+<StraightVertex x="333.396" y="448.3579"><Weight values="5355" indices="1025"/></StraightVertex>
+<StraightVertex x="321.8315" y="449.6675"><Weight values="1785" indices="1025"/></StraightVertex>
+<StraightVertex x="309.3418" y="450.6873"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="295.5804" y="451.4163"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="279.7142" y="451.854"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="256" y="452"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="232.2858" y="451.854"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="216.4196" y="451.4163"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="202.6582" y="450.6873"><Weight values="255" indices="1"/></StraightVertex>
+<StraightVertex x="190.1685" y="449.6675"><Weight values="1785" indices="769"/></StraightVertex>
+<StraightVertex x="178.604" y="448.3579"><Weight values="5355" indices="769"/></StraightVertex>
+<StraightVertex x="167.7809" y="446.7596"><Weight values="9945" indices="769"/></StraightVertex>
+<StraightVertex x="157.5877" y="444.8738"><Weight values="15300" indices="769"/></StraightVertex>
+<StraightVertex x="147.9508" y="442.7017"><Weight values="20910" indices="769"/></StraightVertex>
+<StraightVertex x="138.8193" y="440.2444"><Weight values="26265" indices="769"/></StraightVertex>
+<StraightVertex x="130.1576" y="437.503"><Weight values="31365" indices="769"/></StraightVertex>
+<StraightVertex x="121.9432" y="434.4781"><Weight values="35955" indices="769"/></StraightVertex>
+<StraightVertex x="114.1665" y="431.1697"><Weight values="39780" indices="769"/></StraightVertex>
+<StraightVertex x="106.8332" y="427.5768"><Weight values="43095" indices="769"/></StraightVertex>
+<StraightVertex x="99.9678" y="423.697"><Weight values="45645" indices="769"/></StraightVertex>
+<StraightVertex x="93.6176" y="419.5258"><Weight values="47430" indices="769"/></StraightVertex>
+<StraightVertex x="87.855" y="415.0557"><Weight values="48450" indices="769"/></StraightVertex>
+<StraightVertex x="82.7775" y="410.2745"><Weight values="48960" indices="769"/></StraightVertex>
+<StraightVertex x="78.5024" y="405.1627"><Weight values="48960" indices="769"/></StraightVertex>
+<StraightVertex x="75.1553" y="399.6895"><Weight values="12517440" indices="197121"/></StraightVertex>
+<StraightVertex x="72.852" y="393.8042"><Weight values="12517440" indices="197121"/></StraightVertex>
+<StraightVertex x="71.6762" y="387.418"><Weight values="12517695" indices="197121"/></StraightVertex>
+<StraightVertex x="71.6616" y="380.3587"><Weight values="12518205" indices="197121"/></StraightVertex>
+<StraightVertex x="72.799" y="372.2026"><Weight values="12518715" indices="197121"/></StraightVertex>
+<StraightVertex x="75.4677" y="360"><Weight values="12519990" indices="197121"/></StraightVertex>
+<StraightVertex x="77.7151" y="350.1895"><Weight values="12521265" indices="197121"/></StraightVertex>
+<StraightVertex x="80.1104" y="340.4211"><Weight values="12522540" indices="197121"/></StraightVertex>
+<StraightVertex x="82.7257" y="330.7365"><Weight values="12524070" indices="197121"/></StraightVertex>
+<StraightVertex x="85.7185" y="321.1771"><Weight values="12459810" indices="197121"/></StraightVertex>
+<StraightVertex x="89.2327" y="311.7841"><Weight values="12330525" indices="197121"/></StraightVertex>
+<StraightVertex x="93.3589" y="302.5975"><Weight values="12135960" indices="197121"/></StraightVertex>
+<StraightVertex x="98.1378" y="293.6567"><Weight values="11810580" indices="197121"/></StraightVertex>
+<StraightVertex x="103.5756" y="285"><Weight values="11354385" indices="197121"/></StraightVertex>
+<StraightVertex x="109.6602" y="276.6645"><Weight values="10702350" indices="197121"/></StraightVertex>
+<StraightVertex x="116.3695" y="268.6858"><Weight values="9920010" indices="197121"/></StraightVertex>
+<StraightVertex x="123.6761" y="261.0981"><Weight values="8941575" indices="197121"/></StraightVertex>
+<StraightVertex x="131.5492" y="253.934"><Weight values="7832580" indices="197121"/></StraightVertex>
+<StraightVertex x="139.9551" y="247.224"><Weight values="6527490" indices="197121"/></StraightVertex>
+<StraightVertex x="148.858" y="240.997"><Weight values="5222400" indices="197121"/></StraightVertex>
+<StraightVertex x="158.2196" y="235.2796"><Weight values="15045" indices="770"/></StraightVertex>
+<StraightVertex x="168" y="230.0962"><Weight values="9945" indices="770"/></StraightVertex>
+<StraightVertex x="178.1572" y="225.4691"><Weight values="5355" indices="770"/></StraightVertex>
+<StraightVertex x="188.6477" y="221.4181"><Weight values="2040" indices="770"/></StraightVertex>
+<StraightVertex x="199.4267" y="217.9605"><Weight values="510" indices="770"/></StraightVertex>
+<StraightVertex x="210.4478" y="215.1111"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="221.6641" y="212.8822"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="233.0274" y="211.2833"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="244.489" y="210.3212"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="256" y="210"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="267.511" y="210.3212"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="278.9726" y="211.2833"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="290.3359" y="212.8822"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="301.5522" y="215.1111"><Weight values="255" indices="2"/></StraightVertex>
+<StraightVertex x="312.5733" y="217.9605"><Weight values="510" indices="1026"/></StraightVertex>
+<StraightVertex x="323.3523" y="221.4181"><Weight values="2040" indices="1026"/></StraightVertex>
+<StraightVertex x="333.8428" y="225.4691"><Weight values="5355" indices="1026"/></StraightVertex>
+<StraightVertex x="344" y="230.0962"><Weight values="9945" indices="1026"/></StraightVertex>
+<StraightVertex x="353.7804" y="235.2796"><Weight values="15045" indices="1026"/></StraightVertex>
+<StraightVertex x="363.142" y="240.997"><Weight values="5222400" indices="262657"/></StraightVertex>
+<StraightVertex x="372.0449" y="247.224"><Weight values="6527490" indices="262657"/></StraightVertex>
+<StraightVertex x="380.4508" y="253.934"><Weight values="7832580" indices="262657"/></StraightVertex>
+<StraightVertex x="388.3239" y="261.0981"><Weight values="8941575" indices="262657"/></StraightVertex>
+<StraightVertex x="395.6305" y="268.6858"><Weight values="9920010" indices="262657"/></StraightVertex>
+<StraightVertex x="402.3398" y="276.6645"><Weight values="10702350" indices="262657"/></StraightVertex>
+<StraightVertex x="408.4244" y="285"><Weight values="11354385" indices="262657"/></StraightVertex>
+<StraightVertex x="413.8622" y="293.6567"><Weight values="11810580" indices="262657"/></StraightVertex>
+<StraightVertex x="418.6411" y="302.5975"><Weight values="12135960" indices="262657"/></StraightVertex>
+<StraightVertex x="422.7673" y="311.7841"><Weight values="12330525" indices="262657"/></StraightVertex>
+<StraightVertex x="426.2815" y="321.1771"><Weight values="12459810" indices="262657"/></StraightVertex>
+<StraightVertex x="429.2743" y="330.7365"><Weight values="12524070" indices="262657"/></StraightVertex>
+<StraightVertex x="431.8896" y="340.4211"><Weight values="12522540" indices="262657"/></StraightVertex>
+<StraightVertex x="434.2849" y="350.1895"><Weight values="12521265" indices="262657"/></StraightVertex>
+<Skin name="Skin">
+<Tendon boneId="0:105" xx="0" xy="-1" yx="1" yy="0" tx="256" ty="452" name="Body"/>
+<Tendon boneId="0:106" xx="0" xy="-1" yx="1" yy="0" tx="256" ty="360" name="Crown"/>
+<Tendon boneId="0:109" xx="-1" xy="0" yx="0" yy="-1" tx="256" ty="360" name="SideL"/>
+<Tendon boneId="0:110" xx="1" xy="0" yx="0" yy="1" tx="256" ty="360" name="SideR"/>
+</Skin></PointsPath>
+<Fill name="Material"><SolidColor colorValue="FF800000" name="C"/></Fill></Shape>
+<StateMachine name="Rig" id="0:111"><StateMachineLayer name="Face"><EntryState><StateTransition stateToId="0:114"/></EntryState><AnimationState x="200" animationId="0:113" id="0:114"/></StateMachineLayer></StateMachine>
+<LinearAnimation loopValue="loop" fps="60" duration="240" name="Idle" id="0:113"><KeyedObject objectId="0:108"><KeyedProperty property="scaleY"><KeyFrameDouble value="1" frame="0" interpolationType="hold"/><KeyFrameDouble value="1" frame="200" interpolationType="cubic"><CubicEaseInterpolator x1="0.5" y1="0" x2="0.9" y2="0.6"/></KeyFrameDouble><KeyFrameDouble value="0.08" frame="205" interpolationType="cubic"><CubicEaseInterpolator x1="0.2" y1="0.4" x2="0.4" y2="1"/></KeyFrameDouble><KeyFrameDouble value="1" frame="213" interpolationType="hold"/></KeyedProperty></KeyedObject></LinearAnimation>
+</Artboard>
+<ViewModel name="Blob" id="0:900">
+<ViewModelPropertyNumber name="state" id="0:901"/>
+<ViewModelPropertyNumber name="wobble" id="0:902"/>
+<ViewModelInstance exports="true" name="Default" id="0:899">
+<ViewModelInstanceNumber propertyValue="0" viewModelPropertyId="0:901" id="0:146"/>
+<ViewModelInstanceNumber propertyValue="1" viewModelPropertyId="0:902" id="0:147"/>
+</ViewModelInstance></ViewModel>
+<ComponentAsset artboardId="0:101" name="BlobRig" id="0:144"/>
+<ScriptAsset file="Jelly.luau" scriptProtocolValue="1" name="Jelly" id="0:143"/>
+<ShaderAsset file="jelly.wgsl" name="jelly" id="0:145"/>
+</Rive>
