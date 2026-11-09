@@ -1,0 +1,5 @@
+name: titan-ai
+main: "Logo"
+logs:
+  file: build/rive.log
+  problems: build/problems.log
