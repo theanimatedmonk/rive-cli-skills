@@ -292,182 +292,9 @@ body {
   transition: opacity 0.4s ease;
 }
 
-.home > img {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
 .home.is-leaving {
   opacity: 0;
   pointer-events: none;
-}
-
-/* Promo slot in the empty space above the two cards on the home image. */
-.home__promo {
-  position: absolute;
-  top: 98px;
-  left: 16px;
-  right: 16px;
-  height: 136px;
-  border-radius: 20px;
-  background: #000 url("assets/promo-bg.png") center / cover no-repeat;
-  /* Gold stroke with a soft glow: gold up-left, violet down-right. */
-  border: 1px solid rgba(232, 194, 122, 0.75);
-  box-shadow:
-    -6px -6px 22px rgba(232, 194, 122, 0.35),
-    6px 6px 22px rgba(123, 92, 255, 0.45);
-}
-
-.home__promo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 16px 0 8px;
-  text-align: left;
-}
-
-.home__promo-card {
-  width: 88px;
-  height: 88px;
-  flex-shrink: 0;
-}
-
-.home__promo-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-}
-
-.home__promo-title {
-  font-family: "Lora", Georgia, serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 26px;
-  color: #ffffff;
-}
-
-.home__promo-copy {
-  margin: none;
-  font-family: "Lora", Georgia, serif;
-  font-size: 12px;
-  line-height: auto;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.home__promo-cta {
-  margin-top: 12px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  background: #E8C27A;
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-  font-family: "DM Sans", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: #14122B;
-}
-
-/* Two small stars travelling along the promo's gold border, half a lap
-   apart. The path traces the border's centre line (box 328x136, radius 20). */
-.promo-star {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 12px;
-  height: 12px;
-  offset-path: path("M 19 -0.5 H 307 A 19.5 19.5 0 0 1 326.5 19 V 115 A 19.5 19.5 0 0 1 307 134.5 H 19 A 19.5 19.5 0 0 1 -0.5 115 V 19 A 19.5 19.5 0 0 1 19 -0.5 Z");
-  offset-rotate: 0deg;
-  animation: promo-star-travel 9s linear infinite;
-  pointer-events: none;
-}
-
-.promo-star--second {
-  animation-delay: -4.5s;
-}
-
-.promo-star svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: #f7dd9c;
-  filter: drop-shadow(0 0 3px rgba(247, 221, 156, 0.95)) drop-shadow(0 0 7px rgba(232, 194, 122, 0.6));
-  animation: promo-star-twinkle 1.6s ease-in-out infinite alternate;
-}
-
-.promo-star--second svg {
-  animation-delay: -0.8s;
-}
-
-@keyframes promo-star-travel {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
-  }
-}
-
-@keyframes promo-star-twinkle {
-  from {
-    transform: scale(0.75) rotate(0deg);
-    opacity: 0.75;
-  }
-  to {
-    transform: scale(1.1) rotate(45deg);
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .promo-star,
-  .promo-star svg {
-    animation: none;
-  }
-
-  .promo-star--second {
-    offset-distance: 50%;
-  }
-}
-
-/* After a card is drawn: the promo shows that card, without the stroke,
-   glow or travelling stars. */
-.home__promo.is-drawn {
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.home__promo.is-drawn .promo-star {
-  display: none;
-}
-
-.home__promo.is-drawn .home__promo-card {
-  object-fit: contain;
-  height: 100px;
-  border-radius: 4px;
-  filter: drop-shadow(0 0 8px rgba(232, 194, 122, 0.3));
-}
-
-/* The promo card floats gently: the card back by default, and the drawn
-   card after Done. */
-.home__promo-card {
-  animation: promo-card-float 3.6s ease-in-out infinite;
-}
-
-@keyframes promo-card-float {
-  0%,
-  100% {
-    transform: translateY(3px) rotate(-1.5deg);
-  }
-  50% {
-    transform: translateY(-4px) rotate(1.5deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home__promo-card {
-    animation: none !important;
-  }
 }
 
 /* ---------------------------------------------------------------------
@@ -515,8 +342,6 @@ body {
 .device__island,
 .device__key,
 .status-bar__icons--ios,
-.home__ios-top,
-.home__ios-bottom,
 .home-indicator {
   display: none;
 }
@@ -608,27 +433,6 @@ body {
 
 .status-bar__icons--ios svg {
   fill: currentColor;
-}
-
-/* Cover the Android bars baked into the home screenshot. */
-.device.is-iphone .home__ios-top,
-.device.is-iphone .home__ios-bottom {
-  display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
-.device.is-iphone .home__ios-top {
-  top: 0;
-  height: 30px;
-  background: #1d1c36;
-}
-
-.device.is-iphone .home__ios-bottom {
-  bottom: 0;
-  height: 46px;
-  background: #14162d;
 }
 
 /* No Android nav bar: the home indicator floats over every screen. */
