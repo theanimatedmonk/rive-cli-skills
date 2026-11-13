@@ -1,0 +1,244 @@
+/* Palm reading: SCANNING (ScanAnimationScreen) and ANALYZING (RevealScreen).
+   The scan caption uses the Android system serif (Noto Serif) and the
+   canvas labels and the card headline use Roboto, as in the app. */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif&family=Roboto:wght@400;700&display=swap");
+
+/* ---------------------------------------------------------------------
+   Scanning */
+.palm-scan {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+}
+
+.palm-scan__photo,
+.palm-scan__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* Caption pill over a 70%-wide progress bar, 24dp above the nav bar. */
+.palm-scan__bottom {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: calc(var(--bar-top) + 24px) 24px calc(var(--bar-bottom) + 24px);
+  pointer-events: none;
+}
+
+.palm-scan__status {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  transition:
+    width 0.35s cubic-bezier(0.25, 0.8, 0.35, 1),
+    height 0.35s cubic-bezier(0.25, 0.8, 0.35, 1);
+}
+
+.palm-scan__pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(14, 12, 36, 0.7);
+  color: var(--lilac);
+  font: 400 18px/24px "Noto Serif", Georgia, serif;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.35s cubic-bezier(0.25, 0.8, 0.35, 1);
+}
+
+.palm-scan__pill.is-entering,
+.palm-scan__pill.is-leaving {
+  opacity: 0;
+}
+
+.palm-scan__bar {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Analyzing: the card flip */
+.palm-reveal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Compose blur(24.dp) is a radius; CSS blur() takes about half of it. */
+.palm-reveal__photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0.35;
+  filter: blur(12px);
+}
+
+.palm-reveal__dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 12, 36, 0.55);
+}
+
+/* cameraDistance 14·density ≈ a 1008 px perspective. */
+.palm-reveal__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  perspective: 1008px;
+}
+
+.palm-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.palm-card__face {
+  position: absolute;
+  inset: 0;
+}
+
+.palm-card__face[hidden] {
+  display: none;
+}
+
+.palm-card__face--front {
+  background: #1a1236;
+}
+
+/* The back is un-mirrored (graphicsLayer rotationY = 180 in the app). */
+.palm-card__face--back {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, #1a1236 0%, #3a1f4e 50%, #5a2a52 100%);
+}
+
+.palm-card__layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.palm-card__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 22px;
+  text-align: center;
+}
+
+.palm-card__spacer {
+  flex: 0 0 45%;
+}
+
+.palm-card__grow {
+  flex: 1 1 auto;
+}
+
+/* The archetype: gold foil with a light running across it. */
+.palm-card__name {
+  margin: 0;
+  font: 400 29px/33px "Palm Fell", "IM Fell English SC", Georgia, serif;
+  letter-spacing: 0.5px;
+  color: #f2d48c;
+  background: linear-gradient(100deg, #c99b4a 0%, #f2d48c 30%, #fff4d6 45%, #f2d48c 60%, #c99b4a 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(232, 194, 122, 0.45));
+  animation: palm-name-foil 3.2s linear infinite;
+}
+
+@keyframes palm-name-foil {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -130% 0;
+  }
+}
+
+.palm-card__headline {
+  margin: 0;
+  padding-bottom: 30px;
+  color: rgba(217, 212, 236, 0.9);
+  font: 600 12.5px/24px "Palm DM Sans", "DM Sans", sans-serif;
+  letter-spacing: 0.6px;
+}
+
+/* Effects around the card (palm-reveal.js). */
+.palm-reveal__fx {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+/* Once turned, the card glows. */
+.palm-card {
+  transition: box-shadow 0.9s ease;
+}
+
+.palm-card.is-revealed {
+  box-shadow:
+    0 0 0 1px rgba(242, 212, 151, 0.55),
+    0 0 36px rgba(232, 194, 122, 0.5),
+    0 0 90px rgba(185, 164, 242, 0.35);
+  animation: palm-card-glow 2.6s ease-in-out 0.9s infinite alternate;
+}
+
+@keyframes palm-card-glow {
+  to {
+    box-shadow:
+      0 0 0 1px rgba(242, 212, 151, 0.8),
+      0 0 52px rgba(232, 194, 122, 0.65),
+      0 0 120px rgba(185, 164, 242, 0.45);
+  }
+}
+
+.palm-reveal__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font: 600 11px/16px "Palm DM Sans", "DM Sans", sans-serif;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #f2d497;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s ease 0.35s, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s;
+  text-shadow: 0 0 12px rgba(232, 194, 122, 0.6);
+}
+
+.palm-reveal__caption.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palm-scan__status,
+  .palm-scan__pill {
+    transition: none;
+  }
+
+  .palm-card__name,
+  .palm-card.is-revealed {
+    animation: none;
+  }
+}
