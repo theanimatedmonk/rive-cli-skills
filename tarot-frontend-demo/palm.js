@@ -284,24 +284,23 @@
     };
     const titleEl = document.getElementById("palm-tile-title");
     const icon = document.getElementById("palm-tile-icon");
+    const badge = document.getElementById("palm-tile-badge");
     tile.classList.toggle("is-read", Boolean(latest));
+    if (badge) badge.hidden = Boolean(latest);
     if (!latest) {
-      set("palm-tile-badge", "\u2726 NEW \u00B7 AI PALM SCAN");
       set("palm-tile-title", "Read your palm");
       set("palm-tile-copy", "Reveal your heart, head and life lines from one photo.");
-      set("palm-tile-cta", "Scan my palm");
+      set("palm-tile-cta", "Scan palm");
       if (titleEl) titleEl.classList.add("feature__title--nowrap");
       if (icon) icon.hidden = false;
-      tile.setAttribute("aria-label", "Read your palm: scan my palm");
+      tile.setAttribute("aria-label", "Palm: scan palm");
       return;
     }
     const { person, palm } = latest;
-    const whose = person.isMe ? "YOUR" : `${person.name.toUpperCase()}${/s$/i.test(person.name) ? "'" : "'S"}`;
     const archetype = palm.archetype || "Your palm reading";
-    set("palm-tile-badge", `\u2726 ${whose} PALM`);
     set("palm-tile-title", archetype);
     set("palm-tile-copy", palm.headline || "Your heart, head and life lines, read.");
-    set("palm-tile-cta", person.isMe ? "See my reading" : "See their reading");
+    set("palm-tile-cta", "See reading");
     if (titleEl) titleEl.classList.remove("feature__title--nowrap");
     if (icon) icon.hidden = true;
     tile.setAttribute("aria-label", `${archetype}: see the palm reading`);
