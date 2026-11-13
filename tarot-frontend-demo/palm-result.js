@@ -278,7 +278,7 @@
     ctx.font = `600 ${size}px "Palm Cormorant", serif`;
     const width = ctx.measureText(reading.archetype).width;
     if (width > 980) {
-      size *= 980 / width;
+      size = Math.floor((size * 980) / width);
       ctx.font = `600 ${size}px "Palm Cormorant", serif`;
     }
     ctx.fillStyle = C.cream;

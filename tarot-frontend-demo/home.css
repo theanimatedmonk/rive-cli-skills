@@ -192,67 +192,9 @@ body {
 
 .medallion--45 {
   --size: 44.8px;
-  font-size: 19.2px;
+  font-size: 19px;
   line-height: 24.8px;
   filter: drop-shadow(0 4.8px 5.6px rgba(232, 196, 107, 0.25));
-}
-
-/* Feature cards: palm reading, then daily tarot. Both are buttons. */
-.feature {
-  position: relative;
-  display: block;
-  width: 358px;
-  padding: 0;
-  overflow: hidden;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s ease;
-}
-
-.feature:active {
-  transform: scale(0.985);
-}
-
-.feature:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
-
-.feature--palm {
-  height: 184.8px;
-  border: 1.2px solid rgba(232, 196, 107, 0.45);
-  border-radius: 22px;
-  background: linear-gradient(145.46deg, #0e3b4c 14.286%, #2b1c6b 85.714%);
-}
-
-.feature--tarot {
-  height: 176px;
-  border: 1px solid rgba(232, 196, 107, 0.45);
-  border-radius: 24px;
-  background:
-    radial-gradient(331.1px 129.07px at 50% 0, rgba(128, 89, 242, 0.35), rgba(128, 89, 242, 0.1575) 45%, rgba(128, 89, 242, 0)),
-    linear-gradient(180deg, #33266e 0%, #1f174a 100%);
-}
-
-.feature__row {
-  position: absolute;
-  top: 16.8px;
-  left: calc(50% - 0.5px);
-  display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  transform: translateX(-50%);
-}
-
-.feature__row--tarot {
-  top: 16.2px;
-  left: 15px;
-  align-items: center;
-  transform: none;
 }
 
 .feature__art {
@@ -261,69 +203,6 @@ body {
   height: 140px;
   overflow: hidden;
   flex-shrink: 0;
-}
-
-.feature__text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-shrink: 0;
-}
-
-.feature__text--palm {
-  width: 195px;
-  gap: 8px;
-}
-
-.feature__text--tarot {
-  width: 191px;
-  gap: 6px;
-}
-
-.feature__badge {
-  padding: 4px 9px;
-  border-radius: 10px;
-  background: rgba(232, 196, 107, 0.18);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  color: var(--gold);
-  white-space: nowrap;
-}
-
-.feature__eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--gold);
-  white-space: nowrap;
-}
-
-.feature__title {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 26px;
-}
-
-.feature__title--nowrap {
-  line-height: 30px;
-  white-space: nowrap;
-}
-
-.feature__copy {
-  font-size: 13px;
-  line-height: 18px;
-  color: #cfc6ee;
-}
-
-.feature__copy--palm {
-  color: #d6eff0;
-}
-
-.feature__spacer {
-  width: 4px;
-  height: 4px;
 }
 
 /* Gold pill buttons */
@@ -342,10 +221,6 @@ body {
   color: var(--gold-ink);
   text-align: center;
   white-space: nowrap;
-}
-
-.gold-button--palm {
-  width: 191px;
 }
 
 .gold-button--full {
@@ -445,28 +320,13 @@ body {
   filter: drop-shadow(0 0 8px rgba(232, 196, 107, 0.3));
 }
 
-.feature--tarot.is-drawn .tarot-art__back,
-.feature--tarot.is-drawn .tarot-art__front {
+.is-drawn .tarot-art__back,
+.is-drawn .tarot-art__front {
   display: none;
 }
 
-.feature--tarot.is-drawn .tarot-art__drawn {
+.is-drawn .tarot-art__drawn {
   display: block;
-}
-
-/* Ad slot */
-.home__ad {
-  display: grid;
-  place-items: center;
-  width: 355px;
-  height: 100px;
-  align-self: center;
-  border: 1px dashed rgba(255, 255, 255, 0.25);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
 }
 
 /* Today's horoscope */
@@ -522,12 +382,7 @@ body {
   letter-spacing: 1.6px;
 }
 
-.eyebrow--insight {
-  letter-spacing: 1.4px;
-}
-
 .horoscope__sign,
-.home__more,
 .lucky__value {
   font-family: "Cormorant Garamond", serif;
   font-size: 24px;
@@ -614,62 +469,6 @@ body {
   color: var(--gold);
 }
 
-/* Explore more */
-.insights {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  width: 100%;
-}
-
-.insight {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 173px;
-  padding: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(232, 196, 107, 0.45);
-  border-radius: 24px;
-  background:
-    radial-gradient(160px 171.6px at 50% 0, rgba(128, 89, 242, 0.35), rgba(128, 89, 242, 0.1575) 45%, rgba(128, 89, 242, 0)),
-    linear-gradient(180deg, #33266e 0%, #1f174a 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 16px 36px rgba(5, 3, 15, 0.5);
-  flex-shrink: 0;
-}
-
-.insight__body {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.insight__top {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.insight__text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.insight__title {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 28px;
-}
-
-.insight__copy {
-  font-size: 13px;
-  line-height: 17px;
-  color: var(--lavender);
-}
-
 /* Compatibility: you, a partner to pick, and a heart. */
 .pair {
   position: relative;
@@ -696,7 +495,7 @@ body {
   border: 0.8px dashed rgba(201, 191, 255, 0.6);
   border-radius: 50%;
   background: #1f1745;
-  font-size: 19.2px;
+  font-size: 19px;
   line-height: 24.8px;
   color: var(--lavender);
 }
@@ -794,7 +593,7 @@ body {
   display: grid;
   place-items: center;
   font-family: "DM Sans", sans-serif;
-  font-size: 3.244px;
+  font-size: 3px;
   line-height: normal;
   font-variation-settings: "opsz" 9;
   color: #e9c46a;
@@ -869,7 +668,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .feature {
+  button.tile {
     transition: none;
   }
 }
@@ -997,11 +796,325 @@ body {
   }
 }
 
-/* Read state: the latest reading's name may take two lines. */
-.feature--palm.is-read .feature__title {
+/* ---------------------------------------------------------------------
+   Variant C: two tiles side by side, then the horoscope, then two more. */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  padding: 16px 12px 13px;
+  overflow: hidden;
+  border: 1px solid rgba(232, 196, 107, 0.45);
+  border-radius: 24px;
+  background:
+    radial-gradient(160px 150px at 50% 0, rgba(128, 89, 242, 0.35), rgba(128, 89, 242, 0)),
+    linear-gradient(180deg, #33266e 0%, #1f174a 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 16px 36px rgba(5, 3, 15, 0.5);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.tile {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+button.tile:active {
+  transform: scale(0.97);
+}
+
+button.tile:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.tile--palm {
+  background:
+    radial-gradient(160px 150px at 50% 40%, rgba(143, 214, 196, 0.12), rgba(143, 214, 196, 0)),
+    linear-gradient(165deg, #123e52 0%, #1f2a5c 55%, #2b1c6b 100%);
+}
+
+.tile__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+}
+
+.tile__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 1.4px;
+  color: var(--gold);
+}
+
+.tile__eyebrow--rose {
+  margin-top: 14px;
+  color: #efa3ae;
+}
+
+.tile__eyebrow--lilac {
+  margin-top: 14px;
+  color: #c9bfff;
+}
+
+.tile__badge {
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gold);
+}
+
+.tile__badge[hidden] {
+  display: none;
+}
+
+/* The art: one fixed frame in both tiles, so their titles and buttons line
+   up; each illustration is scaled inside it without changing the layout. */
+.tile__frame {
+  display: grid;
+  place-items: center;
+  height: 132px;
+  margin: 2px 0 12px;
+}
+
+.tile__art {
+  transform: scale(var(--art-scale, 1));
+}
+
+.tile__title {
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-height: 26px;
+  margin-bottom: 14px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: -0.1px;
+}
+
+.tile__button {
+  margin-top: auto;
+  padding: 12px 10px;
+  font-size: 15px;
+}
+
+/* Static tiles: compatibility and birth chart. */
+.tile--static::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--blob), transparent);
+  pointer-events: none;
+}
+
+.tile--compat {
+  --blob: rgba(239, 163, 174, 0.28);
+}
+
+.tile--chart {
+  --blob: rgba(185, 164, 242, 0.3);
+}
+
+.tile--static > * {
+  position: relative;
+}
+
+.tile__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+}
+
+.tile__stat {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--lavender);
+}
+
+.tile__stat b {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 32px;
+  color: #efa3ae;
+}
+
+.tile--chart .tile__stat b {
+  color: #c9bfff;
+}
+
+.tile__name {
+  margin-top: 4px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 27px;
+}
+
+.tile__copy {
+  margin: 4px 0 14px;
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--lavender);
+}
+
+.lilac-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: auto;
+  padding: 12px 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d7d0ff, #c2b6ff);
+  box-shadow: 0 6px 14px -6px rgba(185, 164, 242, 0.6);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #1a1433;
+  white-space: nowrap;
+}
+
+.lilac-button img,
+.round-button img {
+  filter: brightness(0) saturate(100%) invert(8%) sepia(30%) saturate(2400%) hue-rotate(230deg);
+}
+
+/* Gold medallion (compatibility's "you"). */
+.medallion--gold {
+  background: radial-gradient(circle calc(var(--size) * 0.99) at 32% 28%, #fff3cc 0%, #f4d98c 45%, #e6bd5c 80%, #c99b3e 100%);
+}
+
+.tile--compat .pair__partner {
+  border-color: rgba(239, 163, 174, 0.7);
+  color: #efa3ae;
+}
+
+.wheel--big {
+  zoom: 1.3;
+}
+
+/* The horoscope, more compact. */
+.horoscope--c .horoscope__head .medallion {
+  --size: 40px;
+  font-size: 20px;
+}
+
+.horoscope__dates {
+  margin-left: 6px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--lavender);
+}
+
+.horoscope--c .horoscope__headline {
+  margin-top: 2px;
+}
+
+.horoscope__body--fade {
+  display: block;
+  max-height: 51.2px;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 55.01%), linear-gradient(90deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 55.01%), linear-gradient(90deg, #000 55%, transparent 100%);
+}
+
+.round-button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f2d485, #e3b854);
+  box-shadow: 0 6px 14px -6px rgba(232, 196, 107, 0.7);
+}
+
+.horoscope--c .horoscope__read {
+  font-size: 15px;
+}
+
+/* Tarot tile: the cards a little smaller, floating; the two drift out of
+   step, over a breathing glow. */
+.tile--tarot .tile__art {
+  --art-scale: 0.86;
+  overflow: visible;
+}
+
+.tile--tarot .tarot-art__back {
+  animation: tarot-float-back 4.2s ease-in-out infinite;
+}
+
+.tile--tarot .tarot-art__front {
+  animation: tarot-float-front 3.6s ease-in-out infinite;
+}
+
+.tile--tarot .tarot-art__glow {
+  animation: tarot-glow 3.6s ease-in-out infinite;
+}
+
+@keyframes tarot-float-back {
+  0%,
+  100% {
+    transform: translateY(2px) rotate(-11deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-8deg);
+  }
+}
+
+@keyframes tarot-float-front {
+  0%,
+  100% {
+    transform: translateY(-3px) rotate(4deg);
+  }
+  50% {
+    transform: translateY(4px) rotate(2.5deg);
+  }
+}
+
+@keyframes tarot-glow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile--tarot .tarot-art__back,
+  .tile--tarot .tarot-art__front,
+  .tile--tarot .tarot-art__glow {
+    animation: none;
+  }
 }

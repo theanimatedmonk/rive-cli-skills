@@ -11,11 +11,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css?v=11" />
-    <link rel="stylesheet" href="home.css?v=3" />
-    <link rel="stylesheet" href="palm.css?v=9" />
+    <link rel="stylesheet" href="home.css?v=11" />
+    <link rel="stylesheet" href="palm.css?v=10" />
     <link rel="stylesheet" href="palm-live.css?v=1" />
-    <link rel="stylesheet" href="palm-scan.css?v=2" />
-    <link rel="stylesheet" href="palm-result.css?v=5" />
+    <link rel="stylesheet" href="palm-scan.css?v=3" />
+    <link rel="stylesheet" href="palm-result.css?v=7" />
   </head>
   <body>
     <div class="frame-switch" role="group" aria-label="Device frame">
@@ -147,7 +147,8 @@
       <!-- Palm reading: its own flow over the app, built by palm.js. -->
       <section class="palm" id="palm" aria-label="Palm reading" hidden></section>
 
-      <!-- Home, from Figma (Horoscope App Design, "Variant A", 9701:2950).
+      <!-- Home, from Figma (Horoscope App Design, "Variant C"; built from a
+           screenshot of it, with the Variant A frame's assets).
            Built at the design's 390 px width and scaled to the 360 px screen.
            Only the palm reading and tarot cards work; the rest is static. -->
       <div class="home" id="home-screen">
@@ -175,62 +176,55 @@
                 <span class="home__menu home__menu--ghost"></span>
               </header>
 
-              <!-- Palm reading: opens the palm flow (palm.js). -->
-              <button type="button" class="feature feature--palm" id="palm-tile" aria-label="Read your palm: scan my palm">
-                <span class="feature__row">
-                  <span class="feature__art palm-art" aria-hidden="true">
+              <!-- Variant C: tarot and palm side by side. Only these two work. -->
+              <div class="duo">
+                <!-- Daily tarot: opens the card picker (main.js). -->
+                <button type="button" class="tile tile--tarot" id="home-promo" aria-label="Tarot: reveal card">
+                  <span class="tile__head"><span class="tile__eyebrow">TAROT</span></span>
+                  <span class="tile__frame" aria-hidden="true"><span class="feature__art tarot-art tile__art">
+                    <span class="tarot-art__glow"></span>
+                    <img class="tarot-art__back" src="assets/home/tarot-card-back.svg" alt="" />
+                    <img class="tarot-art__front" src="assets/home/tarot-card-front.svg" alt="" />
+                    <img class="tarot-art__drawn" id="promo-card" alt="" />
+                  </span></span>
+                  <span class="tile__title" id="promo-copy">Your card is waiting</span>
+                  <span class="gold-button tile__button" id="promo-cta">Reveal card</span>
+                </button>
+
+                <!-- Palm reading: opens the palm flow (palm.js). -->
+                <button type="button" class="tile tile--palm" id="palm-tile" aria-label="Palm: scan palm">
+                  <span class="tile__head">
+                    <span class="tile__eyebrow">PALM</span>
+                    <span class="tile__badge" id="palm-tile-badge">✦ NEW</span>
+                  </span>
+                  <span class="tile__frame" aria-hidden="true"><span class="feature__art palm-art tile__art">
                     <span class="palm-art__glow"></span>
                     <span class="palm-art__mandala"><img src="assets/home/palm-mandala.svg" alt="" /></span>
                     <img class="palm-art__hand" src="assets/home/palm-hand.svg" alt="" />
                     <img class="palm-art__stars" src="assets/home/palm-stars.svg" alt="" />
                     <span class="palm-art__frame"><img src="assets/home/palm-frame.svg" alt="" /></span>
                     <span class="palm-art__scan"><i></i></span>
+                  </span></span>
+                  <span class="tile__title" id="palm-tile-title">Read your palm</span>
+                  <span class="gold-button tile__button">
+                    <img id="palm-tile-icon" src="assets/home/camera.svg" width="16" height="16" alt="" />
+                    <span id="palm-tile-cta">Scan palm</span>
                   </span>
-                  <span class="feature__text feature__text--palm">
-                    <span class="feature__badge" id="palm-tile-badge">✦ NEW · AI PALM SCAN</span>
-                    <span class="feature__title feature__title--nowrap" id="palm-tile-title">Read your palm</span>
-                    <span class="feature__copy feature__copy--palm" id="palm-tile-copy">Reveal your heart, head and life lines from one photo.</span>
-                    <span class="gold-button gold-button--palm">
-                      <img id="palm-tile-icon" src="assets/home/camera.svg" width="16" height="16" alt="" />
-                      <span id="palm-tile-cta">Scan my palm</span>
-                    </span>
-                  </span>
-                </span>
-              </button>
-
-              <!-- Daily tarot: opens the card picker (main.js). -->
-              <button type="button" class="feature feature--tarot" id="home-promo" aria-label="Daily tarot: draw card">
-                <span class="feature__row feature__row--tarot">
-                  <span class="feature__art tarot-art" aria-hidden="true">
-                    <span class="tarot-art__glow"></span>
-                    <img class="tarot-art__back" src="assets/home/tarot-card-back.svg" alt="" />
-                    <img class="tarot-art__front" src="assets/home/tarot-card-front.svg" alt="" />
-                    <img class="tarot-art__drawn" id="promo-card" alt="" />
-                  </span>
-                  <span class="feature__text feature__text--tarot">
-                    <span class="feature__eyebrow">DAILY TAROT</span>
-                    <span class="feature__title">Your card is waiting</span>
-                    <span class="feature__copy" id="promo-copy">Draw today’s card and see what it holds.</span>
-                    <span class="feature__spacer"></span>
-                    <span class="gold-button gold-button--full" id="promo-cta">Draw card</span>
-                  </span>
-                </span>
-              </button>
-
-              <div class="home__ad" aria-hidden="true"><span>Ad · 320 × 100</span></div>
+                </button>
+              </div>
 
               <!-- Static from here down. -->
-              <section class="horoscope" aria-label="Today’s horoscope">
+              <section class="horoscope horoscope--c" aria-label="Today’s horoscope">
                 <img class="horoscope__stars" src="assets/home/stars-card.svg" width="360" height="121" alt="" />
                 <div class="horoscope__head">
-                  <span class="medallion medallion--56">♈</span>
+                  <span class="medallion">♈</span>
                   <div>
                     <p class="eyebrow eyebrow--wide">TODAY’S HOROSCOPE</p>
-                    <p class="horoscope__sign">Aries</p>
+                    <p class="horoscope__sign">Aries <span class="horoscope__dates">Mar 21 – Apr 19</span></p>
                   </div>
                 </div>
                 <p class="horoscope__headline">Lead, don’t wait.</p>
-                <p class="horoscope__body">A confident, social day. Momentum is on your side, so lead the plan rather than wait for one. The evening favours people you already trust.</p>
+                <p class="horoscope__body horoscope__body--fade">A confident, social day. Momentum is on your side, so lead the plan rather than wait for one. The evening favours people you already trust.</p>
                 <span class="horoscope__divider"></span>
                 <div class="horoscope__foot">
                   <div class="lucky">
@@ -247,66 +241,59 @@
                       <span class="lucky__value">A</span>
                     </div>
                   </div>
-                  <span class="horoscope__read">Read <img src="assets/home/chevron-right.svg" width="16" height="16" alt="" /></span>
+                  <span class="horoscope__read">Read <span class="round-button"><img src="assets/home/chevron-right.svg" width="16" height="16" alt="" /></span></span>
                 </div>
               </section>
 
-              <h2 class="home__more">Explore more</h2>
-              <div class="insights">
-                <section class="insight" aria-label="Compatibility">
-                  <p class="eyebrow eyebrow--insight">COMPATIBILITY</p>
-                  <div class="insight__body">
-                    <div class="insight__top">
-                      <span class="pair" aria-hidden="true">
-                        <span class="medallion medallion--45 pair__you">♈</span>
-                        <span class="pair__partner">?</span>
-                        <span class="pair__heart"><img src="assets/home/heart.svg" alt="" /></span>
-                      </span>
-                      <span class="insight__text">
-                        <span class="insight__title">Aries + ?</span>
-                        <span class="insight__copy">Pick their sign to see how you match today.</span>
-                      </span>
-                    </div>
-                    <span class="gold-button gold-button--full">Pick their sign</span>
-                  </div>
+              <div class="duo">
+                <section class="tile tile--static tile--compat" aria-label="Compatibility">
+                  <span class="tile__top">
+                    <span class="pair" aria-hidden="true">
+                      <span class="medallion medallion--45 medallion--gold pair__you">♈</span>
+                      <span class="pair__partner">?</span>
+                      <span class="pair__heart"><img src="assets/home/heart.svg" alt="" /></span>
+                    </span>
+                    <span class="tile__stat"><b>12</b>signs to try</span>
+                  </span>
+                  <span class="tile__eyebrow tile__eyebrow--rose">COMPATIBILITY</span>
+                  <span class="tile__name">Aries + ?</span>
+                  <span class="tile__copy">Pick their sign to see how you match today.</span>
+                  <span class="lilac-button">Pick their sign <img src="assets/home/chevron-right.svg" width="14" height="14" alt="" /></span>
                 </section>
-                <section class="insight" aria-label="Birth chart">
-                  <p class="eyebrow eyebrow--insight">BIRTH CHART</p>
-                  <div class="insight__body">
-                    <div class="insight__top">
-                      <span class="wheel" aria-hidden="true">
-                        <span class="wheel__art">
-                          <span class="wheel__v wheel__v1"><img src="assets/home/wheel-1.svg" alt="" /></span>
-                          <span class="wheel__v wheel__v2"><img src="assets/home/wheel-2.svg" alt="" /></span>
-                          <span class="wheel__v wheel__v3"><img src="assets/home/wheel-3.svg" alt="" /></span>
-                          <img class="wheel__group" src="assets/home/wheel-group.svg" alt="" />
-                          <span class="wheel__glyph" style="inset:1.5% 35.94% 91.77% 56.37%">♈</span>
-                          <span class="wheel__glyph" style="inset:12.58% 16.69% 80.68% 75.62%">♉</span>
-                          <span class="wheel__glyph" style="inset:31.84% 5.6% 61.43% 86.71%">♊</span>
-                          <span class="wheel__glyph" style="inset:54% 5.6% 39.27% 86.71%">♋</span>
-                          <span class="wheel__glyph" style="inset:73.25% 16.69% 20.02% 75.62%">♌</span>
-                          <span class="wheel__glyph" style="inset:84.34% 35.94% 8.93% 56.37%">♍</span>
-                          <span class="wheel__glyph" style="inset:84.34% 58.1% 8.93% 34.21%">♎</span>
-                          <span class="wheel__glyph" style="inset:73.25% 77.35% 20.02% 14.96%">♏</span>
-                          <span class="wheel__glyph" style="inset:54% 88.44% 39.27% 3.87%">♐</span>
-                          <span class="wheel__glyph" style="inset:31.84% 88.44% 61.43% 3.87%">♑</span>
-                          <span class="wheel__glyph" style="inset:12.58% 77.35% 80.68% 14.96%">♒</span>
-                          <span class="wheel__glyph" style="inset:1.5% 58.1% 91.77% 34.21%">♓</span>
-                          <span class="wheel__v wheel__v4"><img src="assets/home/wheel-4.svg" alt="" /></span>
-                          <img class="wheel__dot" style="inset:58.67% 18.08% 37% 77.58%" src="assets/home/wheel-5.svg" alt="" />
-                          <img class="wheel__dot" style="inset:68.17% 72.08% 27.5% 23.58%" src="assets/home/wheel-6.svg" alt="" />
-                          <img class="wheel__dot" style="inset:16.67% 53.33% 79% 42.33%" src="assets/home/wheel-7.svg" alt="" />
-                          <img class="wheel__dot" style="inset:78.42% 39.67% 17.25% 56%" src="assets/home/wheel-8.svg" alt="" />
-                          <img class="wheel__dot" style="inset:45.83%" src="assets/home/wheel-9.svg" alt="" />
-                        </span>
+                <section class="tile tile--static tile--chart" aria-label="Birth chart">
+                  <span class="tile__top">
+                    <span class="wheel wheel--big" aria-hidden="true">
+                      <span class="wheel__art">
+                        <span class="wheel__v wheel__v1"><img src="assets/home/wheel-1.svg" alt="" /></span>
+                        <span class="wheel__v wheel__v2"><img src="assets/home/wheel-2.svg" alt="" /></span>
+                        <span class="wheel__v wheel__v3"><img src="assets/home/wheel-3.svg" alt="" /></span>
+                        <img class="wheel__group" src="assets/home/wheel-group.svg" alt="" />
+                        <span class="wheel__glyph" style="inset:1.5% 35.94% 91.77% 56.37%">♈</span>
+                        <span class="wheel__glyph" style="inset:12.58% 16.69% 80.68% 75.62%">♉</span>
+                        <span class="wheel__glyph" style="inset:31.84% 5.6% 61.43% 86.71%">♊</span>
+                        <span class="wheel__glyph" style="inset:54% 5.6% 39.27% 86.71%">♋</span>
+                        <span class="wheel__glyph" style="inset:73.25% 16.69% 20.02% 75.62%">♌</span>
+                        <span class="wheel__glyph" style="inset:84.34% 35.94% 8.93% 56.37%">♍</span>
+                        <span class="wheel__glyph" style="inset:84.34% 58.1% 8.93% 34.21%">♎</span>
+                        <span class="wheel__glyph" style="inset:73.25% 77.35% 20.02% 14.96%">♏</span>
+                        <span class="wheel__glyph" style="inset:54% 88.44% 39.27% 3.87%">♐</span>
+                        <span class="wheel__glyph" style="inset:31.84% 88.44% 61.43% 3.87%">♑</span>
+                        <span class="wheel__glyph" style="inset:12.58% 77.35% 80.68% 14.96%">♒</span>
+                        <span class="wheel__glyph" style="inset:1.5% 58.1% 91.77% 34.21%">♓</span>
+                        <span class="wheel__v wheel__v4"><img src="assets/home/wheel-4.svg" alt="" /></span>
+                        <img class="wheel__dot" style="inset:58.67% 18.08% 37% 77.58%" src="assets/home/wheel-5.svg" alt="" />
+                        <img class="wheel__dot" style="inset:68.17% 72.08% 27.5% 23.58%" src="assets/home/wheel-6.svg" alt="" />
+                        <img class="wheel__dot" style="inset:16.67% 53.33% 79% 42.33%" src="assets/home/wheel-7.svg" alt="" />
+                        <img class="wheel__dot" style="inset:78.42% 39.67% 17.25% 56%" src="assets/home/wheel-8.svg" alt="" />
+                        <img class="wheel__dot" style="inset:45.83%" src="assets/home/wheel-9.svg" alt="" />
                       </span>
-                      <span class="insight__text">
-                        <span class="insight__title">Your full chart</span>
-                        <span class="insight__copy">Sun, moon, rising and all 10 planets.</span>
-                      </span>
-                    </div>
-                    <span class="gold-button gold-button--full">Pick Sign</span>
-                  </div>
+                    </span>
+                    <span class="tile__stat"><b>1 min</b>to create</span>
+                  </span>
+                  <span class="tile__eyebrow tile__eyebrow--lilac">BIRTH CHART</span>
+                  <span class="tile__name">Your full chart</span>
+                  <span class="tile__copy">Sun, moon, rising and all 10 planets.</span>
+                  <span class="lilac-button">Create chart <img src="assets/home/chevron-right.svg" width="14" height="14" alt="" /></span>
                 </section>
               </div>
             </div>
@@ -327,14 +314,14 @@
     <script src="personas.js?v=2"></script>
     <script src="main.js?v=12"></script>
     <!-- Palm reading: the core first, then the stages it registers. -->
-    <script src="palm.js?v=8"></script>
+    <script src="palm.js?v=9"></script>
     <script src="palm-vision.js?v=1"></script>
     <script src="palm-draw.js?v=1"></script>
     <script src="palm-engine.js?v=1"></script>
     <script src="palm-live.js?v=1"></script>
     <script src="palm-scan.js?v=1"></script>
     <script src="palm-reveal.js?v=3"></script>
-    <script src="palm-result.js?v=4"></script>
+    <script src="palm-result.js?v=5"></script>
     <!-- The nav between the demos (bottom left). -->
     <script src="../site-nav.js"></script>
   </body>
