@@ -251,7 +251,11 @@ function hideHome() {
   }, HOME_FADE_MS);
 }
 
-homeEl.addEventListener("click", () => {
+// Only the daily tarot card opens the card picker; the palm reading card
+// opens palm reading (palm.js), and the rest of the home screen is static.
+const promoEl = document.getElementById("home-promo");
+
+promoEl.addEventListener("click", () => {
   if (homeEl.classList.contains("is-leaving")) {
     return;
   }
@@ -275,7 +279,7 @@ function returnHome() {
   promoCard.alt = persona.name;
   document.getElementById("promo-copy").textContent = persona.name;
   document.getElementById("promo-cta").textContent = "Read More";
-  document.getElementById("home-promo").classList.add("is-drawn");
+  promoEl.classList.add("is-drawn");
   homeMode = "drawn";
 
   homeEl.classList.add("is-leaving");
@@ -358,7 +362,7 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
 })();
 
 // ?embed=1: the app alone, filling the window (inside a 3D device, say).
-// ?auto=1: it plays itself, for filming: tap home, pick the middle card,
+// ?auto=1: it plays itself, for filming: tap the tarot card, pick the middle card,
 // let the reveal and the reading run, scroll the reading, start again.
 // A parent page hears { tarot: "start" } as each run begins.
 (() => {
@@ -405,7 +409,7 @@ window.addEventListener("resize", () => riveInstance.resizeDrawingSurfaceToCanva
     await until(() => riveLoaded);
     window.parent.postMessage({ tarot: "start" }, "*");
     await wait(1400);
-    homeEl.click();
+    promoEl.click();
     await until(() => canvas.classList.contains("is-ready"));
     await wait(900);
     // The middle card of the fan.

@@ -1,0 +1,444 @@
+/* Palm reading: RESULT (ResultScreen, c56). Sizes are the app's dp/sp,
+   1:1 CSS px on the 360-wide phone. The NightSky (.palm__sky) is behind. */
+
+.palm-result {
+  position: absolute;
+  inset: 0;
+}
+
+.palm-result__list {
+  /* Starts below the status bar, so the reading never scrolls under it. */
+  position: absolute;
+  inset: var(--bar-top) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 0 var(--bar-bottom);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.palm-result__list::-webkit-scrollbar {
+  display: none;
+}
+
+.palm-result__list > * {
+  flex-shrink: 0;
+}
+
+/* Status-bar scrim over the list. */
+.palm-result__scrim {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--bar-top);
+  background: rgba(14, 12, 36, 0.85);
+  pointer-events: none;
+}
+
+/* Staggered entrance: one 1600 ms clock; item k starts at min(k x 0.08, 0.6)
+   and runs 0.4 of it with FastOutSlowIn. */
+.palm-result__item {
+  animation: palm-result-in 640ms var(--ease) var(--d, 0ms) both;
+}
+
+@keyframes palm-result-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- TopBar */
+.palm-result__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 16px;
+}
+
+.palm-result__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.palm-result__icon:active {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Share: the tarot reading's gold pill button (.reading__share). */
+.palm .palm-result__share {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 16px 0 13px;
+  border-radius: 999px;
+  background: #e8c27a;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #14122b;
+}
+
+.palm-result__share svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.palm .palm-result__share:active {
+  filter: brightness(1.08);
+}
+
+/* --- Headers */
+.palm-result__pad {
+  padding: 0 20px;
+}
+
+.palm-result__frame {
+  position: relative;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 1.5dp border, gradient [goldLight, gold@30%, goldLight] corner to corner. */
+.palm-result__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(var(--border-angle, 135deg), #f2d497, rgba(232, 194, 122, 0.3), #f2d497);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.palm-result__frame--map {
+  background: linear-gradient(var(--surface), var(--bg));
+}
+
+.palm-result__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.palm-result__star {
+  position: absolute;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--gold-light);
+}
+
+.palm-result__star--tl {
+  top: 12px;
+  left: 12px;
+}
+
+.palm-result__star--tr {
+  top: 12px;
+  right: 12px;
+}
+
+.palm-result__star--bl {
+  bottom: 12px;
+  left: 12px;
+}
+
+.palm-result__star--br {
+  bottom: 12px;
+  right: 12px;
+}
+
+.palm-result__map-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(14, 12, 36, 0.7);
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 1.6px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+/* --- Essence: the archetype and a short summary, under the frame. */
+.palm-result__essence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px 28px 0;
+  text-align: center;
+}
+
+.palm-result__label {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 16px;
+  letter-spacing: 1.8px;
+  color: var(--mint);
+}
+
+.palm-result__archetype {
+  margin: 4px 0 0;
+  font-family: "Palm Cormorant", serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 38px;
+  color: var(--cream);
+}
+
+.palm-result__summary {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--lilac);
+}
+
+/* --- Tabs: one chip per section, then the chosen section's card. */
+.palm-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.palm-tabs__row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 20px 4px;
+  overflow-x: auto;
+  scroll-padding: 0 20px;
+  scrollbar-width: none;
+}
+
+.palm-tabs__row::-webkit-scrollbar {
+  display: none;
+}
+
+.palm .palm-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px 0 8px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  font-family: "Palm DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lilac);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.palm-tabs__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: var(--c);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.palm .palm-tabs__tab[aria-selected="true"] {
+  border-color: color-mix(in srgb, var(--c) 70%, transparent);
+  background: color-mix(in srgb, var(--c) 16%, rgba(14, 12, 36, 0.6));
+  box-shadow: 0 0 16px -4px color-mix(in srgb, var(--c) 70%, transparent);
+  color: var(--cream);
+}
+
+.palm-tabs__tab[aria-selected="true"] .palm-tabs__icon {
+  background: var(--c);
+  color: var(--bg);
+}
+
+.palm-tabs__panel {
+  padding: 0 20px;
+}
+
+.palm-tabs__card {
+  position: relative;
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  border-radius: 22px;
+  background:
+    radial-gradient(220px 140px at 100% 0, color-mix(in srgb, var(--c) 18%, transparent), transparent),
+    linear-gradient(180deg, rgba(30, 27, 58, 0.92), rgba(14, 12, 36, 0.92));
+}
+
+.palm-tabs__card.is-entering {
+  animation: palm-tab-in 0.38s var(--ease) both;
+}
+
+@keyframes palm-tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.palm-tabs__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.palm-tabs__badge {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c) 26%, transparent), transparent 72%);
+  box-shadow: 0 0 22px -6px var(--c);
+  color: var(--c);
+}
+
+.palm-tabs__title {
+  margin: 0;
+  font-family: "Palm Cormorant", serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--cream);
+}
+
+.palm-tabs__faint {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.palm-tabs__traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.palm-tabs__trait {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--c);
+}
+
+.palm-tabs__body {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 23px;
+  color: var(--lilac);
+}
+
+.palm-tabs__note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: var(--muted);
+}
+
+/* --- Footer */
+.palm-result__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 20px;
+}
+
+.palm-result__again {
+  width: 100%;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--gold) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--bg) !important;
+}
+
+.palm-result__home {
+  padding: 10px 16px !important;
+  border-radius: 999px;
+  font-size: 14px !important;
+  line-height: 20px;
+  color: var(--cream) !important;
+}
+
+.palm-result__again:active {
+  filter: brightness(1.1);
+}
+
+.palm-result__home:active {
+  background: rgba(243, 238, 221, 0.08) !important;
+}
+
+.palm-result__disclaimer {
+  margin: 0;
+  padding-bottom: 12px;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  color: rgba(163, 159, 192, 0.7);
+}
+
+/* Web-only feedback when the share sheet isn't available. */
+.palm-result__toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--bar-bottom) + 16px);
+  transform: translate(-50%, 8px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(14, 12, 36, 0.92);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--cream);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.palm-result__toast.is-shown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palm-result__item {
+    animation: none;
+  }
+}

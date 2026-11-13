@@ -1,0 +1,1007 @@
+/* Home screen, from Figma: Horoscope App Design / Logo, "Variant A"
+   (node 9701:2950). Laid out at the design's 390 px width and scaled to the
+   360 px phone, so every size below is the design's own. */
+
+body {
+  /* DM Sans with an optical-size axis: hold it at the static 14 pt cut the
+     rest of the demo uses (and the design asks for). */
+  font-optical-sizing: none;
+}
+
+.home {
+  --scale: 0.923077; /* 360 / 390 */
+  --gold-ink: #291f0a;
+  --ink: #f5f2ff;
+  --gold: #e8c46b;
+  --lavender: #b5abd9;
+  overflow: hidden;
+  background: #0d0a21;
+  cursor: default;
+  text-align: left;
+}
+
+.home__scroll {
+  position: absolute;
+  inset: 0 0 calc(46px * var(--scale));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.home__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.home__page {
+  position: relative;
+  width: 390px;
+  zoom: var(--scale);
+  display: flex;
+  flex-direction: column;
+  font-family: "DM Sans", sans-serif;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink);
+  background:
+    radial-gradient(240px 363.47px at 20px 1114.8px, rgba(158, 43, 107, 0.38), rgba(158, 43, 107, 0.171) 45%, rgba(158, 43, 107, 0)),
+    radial-gradient(220px 337.51px at 351px 545.21px, rgba(92, 64, 204, 0.28), rgba(92, 64, 204, 0.126) 45%, rgba(92, 64, 204, 0)),
+    radial-gradient(300px 337.51px at 214.5px 194.72px, rgba(107, 71, 217, 0.55), rgba(107, 71, 217, 0.2475) 45%, rgba(107, 71, 217, 0)),
+    linear-gradient(180deg, #0f0a22 0%, #140f30 45%, #0d0a1f 100%),
+    #0d0a21;
+}
+
+.home__page p,
+.home__page h2 {
+  margin: 0;
+}
+
+.home__stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+/* Status bar */
+.home__status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 24px;
+  padding: 8.738px 20.971px;
+  flex-shrink: 0;
+}
+
+.home__time {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17.476px;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.9;
+}
+
+.home__status-icons {
+  position: relative;
+  width: 43px;
+  height: 14.85px;
+  margin-top: 2.62px;
+  opacity: 0.8;
+}
+
+.home__status-icons img {
+  position: absolute;
+  top: 0;
+}
+
+.home__status-icons img:nth-child(1) {
+  left: 0;
+}
+
+.home__status-icons img:nth-child(2) {
+  left: 34.78%;
+}
+
+.home__status-icons img:nth-child(3) {
+  left: 82.61%;
+  top: 0.87px;
+}
+
+.home__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Header */
+.home__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.home__menu {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.home__menu img {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+}
+
+.home__menu--ghost {
+  opacity: 0;
+}
+
+.home__sign {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgba(232, 196, 107, 0.28);
+  border-radius: 47px;
+  background: #1a1440;
+}
+
+.home__sign .medallion {
+  margin-right: 2px;
+}
+
+.home__sign-name {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 21.85px;
+  letter-spacing: 0.2px;
+}
+
+/* Gold medallion with the zodiac glyph (the design's "Zodiac medallion"). */
+.medallion {
+  --size: 36px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle calc(var(--size) * 0.99036) at 32% 28%, #ffcee0 0%, #f2a6c2 45%, #f1699b 72.5%, #f14b88 86.25%, #f02d75 100%);
+  filter: drop-shadow(0 6px 7px rgba(232, 196, 107, 0.25));
+  font-family: "Noto Sans Symbols", sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--gold-ink);
+}
+
+.medallion--56 {
+  --size: 56px;
+  font-size: 24px;
+  line-height: 31px;
+}
+
+.medallion--45 {
+  --size: 44.8px;
+  font-size: 19.2px;
+  line-height: 24.8px;
+  filter: drop-shadow(0 4.8px 5.6px rgba(232, 196, 107, 0.25));
+}
+
+/* Feature cards: palm reading, then daily tarot. Both are buttons. */
+.feature {
+  position: relative;
+  display: block;
+  width: 358px;
+  padding: 0;
+  overflow: hidden;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.feature:active {
+  transform: scale(0.985);
+}
+
+.feature:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.feature--palm {
+  height: 184.8px;
+  border: 1.2px solid rgba(232, 196, 107, 0.45);
+  border-radius: 22px;
+  background: linear-gradient(145.46deg, #0e3b4c 14.286%, #2b1c6b 85.714%);
+}
+
+.feature--tarot {
+  height: 176px;
+  border: 1px solid rgba(232, 196, 107, 0.45);
+  border-radius: 24px;
+  background:
+    radial-gradient(331.1px 129.07px at 50% 0, rgba(128, 89, 242, 0.35), rgba(128, 89, 242, 0.1575) 45%, rgba(128, 89, 242, 0)),
+    linear-gradient(180deg, #33266e 0%, #1f174a 100%);
+}
+
+.feature__row {
+  position: absolute;
+  top: 16.8px;
+  left: calc(50% - 0.5px);
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  transform: translateX(-50%);
+}
+
+.feature__row--tarot {
+  top: 16.2px;
+  left: 15px;
+  align-items: center;
+  transform: none;
+}
+
+.feature__art {
+  position: relative;
+  width: 120px;
+  height: 140px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.feature__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.feature__text--palm {
+  width: 195px;
+  gap: 8px;
+}
+
+.feature__text--tarot {
+  width: 191px;
+  gap: 6px;
+}
+
+.feature__badge {
+  padding: 4px 9px;
+  border-radius: 10px;
+  background: rgba(232, 196, 107, 0.18);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.feature__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.feature__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 26px;
+}
+
+.feature__title--nowrap {
+  line-height: 30px;
+  white-space: nowrap;
+}
+
+.feature__copy {
+  font-size: 13px;
+  line-height: 18px;
+  color: #cfc6ee;
+}
+
+.feature__copy--palm {
+  color: #d6eff0;
+}
+
+.feature__spacer {
+  width: 4px;
+  height: 4px;
+}
+
+/* Gold pill buttons */
+.gold-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f2d485, #e3b854);
+  filter: drop-shadow(0 6px 8px rgba(232, 196, 107, 0.3));
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: var(--gold-ink);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.gold-button--palm {
+  width: 191px;
+}
+
+.gold-button--full {
+  width: 100%;
+}
+
+/* Palm illustration (9726:9364) */
+.palm-art > * {
+  position: absolute;
+}
+
+.palm-art__glow {
+  top: calc(50% + 4.45px);
+  left: calc(50% - 1.7px);
+  width: 101.164px;
+  height: 101.164px;
+  border-radius: 29.754px;
+  background: radial-gradient(circle 50.582px, #e9c46a, rgba(233, 196, 106, 0));
+  opacity: 0.35;
+  transform: translate(-50%, -50%);
+}
+
+.palm-art__mandala {
+  inset: 12.09% 2.65% 6.4% 2.3%;
+}
+
+.palm-art__mandala img {
+  position: absolute;
+  inset: -0.14%;
+  width: 100.28%;
+  height: 100.28%;
+}
+
+.palm-art__hand {
+  inset: 13.45% 24.74% 15.44% 17.44%;
+  width: 57.82%;
+  height: 71.11%;
+}
+
+.palm-art__stars {
+  inset: 8.55% 7.61% 11.31% -0.18%;
+  width: 92.57%;
+  height: 80.14%;
+}
+
+.palm-art__frame {
+  inset: 14.93% 15.87% 17.56% 15.53%;
+}
+
+.palm-art__frame img {
+  position: absolute;
+  top: -0.71%;
+  left: -0.82%;
+  width: 101.64%;
+  height: 101.42%;
+}
+
+/* Tarot illustration (9726:9602): two cards fanned over a gold glow. */
+.tarot-art > * {
+  position: absolute;
+}
+
+.tarot-art__glow {
+  top: 17.98px;
+  left: 7.5px;
+  width: 108.024px;
+  height: 108.024px;
+  border-radius: 50%;
+  background: radial-gradient(circle 76.384px, rgba(232, 196, 107, 0.35), rgba(232, 196, 107, 0) 70%);
+}
+
+.tarot-art__back {
+  top: calc(12.38px + (114.717px - 104.423px) / 2);
+  left: calc(4px + (85.509px - 68.415px) / 2);
+  width: 68.415px;
+  height: 104.423px;
+  transform: rotate(-10deg);
+}
+
+.tarot-art__front {
+  top: calc(12px + (115.478px - 110.724px) / 2);
+  left: calc(21.91px + (79.564px - 72.016px) / 2);
+  width: 72.016px;
+  height: 110.724px;
+  transform: rotate(4deg);
+}
+
+/* After a card is drawn, the card art becomes that card. */
+.tarot-art__drawn {
+  display: none;
+  top: 14px;
+  left: 22px;
+  width: 76px;
+  height: 112px;
+  object-fit: contain;
+  transform: rotate(4deg);
+  filter: drop-shadow(0 0 8px rgba(232, 196, 107, 0.3));
+}
+
+.feature--tarot.is-drawn .tarot-art__back,
+.feature--tarot.is-drawn .tarot-art__front {
+  display: none;
+}
+
+.feature--tarot.is-drawn .tarot-art__drawn {
+  display: block;
+}
+
+/* Ad slot */
+.home__ad {
+  display: grid;
+  place-items: center;
+  width: 355px;
+  height: 100px;
+  align-self: center;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Today's horoscope */
+.horoscope {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 28px;
+  background:
+    radial-gradient(140px 90px at 304.3px 30px, rgba(153, 115, 255, 0.25), rgba(153, 115, 255, 0.1125) 45%, rgba(153, 115, 255, 0)),
+    radial-gradient(320px 150px at 214.8px -20px, rgba(115, 77, 229, 0.7), rgba(115, 77, 229, 0.315) 45%, rgba(115, 77, 229, 0)),
+    linear-gradient(180deg, #241c52 0%, #1a1440 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 16px 36px rgba(5, 3, 15, 0.5);
+}
+
+.horoscope > * {
+  position: relative;
+}
+
+.horoscope__stars {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  pointer-events: none;
+}
+
+.horoscope__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.horoscope__head > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.eyebrow--wide {
+  letter-spacing: 1.6px;
+}
+
+.eyebrow--insight {
+  letter-spacing: 1.4px;
+}
+
+.horoscope__sign,
+.home__more,
+.lucky__value {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.horoscope__headline {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.horoscope__body {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-size: 16px;
+  line-height: 25.6px;
+  color: #ede8ff;
+}
+
+.horoscope__divider {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.horoscope__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lucky {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.lucky__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.lucky__item--colour {
+  align-self: stretch;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.lucky__label {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--lavender);
+}
+
+.lucky__colour {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lucky__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background: #e35440;
+}
+
+.horoscope__read {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: var(--gold);
+}
+
+/* Explore more */
+.insights {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.insight {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 173px;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(232, 196, 107, 0.45);
+  border-radius: 24px;
+  background:
+    radial-gradient(160px 171.6px at 50% 0, rgba(128, 89, 242, 0.35), rgba(128, 89, 242, 0.1575) 45%, rgba(128, 89, 242, 0)),
+    linear-gradient(180deg, #33266e 0%, #1f174a 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 16px 36px rgba(5, 3, 15, 0.5);
+  flex-shrink: 0;
+}
+
+.insight__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.insight__top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.insight__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.insight__copy {
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--lavender);
+}
+
+/* Compatibility: you, a partner to pick, and a heart. */
+.pair {
+  position: relative;
+  display: block;
+  width: 73.6px;
+  height: 48px;
+}
+
+.pair > * {
+  position: absolute;
+  top: 0;
+}
+
+.pair__you {
+  left: 0;
+}
+
+.pair__partner {
+  left: 28.8px;
+  display: grid;
+  place-items: center;
+  width: 44.8px;
+  height: 44.8px;
+  border: 0.8px dashed rgba(201, 191, 255, 0.6);
+  border-radius: 50%;
+  background: #1f1745;
+  font-size: 19.2px;
+  line-height: 24.8px;
+  color: var(--lavender);
+}
+
+.pair__heart {
+  top: 28.8px;
+  left: 27.2px;
+  width: 19.2px;
+  height: 19.2px;
+}
+
+.pair__heart img {
+  position: absolute;
+  inset: -12.5%;
+  width: 125%;
+  height: 125%;
+}
+
+/* Birth chart wheel (9701:3302) */
+.wheel {
+  position: relative;
+  display: block;
+  width: 45.798px;
+  height: 48px;
+  filter: drop-shadow(0 2.642px 3.963px rgba(232, 196, 107, 0.25));
+}
+
+.wheel__art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45.798px;
+  height: 45.798px;
+  overflow: hidden;
+}
+
+.wheel__art > * {
+  position: absolute;
+}
+
+.wheel__v img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.wheel__v1,
+.wheel__group {
+  inset: 1.67%;
+}
+
+.wheel__group {
+  width: 96.66%;
+  height: 96.66%;
+}
+
+.wheel__v1 img {
+  inset: -0.43%;
+  width: 100.86%;
+  height: 100.86%;
+}
+
+.wheel__v2 {
+  inset: 12.5%;
+}
+
+.wheel__v2 img {
+  inset: -0.56%;
+  width: 101.12%;
+  height: 101.12%;
+}
+
+.wheel__v3 {
+  inset: 25%;
+}
+
+.wheel__v3 img {
+  inset: -0.83%;
+  width: 101.66%;
+  height: 101.66%;
+}
+
+.wheel__v4 {
+  inset: 25.42% 26.5% 33.92% 30.83%;
+}
+
+.wheel__v4 img {
+  top: -1.61%;
+  left: -1.2%;
+  width: 102.67%;
+  height: 102.66%;
+}
+
+.wheel__glyph {
+  display: grid;
+  place-items: center;
+  font-family: "DM Sans", sans-serif;
+  font-size: 3.244px;
+  line-height: normal;
+  font-variation-settings: "opsz" 9;
+  color: #e9c46a;
+  text-align: center;
+}
+
+.wheel__dot {
+  width: auto;
+  height: auto;
+}
+
+/* Android nav bar (9701:3250) */
+.home__nav {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 390px;
+  height: 46px;
+  zoom: var(--scale);
+  background: #14162d;
+}
+
+.home__nav > * {
+  position: absolute;
+  top: 15px;
+}
+
+.home__nav-recents {
+  left: 85px;
+  width: 15px;
+  height: 16px;
+}
+
+.home__nav-recents i {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 16px;
+  border-radius: 1px;
+  background: #fff;
+}
+
+.home__nav-recents i:nth-child(2) {
+  left: 6.5px;
+}
+
+.home__nav-recents i:nth-child(3) {
+  left: 13px;
+}
+
+.home__nav img:nth-of-type(1) {
+  left: 188px;
+}
+
+.home__nav img:nth-of-type(2) {
+  top: 14.74px;
+  left: 295.44px;
+}
+
+/* iPhone frame: its own status bar and home indicator float above. */
+.device.is-iphone .home__status,
+.device.is-iphone .home__nav {
+  display: none;
+}
+
+.device.is-iphone .home__page {
+  padding-top: 28px;
+}
+
+.device.is-iphone .home__scroll {
+  bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Palm card illustration, animated: the mandala turns, the glow breathes,
+   the stars twinkle, the hand floats, the corner brackets pulse, and a gold
+   scan line sweeps down the palm inside the brackets. */
+.palm-art__mandala {
+  animation: palm-art-spin 48s linear infinite;
+}
+
+.palm-art__glow {
+  animation: palm-art-breathe 3.2s ease-in-out infinite alternate;
+}
+
+.palm-art__stars {
+  animation: palm-art-twinkle 2.4s ease-in-out infinite alternate;
+}
+
+.palm-art__hand {
+  animation: palm-art-float 3.6s ease-in-out infinite;
+}
+
+.palm-art__frame {
+  animation: palm-art-pulse 2.8s ease-in-out infinite;
+}
+
+/* The scan runs inside the frame's box: down over the palm, then a rest. */
+.palm-art__scan {
+  inset: 14.93% 15.87% 17.56% 15.53%;
+  overflow: hidden;
+}
+
+.palm-art__scan i {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, rgba(242, 212, 133, 0), #f2d485 25%, #fff3cf 50%, #f2d485 75%, rgba(242, 212, 133, 0));
+  box-shadow: 0 0 6px 1px rgba(232, 196, 107, 0.55), 0 -10px 14px rgba(232, 196, 107, 0.18);
+  opacity: 0;
+  animation: palm-art-scan 3.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes palm-art-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes palm-art-breathe {
+  from {
+    opacity: 0.22;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+@keyframes palm-art-twinkle {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes palm-art-float {
+  0%,
+  100% {
+    transform: translateY(1.5px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes palm-art-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.045);
+    opacity: 0.8;
+  }
+}
+
+@keyframes palm-art-scan {
+  0% {
+    top: 4%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  70% {
+    top: 94%;
+    opacity: 0;
+  }
+  100% {
+    top: 94%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palm-art__mandala,
+  .palm-art__glow,
+  .palm-art__stars,
+  .palm-art__hand,
+  .palm-art__frame,
+  .palm-art__scan i {
+    animation: none;
+  }
+}
+
+/* Read state: the latest reading's name may take two lines. */
+.feature--palm.is-read .feature__title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 26px;
+}

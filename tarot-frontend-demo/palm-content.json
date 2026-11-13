@@ -1,0 +1,526 @@
+{
+  "_note": "Palm reading content, verbatim from the Horoscope Launcher APK (ww5, s23.n, s77, c56, tq6). Used by palm-engine.js and palm-result.js.",
+  "enums": {
+    "hand": [
+      "LEFT",
+      "RIGHT"
+    ],
+    "handLabel": {
+      "LEFT": "Left",
+      "RIGHT": "Right"
+    },
+    "element": [
+      "EARTH",
+      "AIR",
+      "FIRE",
+      "WATER"
+    ],
+    "elementTitle": {
+      "EARTH": "Earth",
+      "AIR": "Air",
+      "FIRE": "Fire",
+      "WATER": "Water"
+    },
+    "mount": [
+      "JUPITER",
+      "SATURN",
+      "APOLLO",
+      "MERCURY",
+      "VENUS"
+    ],
+    "mountTitle": {
+      "JUPITER": "Mount of Jupiter",
+      "SATURN": "Mount of Saturn",
+      "APOLLO": "Mount of Apollo",
+      "MERCURY": "Mount of Mercury",
+      "VENUS": "Mount of Venus"
+    },
+    "heartEnd": [
+      "INDEX",
+      "BETWEEN",
+      "MIDDLE",
+      "SHORT"
+    ],
+    "headStart": [
+      "JOINED",
+      "CLOSE",
+      "APART"
+    ],
+    "headSlope": [
+      "STRAIGHT",
+      "GENTLE",
+      "SLOPING"
+    ],
+    "line": [
+      "HEART",
+      "HEAD",
+      "LIFE",
+      "FATE"
+    ],
+    "lineTitle": {
+      "HEART": "Heart line",
+      "HEAD": "Head line",
+      "LIFE": "Life line",
+      "FATE": "Fate line"
+    },
+    "sectionKind": [
+      "ELEMENT",
+      "HEART",
+      "HEAD",
+      "LIFE",
+      "FATE",
+      "MOUNT"
+    ]
+  },
+  "archetype": {
+    "mountAdjective": {
+      "JUPITER": "Bold",
+      "SATURN": "Wise",
+      "APOLLO": "Radiant",
+      "MERCURY": "Clever",
+      "VENUS": "Warm-hearted"
+    },
+    "elementNoun": {
+      "EARTH": "Builder",
+      "AIR": "Messenger",
+      "FIRE": "Trailblazer",
+      "WATER": "Dreamer"
+    }
+  },
+  "handMeaning": {
+    "dominant": "Your dominant hand: who you're becoming and the choices you're making now.",
+    "nonDominant": "Your non-dominant hand: your inner nature and the gifts you were born with."
+  },
+  "essence": {
+    "element": {
+      "EARTH": "Someone the world can lean on.",
+      "AIR": "A bright, restless mind.",
+      "FIRE": "Born to set things in motion.",
+      "WATER": "You feel the world more deeply than most."
+    },
+    "heartEnd": {
+      "INDEX": "You love with high ideals",
+      "BETWEEN": "You love warmly but wisely",
+      "MIDDLE": "You love boldly and directly",
+      "SHORT": "You love through actions"
+    },
+    "headStart": {
+      "JOINED": "and think before you leap.",
+      "CLOSE": "and trust your own judgement.",
+      "APART": "and follow your own mind."
+    },
+    "mount": {
+      "JUPITER": "Your drive to lead sets you apart.",
+      "SATURN": "Your patience and depth set you apart.",
+      "APOLLO": "Your creative spark sets you apart.",
+      "MERCURY": "Your way with words sets you apart.",
+      "VENUS": "Your warmth sets you apart."
+    }
+  },
+  "strengths": {
+    "headSlopeChip": {
+      "STRAIGHT": "Practical",
+      "GENTLE": "Balanced",
+      "SLOPING": "Imaginative"
+    }
+  },
+  "sections": {
+    "ELEMENT": {
+      "byElement": {
+        "EARTH": {
+          "trait": "Grounded · Loyal · Practical",
+          "bodies": [
+            "A square palm with shorter fingers: an Earth hand. Dependable, patient, quietly strong.",
+            "Square palm, sturdy fingers. You're a builder: slow, sure and hard to knock off course.",
+            "An Earth hand. You trust what's real and turn ideas into things that last."
+          ]
+        },
+        "AIR": {
+          "trait": "Curious · Witty · Communicative",
+          "bodies": [
+            "A square palm with long fingers: an Air hand. Quick mind, quick tongue, endless curiosity.",
+            "Air hands belong to thinkers and talkers. You connect ideas, and people.",
+            "An Air hand. You spot patterns others miss and explain them well."
+          ]
+        },
+        "FIRE": {
+          "trait": "Bold · Passionate · Spontaneous",
+          "bodies": [
+            "A long palm with shorter fingers: a Fire hand. Energy, nerve and warmth.",
+            "Fire hands belong to starters. You act while others hesitate.",
+            "A Fire hand. When you care about something, everyone knows it."
+          ]
+        },
+        "WATER": {
+          "trait": "Intuitive · Creative · Empathic",
+          "bodies": [
+            "A long palm with long fingers: a Water hand. You feel deeply and read people well.",
+            "Water hands belong to dreamers and healers. People come to you to feel understood.",
+            "A Water hand. Rich imagination, real empathy."
+          ]
+        }
+      }
+    },
+    "HEART": {
+      "title": "Heart line",
+      "curvePhrase": {
+        "true": "curves upward and",
+        "false": "runs fairly straight and"
+      },
+      "endPhrase": {
+        "INDEX": "reaches toward your index finger.",
+        "BETWEEN": "ends between your index and middle fingers.",
+        "MIDDLE": "ends beneath your middle finger.",
+        "SHORT": "stops short of your middle finger."
+      },
+      "byEnd": {
+        "INDEX": {
+          "trait": "Idealistic · Devoted · High standards",
+          "bodies": [
+            "The idealist's heart. You hold out for the real thing, then give it everything.",
+            "You see the best in the people you love, and expect it too.",
+            "Love is a promise to you. Loyal, devoted, hard to fool.",
+            "High standards, deep devotion. When you commit, you commit fully."
+          ]
+        },
+        "BETWEEN": {
+          "trait": "Balanced · Warm · Wise",
+          "bodies": [
+            "The balanced heart: openly warm, careful about who gets close.",
+            "Warmth backed by good judgement. Trust, once earned, runs deep.",
+            "You give generously, not blindly. Your relationships tend to last.",
+            "Heart and head work together. You love fully without losing yourself."
+          ]
+        },
+        "MIDDLE": {
+          "trait": "Passionate · Direct · Bold",
+          "bodies": [
+            "A passionate, direct heart. You know what you feel and say it.",
+            "You love boldly and act on it. Mixed signals aren't your style.",
+            "Heart first, explanations later. People always know where they stand.",
+            "Strong feelings, honestly shown."
+          ]
+        },
+        "SHORT": {
+          "trait": "Loyal · Practical · Protective",
+          "bodies": [
+            "You show love through actions, not speeches. Fiercely protective of your people.",
+            "A small circle, deeply valued. You prove you care by turning up.",
+            "Practical in love: you fix, help and stay.",
+            "You keep your heart for the few who matter, and never let them down."
+          ]
+        }
+      }
+    },
+    "HEAD": {
+      "title": "Head line",
+      "startPhrase": {
+        "JOINED": "begins joined to your life line",
+        "CLOSE": "starts just apart from your life line",
+        "APART": "starts clearly apart from your life line"
+      },
+      "slopePhrase": {
+        "STRAIGHT": "runs straight",
+        "GENTLE": "dips gently",
+        "SLOPING": "slopes down"
+      },
+      "reachPhrase": {
+        "true": "across to beneath your little finger",
+        "false": "to beneath your ring finger"
+      },
+      "reachTrait": {
+        "true": "Big-picture",
+        "false": "Focused"
+      },
+      "startTrait": {
+        "JOINED": "Thoughtful",
+        "CLOSE": "Self-reliant",
+        "APART": "Independent"
+      },
+      "slopeTrait": {
+        "STRAIGHT": "Practical",
+        "GENTLE": "Balanced",
+        "SLOPING": "Imaginative"
+      },
+      "startBodies": {
+        "JOINED": [
+          "You think before you leap.",
+          "You weigh things up before acting.",
+          "Careful choices, rarely regretted.",
+          "You plan with the people around you in mind."
+        ],
+        "CLOSE": [
+          "You trust your own judgement early.",
+          "Independent, never reckless.",
+          "You hear the advice, then decide for yourself."
+        ],
+        "APART": [
+          "That gap marks an independent mind.",
+          "Striking out on your own suits you.",
+          "Self-directed: you'd rather try than wait."
+        ]
+      },
+      "slopeBodies": {
+        "STRAIGHT": [
+          "The straight run means a clear, practical head.",
+          "Logic leads. You cut straight to the real problem.",
+          "Grounded thinking that people trust."
+        ],
+        "GENTLE": [
+          "The gentle dip balances logic with imagination.",
+          "Practical, with a creative streak when it counts.",
+          "You plan the detail and still see the big picture."
+        ],
+        "SLOPING": [
+          "The slope adds imagination: your ideas are your own.",
+          "A creative mind that thinks in pictures.",
+          "You solve problems sideways, and it works."
+        ]
+      }
+    },
+    "LIFE": {
+      "title": "Life line",
+      "arcPhrase": {
+        "true": "Your life line sweeps in a wide arc around your thumb",
+        "false": "Your life line stays close to your thumb"
+      },
+      "fullPhrase": {
+        "true": " and runs all the way to your wrist.",
+        "false": "."
+      },
+      "closer": {
+        "true": " Its full sweep adds staying power.",
+        "false": " A shorter life line isn't a shorter life: in palmistry it speaks to how you spend your energy."
+      },
+      "resilientSuffix": " · Resilient",
+      "byWide": {
+        "true": {
+          "trait": "Energetic · Adventurous",
+          "bodies": [
+            "A wide arc points to energy and a real appetite for life. New places and people recharge you.",
+            "Plenty of drive. You say yes to new experiences.",
+            "You live fully and bounce back from setbacks fast.",
+            "Restless in the best way: adventure keeps you going."
+          ]
+        },
+        "false": {
+          "trait": "Steady · Rooted",
+          "bodies": [
+            "A close arc points to steady, grounded energy. Home and routine recharge you.",
+            "You pace yourself and go the distance.",
+            "Calm and rooted: your strength comes from the people closest to you.",
+            "Steady energy, used wisely. You know when to rest and when to push."
+          ]
+        }
+      }
+    },
+    "FATE": {
+      "title": "Fate line",
+      "variants": {
+        "besideLife": {
+          "opening": "Your fate line rises from beside your life line near the wrist.",
+          "trait": "Self-made · Purposeful",
+          "bodies": [
+            "A self-made path, with people close to you cheering you on.",
+            "Your direction comes from your own effort, and it's all the stronger for it.",
+            "You're building something of your own, step by step.",
+            "Purpose found early, and earned."
+          ]
+        },
+        "middle": {
+          "opening": "Your fate line rises up the middle of your palm.",
+          "trait": "Purposeful · Driven · Recognised",
+          "bodies": [
+            "A clear sense of purpose. Your work tends to get noticed.",
+            "You know where you're headed, and you tend to get there.",
+            "A steady calling, followed with conviction."
+          ]
+        },
+        "none": {
+          "opening": "No clear fate line shows on this palm.",
+          "trait": "Free · Adaptable",
+          "bodies": [
+            "In palmistry, that means you write your own story.",
+            "No fixed path: you're free to reinvent yourself.",
+            "Your best chances often come from unexpected directions."
+          ]
+        }
+      }
+    },
+    "MOUNT": {
+      "byMount": {
+        "JUPITER": {
+          "trait": "Leadership · Confidence · Ambition",
+          "bodies": [
+            "A strong index finger lifts the Mount of Jupiter. A natural leader with healthy ambition.",
+            "Jupiter stands out in your hand: confidence, generosity, high aims."
+          ]
+        },
+        "SATURN": {
+          "trait": "Wisdom · Discipline · Depth",
+          "bodies": [
+            "A long middle finger raises the Mount of Saturn. Wise, responsible, patient.",
+            "Saturn gives you depth. You value truth over flattery, and your advice is good."
+          ]
+        },
+        "APOLLO": {
+          "trait": "Creativity · Charm · Success",
+          "bodies": [
+            "Your ring finger lifts the Mount of Apollo, the Sun. Charm, creativity, an eye for beauty.",
+            "The Sun is strong in your palm. Creative work tends to bring you joy, and recognition."
+          ]
+        },
+        "MERCURY": {
+          "trait": "Eloquence · Wit · Business sense",
+          "bodies": [
+            "A long little finger strengthens the Mount of Mercury. Persuasive, quick-witted, good with deals.",
+            "Mercury favours you with clever words and a sharp sense of humour."
+          ]
+        },
+        "VENUS": {
+          "trait": "Love · Warmth · Zest for life",
+          "bodies": [
+            "An open thumb enlarges the Mount of Venus. A big heart and a love of life's pleasures.",
+            "Venus rules your palm: passion, kindness and a taste for good company."
+          ]
+        }
+      }
+    }
+  },
+  "signs": {
+    "ARIES": {
+      "title": "Aries",
+      "chip": "Driven",
+      "echoes": [
+        "There's a starter's impatience here too: you'd rather begin than wait for perfect.",
+        "A competitive streak shows through. A challenge wakes you right up."
+      ]
+    },
+    "TAURUS": {
+      "title": "Taurus",
+      "chip": "Steady",
+      "echoes": [
+        "There's real staying power here, and a soft spot for comfort and good things.",
+        "Once you've decided, you're hard to move, and the people you love count on that."
+      ]
+    },
+    "GEMINI": {
+      "title": "Gemini",
+      "chip": "Curious",
+      "echoes": [
+        "There's a quick, curious streak too: you're rarely without a question or a story.",
+        "You adapt fast, and conversation comes easily to you."
+      ]
+    },
+    "CANCER": {
+      "title": "Cancer",
+      "chip": "Caring",
+      "echoes": [
+        "There's a protective streak here: home and your people come first.",
+        "You pick up on moods before anyone says a word."
+      ]
+    },
+    "LEO": {
+      "title": "Leo",
+      "chip": "Generous",
+      "echoes": [
+        "There's a generous warmth here, and people notice when you walk into a room.",
+        "You give loyalty and praise freely, and you shine when you're appreciated."
+      ]
+    },
+    "VIRGO": {
+      "title": "Virgo",
+      "chip": "Precise",
+      "echoes": [
+        "There's a careful eye here: you notice the details others miss.",
+        "You show care by being useful, and you quietly hold things together."
+      ]
+    },
+    "LIBRA": {
+      "title": "Libra",
+      "chip": "Fair-minded",
+      "echoes": [
+        "There's a peacemaker in this hand: you weigh both sides and look for the fair answer.",
+        "Harmony matters to you, and you have a gift for putting people at ease."
+      ]
+    },
+    "SCORPIO": {
+      "title": "Scorpio",
+      "chip": "Perceptive",
+      "echoes": [
+        "There's an intensity here: you see through people, and you don't do things by halves.",
+        "Your loyalty runs deep, and so does your memory."
+      ]
+    },
+    "SAGITTARIUS": {
+      "title": "Sagittarius",
+      "chip": "Optimistic",
+      "echoes": [
+        "There's a restless optimism here: new horizons pull at you.",
+        "You say what you think, and your honesty is part of your charm."
+      ]
+    },
+    "CAPRICORN": {
+      "title": "Capricorn",
+      "chip": "Ambitious",
+      "echoes": [
+        "There's quiet ambition here: you play the long game, and usually win it.",
+        "Discipline comes naturally. You climb steadily while others sprint and stall."
+      ]
+    },
+    "AQUARIUS": {
+      "title": "Aquarius",
+      "chip": "Original",
+      "echoes": [
+        "There's an original streak here: you'd rather be yourself than fit in.",
+        "You think about the bigger picture, and the people in it."
+      ]
+    },
+    "PISCES": {
+      "title": "Pisces",
+      "chip": "Compassionate",
+      "echoes": [
+        "There's a dreamer's softness here, and a deep well of compassion.",
+        "You sense what others feel, sometimes before they do."
+      ]
+    }
+  },
+  "ui": {
+    "topBarTitle": "Palm Reading",
+    "backContentDescription": "Back",
+    "shareContentDescription": "Share",
+    "closeGlyph": "✕",
+    "cornerGlyph": "✦",
+    "photoContentDescription": "Your palm",
+    "possessive": {
+      "self": "Your",
+      "suffixS": "'",
+      "suffixOther": "'s"
+    },
+    "legendFaintSuffix": " · faint",
+    "legendLabel": {
+      "HEART": "Heart",
+      "HEAD": "Head",
+      "LIFE": "Life",
+      "FATE": "Fate"
+    },
+    "essenceTitle": "✦  Your essence",
+    "footerPrimary": "Read another palm",
+    "footerSecondary": "Back to horoscope",
+    "disclaimer": "Palm reading is for entertainment and reflection only."
+  },
+  "share": {
+    "textTemplate": "My palm says I'm %1$s ✋\n\nDownload the Horoscope Launcher to read yours 💫\n%2$s",
+    "link": "https://app.adjust.com/258alz46",
+    "cardTitle": "MY PALM READING",
+    "cardCornerGlyph": "✦",
+    "cardStrengthSeparator": "  ·  ",
+    "cardFooter": "What does your palm say?",
+    "imageFileName": "palm_reading.jpg",
+    "imageSize": [
+      1080,
+      1350
+    ],
+    "jpegQuality": 92
+  }
+}
