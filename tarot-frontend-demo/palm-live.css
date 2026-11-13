@@ -1,0 +1,276 @@
+/* Palm reading: LIVE (LiveScanScreen). Layout in dp = CSS px. The overlay
+   canvas uses the app's device pixels / 3. This screen sets no font family,
+   so its text is the system sans (M3 default typography). */
+
+.palm-live {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--lilac);
+}
+
+/* The camera preview and the overlay fill the whole screen, under the bars. */
+.palm-live__media,
+.palm-live__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.palm-live__preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The front camera is shown mirrored, like a selfie. */
+.palm-live.is-front .palm-live__preview {
+  transform: scaleX(-1);
+}
+
+/* --- Controls column (inside the system bars) */
+.palm-live__controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--bar-top) 0 var(--bar-bottom);
+  pointer-events: none;
+}
+
+.palm-live__controls button {
+  pointer-events: auto;
+}
+
+.palm-live__top {
+  padding: 8px;
+}
+
+.palm-live__back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(14, 12, 36, 0.5) !important;
+  color: var(--lilac) !important;
+}
+
+.palm-live__camera-ui {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.palm-live__camera-ui[hidden] {
+  display: none;
+}
+
+.palm-live__pill {
+  align-self: center;
+  margin: 8px 24px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(14, 12, 36, 0.72);
+  color: var(--lilac);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.palm-live__pill.is-perfect {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+.palm-live__spacer {
+  flex: 1;
+}
+
+/* Tip: shown after 12 s while the lock stays under 30 %. */
+.palm-live__tip {
+  display: grid;
+  place-items: center;
+  padding: 0 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+.palm-live__tip.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+
+.palm-live__tip-text {
+  grid-area: 1 / 1;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(14, 12, 36, 0.55);
+  color: rgba(217, 212, 236, 0.85);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+
+.palm-live__tip-text.is-in {
+  opacity: 1;
+}
+
+.palm-live__bottom {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 16px 0 8px;
+}
+
+.palm-live__ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+}
+
+.palm-live__ring-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.palm-live__ring-text {
+  position: relative;
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.palm-live__ring-text.is-hand {
+  color: var(--lilac);
+  font-size: 28px;
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Roboto, sans-serif;
+}
+
+.palm-live__flip {
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-top: 4px; /* centre on the ring, below the 16 px top padding */
+  border-radius: 50%;
+  background: rgba(14, 12, 36, 0.6) !important;
+  color: var(--lilac) !important;
+  transform: translateY(-50%);
+}
+
+.palm-live__read-slot {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 72px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+.palm-live__read-slot.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+
+/* M3 Button: 40 px tall, 24 px side padding, pill. */
+.palm-live .palm-live__read,
+.palm-live .palm-live__btn {
+  min-height: 40px;
+  padding: 8px 24px !important;
+  border-radius: 999px;
+  background: var(--gold) !important;
+  color: var(--bg) !important;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.palm-live .palm-live__read {
+  font-weight: 700;
+}
+
+.palm-live .palm-live__btn {
+  font-weight: 500;
+}
+
+.palm-live .palm-live__btn--outlined {
+  border: 1px solid #938f99 !important;
+  background: transparent !important;
+  color: var(--gold) !important;
+}
+
+/* --- Permission rationale and camera error */
+.palm-live__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  text-align: center;
+}
+
+.palm-live__panel--error {
+  background: rgba(14, 12, 36, 0.9);
+}
+
+.palm-live__title {
+  margin: 0;
+  color: var(--lilac);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.palm-live__body {
+  margin: 8px 0 24px;
+  color: rgba(217, 212, 236, 0.7);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.palm-live__help {
+  margin: 16px 0 0;
+  color: rgba(217, 212, 236, 0.7);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.palm-live button:active {
+  filter: brightness(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palm-live__tip,
+  .palm-live__tip-text,
+  .palm-live__read-slot {
+    transition-duration: 0.01ms !important;
+  }
+}
